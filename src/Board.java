@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Board {
 	private String boardRepresentation;
 	private List<Card> solution;
@@ -39,33 +41,33 @@ public class Board {
 	 *  
 	 *  **/
 	public void generateBoard() {
-		boardRepresentation = "
-				########################## 
-				##########1####2##########
-				##^^^^##...#^^#...##^^^^##
-				#[RRRR]..#^RRRR^#..[RRRR]#
-				#[RRRR]..[RRRRRR]..[RRRR]#
-				#[RRRR]..[RRRRRR]..[RRRR]#
-				##RRRR].BRRRRRRRRB.C#__###
-				###__R#..[RRRRRR].......3#
-				#....K...#R____R#.......##
-				##........B....B...#^^^^##
-				##^^^#............IRRRRR]#
-				#[RRRR^^#..#####...[RRRR]#
-				#[RRRRRR]..#####...[RRRR]#
-				#[RRRRRRRD.#####...#___R##
-				#[RRRRRR]..#####.....L.I##
-				#[RRRRRR]..#####...#^R^^##
-				##_____R#..#####..#RRRRR##
-				##.....D...##A##.LRRRRRR]#
-				#6..........HH....#RRRRR##
-				##.....O..#^RR^#...#___###
-				##^^^^^]..[RRRR]........4#
-				#[RRRRR]..[RRRRRH.S.....##
-				#[RRRRR]..[RRRR]..[^^^^^##
-				#[RRRRR]..[RRRR]..[RRRRR]#
-				#[RRRRR#..[RRRR]..#RRRRR]#
-				##____##5##____##.##____## ";
+		boardRepresentation =
+				"########################## \n" +
+				"##########1####2##########\n" +
+				"##^^^^##...#^^#...##^^^^##\n" +
+				"#[RRRR]..#^RRRR^#..[RRRR]#\n" +
+				"#[RRRR]..[RRRRRR]..[RRRR]#\n" +
+				"#[RRRR]..[RRRRRR]..[RRRR]#\n" +
+				"##RRRR].BRRRRRRRRB.C#__###\n" +
+				"###__R#..[RRRRRR].......3#\n" +
+				"#....K...#R____R#.......##\n" +
+				"##........B....B...#^^^^##\n" +
+				"##^^^#............IRRRRR]#\n" +
+				"#[RRRR^^#..#####...[RRRR]#\n" +
+				"#[RRRRRR]..#####...[RRRR]#\n" +
+				"#[RRRRRRRD.#####...#___R##\n" +
+				"#[RRRRRR]..#####.....L.I##\n" +
+				"#[RRRRRR]..#####...#^R^^##\n" +
+				"##_____R#..#####..#RRRRR##\n" +
+				"##.....D...##A##.LRRRRRR]#\n" +
+				"#6..........HH....#RRRRR##\n" +
+				"##.....O..#^RR^#...#___###\n" +
+				"##^^^^^]..[RRRR]........4#\n" +
+				"#[RRRRR]..[RRRRRH.S.....##\n" +
+				"#[RRRRR]..[RRRR]..[^^^^^##\n" +
+				"#[RRRRR]..[RRRR]..[RRRRR]#\n" +
+				"#[RRRRR#..[RRRR]..#RRRRR]#\n" +
+				"##____##5##____##.##____##";
 
 
 	}
