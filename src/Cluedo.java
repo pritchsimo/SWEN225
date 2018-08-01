@@ -7,6 +7,14 @@ public class Cluedo {
 		this.board = board;
 	}
 	
+	private void setup() {
+		cardSetup();
+	}
+	
+	private void cardSetup() {
+		
+	}
+	
 	public static void main(String... args) {
 		new Cluedo;
 	}

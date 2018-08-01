@@ -5,7 +5,8 @@ public class Board {
 	private List<Room> rooms;
 
 	public Board(List<Card> solution, List<Player> players) {
-		this.solution = solution, this.players = players;
+		this.solution = solution;
+		this.players = players;
 	}
 
 	/** Generates the board based on the amount of players
@@ -16,18 +17,18 @@ public class Board {
 	 *  ^ - Top Wall
 	 *  _ - Bottom Wall
 	 *  . - Empty Space
-	 *  $ - Door
+	 *  R - Room
 	 *  
-	 *  K - Kitchen
-	 *  B - Ballroom
-	 *  C - Conservatory
-	 *  I - Billiard Room
-	 *  L - Library
-	 *  S - Study
-	 *  H - Hall
-	 *  O - Lounge
-	 *  D - Dining Room
-	 *  A - Accusation Room
+	 *  K - Kitchen Door 
+	 *  B - Ballroom Door
+	 *  C - Conservatory Door
+	 *  I - Billiard Room Door
+	 *  L - Library Door
+	 *  S - Study Door
+	 *  H - Hall Door
+	 *  O - Lounge Door
+	 *  D - Dining Room Door
+	 *  A - Accusation Room Door
 	 *  
 	 *  1 - Mrs. White
 	 *  2 - Mr. Green
@@ -38,32 +39,34 @@ public class Board {
 	 *  
 	 *  **/
 	public void generateBoard() {
-		board = ##########################
+		boardRepresentation = "
+				########################## 
 				##########1####2##########
 				##^^^^##...#^^#...##^^^^##
-				#[KKKK]..#^BBBB^#..[CCCC]#
-				#[KKKK]..[BBBBBB]..[CCCC]#
-				#[KKKK]..[BBBBBB]..[CCCC]#
-				##KKKK].$BBBBBBBB$.$#__###
-				###__K#..[BBBBBB].......3#
-				#........#B____B#.......##
-				##.................#^^^^##
-				##^^^#............$IIIII]#
-				#[DDDD^^#..#####...[IIII]#
-				#[DDDDDD]..#####...[IIII]#
-				#[DDDDDDD$.#####...#___I##
-				#[DDDDDD]..#####.....$.$##
-				#[DDDDDD]..#####...#^L^^##
-				##_____D#..#####..#LLLLL##
-				##.....$...##A##.$LLLLLL]#
-				#6..........$$....#LLLLL##
-				##........#^HH^#...#___###
-				##^^^^^]..[HHHH]........4#
-				#[OOOOO]..[HHHHH$.$.....##
-				#[OOOOO]..[HHHH]..[^^^^^##
-				#[OOOOO]..[HHHH]..[SSSSS]#
-				#[OOOOO#..[HHHH]..#SSSSS]#
-				##____##5##____##.##____##
+				#[RRRR]..#^RRRR^#..[RRRR]#
+				#[RRRR]..[RRRRRR]..[RRRR]#
+				#[RRRR]..[RRRRRR]..[RRRR]#
+				##RRRR].BRRRRRRRRB.C#__###
+				###__R#..[RRRRRR].......3#
+				#....K...#R____R#.......##
+				##........B....B...#^^^^##
+				##^^^#............IRRRRR]#
+				#[RRRR^^#..#####...[RRRR]#
+				#[RRRRRR]..#####...[RRRR]#
+				#[RRRRRRRD.#####...#___R##
+				#[RRRRRR]..#####.....L.I##
+				#[RRRRRR]..#####...#^R^^##
+				##_____R#..#####..#RRRRR##
+				##.....D...##A##.LRRRRRR]#
+				#6..........HH....#RRRRR##
+				##.....O..#^RR^#...#___###
+				##^^^^^]..[RRRR]........4#
+				#[RRRRR]..[RRRRRH.S.....##
+				#[RRRRR]..[RRRR]..[^^^^^##
+				#[RRRRR]..[RRRR]..[RRRRR]#
+				#[RRRRR#..[RRRR]..#RRRRR]#
+				##____##5##____##.##____## ";
+
 
 	}
 }
