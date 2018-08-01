@@ -1,3 +1,6 @@
+import java.awt.*;
+import java.util.List;
+
 public class Room {
 	private String name;
 	private List<Point> doorPos;

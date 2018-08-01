@@ -1,8 +1,8 @@
 public class Card {
 	private String name;
-	private T type;
+	private String type;
 
-	public Card(String name, T type) {
+	public Card(String name, String type) {
 		this.name = name;
 		this.type = type;
 	}
