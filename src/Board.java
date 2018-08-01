@@ -13,7 +13,7 @@ import java.util.List;
 public class Board {
 
 	//------------------------
-	// MEMBER VARIABLES fuck you simon
+	// MEMBER VARIABLES fuck you simon s
 	//------------------------
 
 	//Board Attributes
