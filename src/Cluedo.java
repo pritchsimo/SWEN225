@@ -15,7 +15,7 @@ public class Cluedo {
     //Cluedo Attributes
     private Player move;
 
-    //Cluedo Associations
+    //Cluedo Associationsyeet
     private Board board;
 
     //------------------------
