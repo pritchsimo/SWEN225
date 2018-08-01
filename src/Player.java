@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
@@ -11,9 +12,10 @@ public class Player {
 	public Player(Point startCoord, String name) {
 		this.coord = startCoord;
 		this.name = name;
+		cards = new ArrayList<>();
 	}
 	
-	public void giveCards() {
-		
+	public void giveCard(Card card) {
+		cards.add(card);
 	}
 }
