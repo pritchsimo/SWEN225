@@ -10,35 +10,49 @@ public class Cluedo {
     private List<Card> solution;
     private List<Player> players;
 
-    public Cluedo(Player move, Board board) {
-        this.move = move;
-        this.board = board;
+    public Cluedo() {
         solution = new ArrayList<>();
         players = new ArrayList<>();
         setup();
     }
 
     private void setup() {
-        playerSetup();
+        board = new Board();
+        playerNumberInput();
         cardSetup();
+        weaponSetup();
+        selectFirstTurn();
     }
 
-    private void playerSetup() {
+    private void selectFirstTurn() {
+        move = players.get((int)(Math.random() * players.size()));
+    }
+
+    private void playerSetup(int p) {
+        if (p > 6 || p < 1) {
+            System.out.println("Invalid number of players, there must be between 1 and 6 players.");
+            playerNumberInput();
+        } else {
+            List<Player> availablePlayers = new ArrayList<>();
+            availablePlayers.add(new Player(new Point(8, 25), "Miss Scarlett"));
+            availablePlayers.add(new Player(new Point(1, 18), "Col. Mustard"));
+            availablePlayers.add(new Player(new Point(10, 1), "Mrs. White"));
+            availablePlayers.add(new Player(new Point(15, 1), "Mr. Green"));
+            availablePlayers.add(new Player(new Point(24, 7), "Mrs. Peacock"));
+            availablePlayers.add(new Player(new Point(24, 20), "Prof. Plum"));
+
+            for (int i = 0; i < p; i++)
+                players.add(availablePlayers.get(i));
+        }
+    }
+
+    private void playerNumberInput() {
+        int p = 0;
         Scanner reader = new Scanner(System.in);
-        System.out.println("Enter the number of players");
-        int p = reader.nextInt();
+        System.out.println("Enter the number of players (Between 1 and 6)");
+        p = reader.nextInt();
         reader.close();
-
-        List<Player> availablePlayers = new ArrayList<>();
-        availablePlayers.add(new Player(new Point(8, 25), "Miss Scarlett"));
-        availablePlayers.add(new Player(new Point(1, 18), "Col. Mustard"));
-        availablePlayers.add(new Player(new Point(10, 1), "Mrs. White"));
-        availablePlayers.add(new Player(new Point(15, 1), "Mr. Green"));
-        availablePlayers.add(new Player(new Point(24, 7), "Mrs. Peacock"));
-        availablePlayers.add(new Player(new Point(24, 20), "Prof. Plum"));
-
-        for (int i = 0; i < p; i++)
-            players.add(availablePlayers.get(i));
+        playerSetup(p);
     }
 
     private void cardSetup() {
@@ -91,6 +105,17 @@ public class Cluedo {
             if (counter > players.size())
                 counter = 0;
         }
+    }
+
+    private void weaponSetup() {
+        List<Room> roomShuffler = board.getRooms();
+        Collections.shuffle(roomShuffler);
+        roomShuffler.get(0).setWeapon(new Weapon("Candlestick", roomShuffler.get(0)));
+        roomShuffler.get(1).setWeapon(new Weapon("Dagger", roomShuffler.get(1)));
+        roomShuffler.get(2).setWeapon(new Weapon("Lead Pipe", roomShuffler.get(2)));
+        roomShuffler.get(3).setWeapon(new Weapon("Revolver", roomShuffler.get(3)));
+        roomShuffler.get(4).setWeapon(new Weapon("Rope", roomShuffler.get(4)));
+        roomShuffler.get(5).setWeapon(new Weapon("Spanner", roomShuffler.get(5)));
     }
 
     public static void main(String... args) {

@@ -7,9 +7,12 @@ public class Room {
 	private List<Player> players;
 	private Weapon weapon;
 	
-	public Room(String name, List<Point> doorPos, Weapon weapon) {
+	public Room(String name, List<Point> doorPos) {
 		this.name = name;
 		this.doorPos = doorPos;
+	}
+
+	public void setWeapon(Weapon weapon) {
 		this.weapon = weapon;
 	}
 }
