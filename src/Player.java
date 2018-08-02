@@ -157,23 +157,21 @@ public class Player {
     public void printKnownEvidence(List<String> p, List<String> w, List<String> r){
 	    System.out.println("Suspects:");
 	    for (String s: p){
-            System.out.println(evidence(s));
+            if (knownEvidence.contains(s)) System.out.println(s + " [X]");
+            else System.out.println(s + " [ ]");
         }
 
         System.out.println("Weapons:");
         for (String s: w){
-            System.out.println(evidence(s));
+            if (knownEvidence.contains(s)) System.out.println(s + " [X]");
+            else System.out.println(s + " [ ]");
         }
 
         System.out.println("Rooms:");
         for (String s: r){
-            System.out.println(evidence(s));
+            if (knownEvidence.contains(s)) System.out.println(s + " [X]");
+            else System.out.println(s + " [ ]");
         }
-    }
-
-    private String evidence(String suspect){
-	    if (knownEvidence.contains(suspect)) return suspect + " [X]";
-	    else return suspect + " [ ]";
     }
 
 
