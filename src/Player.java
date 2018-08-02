@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 
@@ -7,8 +6,8 @@ public class Player {
 	private Point coords;
 	private String name;
 	private List<Card> cards;
-	private List<Card> potentialSolutions;
-	private boolean inRoom;
+	private List<String> knownEvidence;
+	private Room room;
 	private char squareChar;       //represents what tile is when they are not on it
     private HashMap<String, List<Point>> roomNames;
 	
@@ -16,27 +15,18 @@ public class Player {
 		this.coords = startCoord;
 		this.name = name;
 		this.cards = new ArrayList<>();
-		this.inRoom = false;
+		this.knownEvidence = new ArrayList<>();
+		this.room = null;
 		this.squareChar = '#';       //starting point will be blocked once they leave
-		roomCoords();
 	}
 	
 	public void giveCard(Card card) {
 		cards.add(card);
+		knownEvidence.add(card.getName());
 	}
 
-	private void roomCoords(){
-	    roomNames = new HashMap<>();
-	    roomNames.put("kitchen", Arrays.asList(new Point(5, 8)));
-        roomNames.put("ballroom", Arrays.asList(new Point(8, 6), new Point(17, 6), new Point(10, 9), new Point(15, 9)));
-        roomNames.put("conservatory", Arrays.asList(new Point(19, 6)));
-        roomNames.put("billiard room", Arrays.asList(new Point(18, 10), new Point(23, 14)));
-        roomNames.put("library", Arrays.asList(new Point(21, 14), new Point(17, 17)));
-        roomNames.put("study", Arrays.asList(new Point(18, 21)));
-        roomNames.put("hall", Arrays.asList(new Point(16, 21), new Point(12, 18), new Point(13, 18)));
-        roomNames.put("lounge", Arrays.asList(new Point(7, 19)));
-        roomNames.put("dining room", Arrays.asList(new Point(7, 17), new Point(9, 13)));
-
+    public String getName() {
+        return name;
     }
 
 	public void move(int diceRoll, Board board){
@@ -46,8 +36,8 @@ public class Player {
         while (true) {     //checks for correct input of room name
             System.out.println("Which room do you wish to head towards? ");
             String r = reader.next();
-            if (roomNames.containsKey(r.toLowerCase())) {
-                doors = roomNames.get(r);
+            if (board.getRooms().containsKey(r.toLowerCase())) {
+                doors = board.getRooms().get(r).getDoorPos();
                 break;
             }
             System.out.println("Please enter a correct room name.");
@@ -99,7 +89,7 @@ public class Player {
             return true;
         } else if (doorSquare(coords.x + dx, coords.y + dy, board) != null){
             System.out.println("You moved " + direction + ". " + movesRemaining + " moves remaining.");
-            System.out.println("You are outside the " + doorSquare(coords.x + dx, coords.y + dy, board) + ".");
+            System.out.println("You are outside the " + doorSquare(coords.x + dx,  coords.y + dy, board) + ".");
             Scanner reader = new Scanner(System.in);
             while (true){
                 System.out.println("Would you like to go in? (yes/no)");
@@ -109,6 +99,7 @@ public class Player {
 
                     Point roomSquare = roomSquare(coords.x + dx, coords.y + dy, board);
                     coords.move(roomSquare.x, roomSquare.y);
+                    room = board.getRooms().get(doorSquare(coords.x + dx, coords.y + dy, board).toLowerCase());
                     squareChar = board.getBoard()[roomSquare.x][roomSquare.y];
                     return true;
                 } else if (response.equals("no")){
@@ -156,5 +147,36 @@ public class Player {
         else if (board.getBoard()[x-1][y] == 'R' || board.getBoard()[x-1][y] == '[' || board.getBoard()[x-1][y] == ']') return new Point(x-1, y);
         else return new Point(x, y-1);
     }
+
+    public void makeAccusation(){
+	    System.out.println("Which player would you like to accuse: ");
+
+	    //not finished
+    }
+
+    public void printKnownEvidence(List<String> p, List<String> w, List<String> r){
+	    System.out.println("Suspects:");
+	    for (String s: p){
+            System.out.println(evidence(s));
+        }
+
+        System.out.println("Weapons:");
+        for (String s: w){
+            System.out.println(evidence(s));
+        }
+
+        System.out.println("Rooms:");
+        for (String s: r){
+            System.out.println(evidence(s));
+        }
+    }
+
+    private String evidence(String suspect){
+	    if (knownEvidence.contains(suspect)) return suspect + " [X]";
+	    else return suspect + " [ ]";
+    }
+
+
+
 
 }
