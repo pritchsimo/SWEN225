@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -81,6 +82,7 @@ public class Board {
 	}
 
 	private void addRooms() {
+	    rooms = new ArrayList<>();
 	    rooms.add(new Room("Kitchen", Arrays.asList(new Point(5, 8))));
 	    rooms.add(new Room("Ballroom", Arrays.asList(new Point(8, 6), new Point(17, 6), new Point(10, 9), new Point(15, 9))));
 	    rooms.add(new Room("Conservatory", Arrays.asList(new Point(19, 6))));
