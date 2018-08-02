@@ -39,7 +39,7 @@ public class Player {
 
     }
 
-	public void move(int diceRoll){
+	public void move(int diceRoll, Board board){
         List<Point> doors;
 
         Scanner reader = new Scanner(System.in);
@@ -75,13 +75,13 @@ public class Player {
                 System.out.println("Move: (w/a/s/d)");
                 String move = reader.next();
                 if (move.equals("w")) {
-                    if (moveDirection("upwards", diceRoll-i-1, 0, -1)) break;
+                    if (moveDirection("upwards", diceRoll-i-1, 0, -1, board)) break;
                 } else if (move.equals("a")) {
-                    if (moveDirection("right", diceRoll-i-1, 1, 0)) break;
+                    if (moveDirection("right", diceRoll-i-1, 1, 0, board)) break;
                 } else if (move.equals("s")) {
-                    if (moveDirection("downwards", diceRoll-i-1, 0, 1)) break;
+                    if (moveDirection("downwards", diceRoll-i-1, 0, 1, board)) break;
                 } else if (move.equals("d")) {
-                    if (moveDirection("left", diceRoll-i-1, -1, 0)) break;
+                    if (moveDirection("left", diceRoll-i-1, -1, 0, board)) break;
                 }
                 System.out.println("Invalid key pressed. Please press a valid key.");
             }
@@ -89,17 +89,17 @@ public class Player {
     }
 
 
-    private boolean moveDirection(String direction, int movesRemaining, int dx, int dy){
-        if (Board.getBoard()[coords.x + dx][coords.y + dy] == '.'){
+    private boolean moveDirection(String direction, int movesRemaining, int dx, int dy, Board board){
+        if (board.getBoard()[coords.x + dx][coords.y + dy] == '.'){
             //need to update board
 
             coords.translate(dx, dy);
             System.out.println("You moved " + direction +". " + movesRemaining + " moves remaining.");
             squareChar = '.';
             return true;
-        } else if (doorSquare(coords.x + dx, coords.y + dy) != null){
+        } else if (doorSquare(coords.x + dx, coords.y + dy, board) != null){
             System.out.println("You moved " + direction + ". " + movesRemaining + " moves remaining.");
-            System.out.println("You are outside the " + doorSquare(coords.x + dx, coords.y + dy) + ".");
+            System.out.println("You are outside the " + doorSquare(coords.x + dx, coords.y + dy, board) + ".");
             Scanner reader = new Scanner(System.in);
             while (true){
                 System.out.println("Would you like to go in? (yes/no)");
@@ -107,12 +107,12 @@ public class Player {
                 if (response.toLowerCase().equals("yes")){
                     //need to update board
 
-                    Point roomSquare = roomSquare(coords.x + dx, coords.y + dy);
+                    Point roomSquare = roomSquare(coords.x + dx, coords.y + dy, board);
                     coords.move(roomSquare.x, roomSquare.y);
-                    squareChar = Board.getBoard()[roomSquare.x][roomSquare.y];
+                    squareChar = board.getBoard()[roomSquare.x][roomSquare.y];
                     return true;
                 } else if (response.equals("no")){
-                    squareChar = Board.getBoard()[coords.x + dx][coords.y + dy];
+                    squareChar = board.getBoard()[coords.x + dx][coords.y + dy];
                     coords.translate(dx, dy);
                     return true;
                 }
@@ -135,25 +135,25 @@ public class Player {
 	    else return dx + " to the right and " + dy*-1 + " upwards.";      //north-east
     }
 
-    private String doorSquare(int x, int y){
-	    if (Board.getBoard()[x][y] == 'K') return "Kitchen";
-	    else if(Board.getBoard()[x][y] == 'B')return "Ballroom";
-	    else if (Board.getBoard()[x][y] == 'C')return "Conservatory";
-	    else if (Board.getBoard()[x][y] == 'I')return "Billiard Room";
-	    else if (Board.getBoard()[x][y] == 'L')return "Library";
-	    else if (Board.getBoard()[x][y] == 'S')return "Study";
-	    else if (Board.getBoard()[x][y] == 'H')return "Hall";
-	    else if (Board.getBoard()[x][y] == 'O')return "Lounge";
-	    else if (Board.getBoard()[x][y] == 'D')return "Dining Room";
-	    else if (Board.getBoard()[x][y] == 'A')return "Accusation Room";
+    private String doorSquare(int x, int y, Board board){
+	    if (board.getBoard()[x][y] == 'K') return "Kitchen";
+	    else if(board.getBoard()[x][y] == 'B')return "Ballroom";
+	    else if (board.getBoard()[x][y] == 'C')return "Conservatory";
+	    else if (board.getBoard()[x][y] == 'I')return "Billiard Room";
+	    else if (board.getBoard()[x][y] == 'L')return "Library";
+	    else if (board.getBoard()[x][y] == 'S')return "Study";
+	    else if (board.getBoard()[x][y] == 'H')return "Hall";
+	    else if (board.getBoard()[x][y] == 'O')return "Lounge";
+	    else if (board.getBoard()[x][y] == 'D')return "Dining Room";
+	    else if (board.getBoard()[x][y] == 'A')return "Accusation Room";
 
 	    return null;
     }
 
-    private Point roomSquare(int x, int y){
-	    if (Board.getBoard()[x+1][y] == 'R' || Board.getBoard()[x+1][y] == '[' || Board.getBoard()[x+1][y] == ']') return new Point(x+1, y);
-	    else if (Board.getBoard()[x][y+1] == 'R' || Board.getBoard()[x][y+1] == '[' || Board.getBoard()[x][y+1] == ']') return new Point(x, y+1);
-        else if (Board.getBoard()[x-1][y] == 'R' || Board.getBoard()[x-1][y] == '[' || Board.getBoard()[x-1][y] == ']') return new Point(x-1, y);
+    private Point roomSquare(int x, int y, Board board){
+	    if (board.getBoard()[x+1][y] == 'R' || board.getBoard()[x+1][y] == '[' || board.getBoard()[x+1][y] == ']') return new Point(x+1, y);
+	    else if (board.getBoard()[x][y+1] == 'R' || board.getBoard()[x][y+1] == '[' || board.getBoard()[x][y+1] == ']') return new Point(x, y+1);
+        else if (board.getBoard()[x-1][y] == 'R' || board.getBoard()[x-1][y] == '[' || board.getBoard()[x-1][y] == ']') return new Point(x-1, y);
         else return new Point(x, y-1);
     }
 
