@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.nio.file.Path;
 import java.util.*;
@@ -177,4 +178,27 @@ public class Player {
         else return suspect + " [ ]";
     }
 
+    public void setPotentialSolutions(List<List<Card>> sols) {
+	    potentialSolutions = new ArrayList<>();
+	    potentialSolutions = sols;
+    }
+
+    public void setPotentialSolutions() {
+	    for (int i = 0; i < potentialSolutions.size(); i++) {
+	        for (Card card : cards) {
+	            if (card.equals(potentialSolutions.get(i).get(0)) || card.equals(potentialSolutions.get(i).get(1)) || card.equals(potentialSolutions.get(i).get(2))) {
+	                potentialSolutions.remove(i);
+	                i--;
+	                break;
+                }
+            }
+        }
+
+        //for debugging prints all combos
+        for (List<Card> s : potentialSolutions) {
+	        System.out.println(s.get(0).getName());
+            System.out.println(s.get(1).getName());
+            System.out.println(s.get(2).getName() + "\n");
+        }
+    }
 }

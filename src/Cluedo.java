@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -7,9 +8,6 @@ public class Cluedo {
     private Board board;
     private List<Card> solution;
     private List<Player> players;
-    private List<String> playerOptions;
-    private List<String> weaponOptions;
-    private List<String> roomOptions;
 
     public Cluedo() {
         solution = new ArrayList<>();
@@ -20,7 +18,6 @@ public class Cluedo {
     private void setup() {
         board = new Board();
         playerSetup();
-        listSetup();
         cardSetup();
         weaponSetup();
         selectFirstTurn();
@@ -60,50 +57,35 @@ public class Cluedo {
         }
     }
 
-    private void listSetup(){
-        playerOptions = new ArrayList<>();
-        playerOptions.add("Miss Scarlett");
-        playerOptions.add("Col. Mustard");
-        playerOptions.add("Mrs. White");
-        playerOptions.add("Mr. Green");
-        playerOptions.add("Mrs. Peacock");
-        playerOptions.add("Prof. Plum");
-
-        weaponOptions = new ArrayList<>();
-        weaponOptions.add("Candlestick");
-        weaponOptions.add("Dagger");
-        weaponOptions.add("Lead Pipe");
-        weaponOptions.add("Revolver");
-        weaponOptions.add("Rope");
-        weaponOptions.add("Spanner");
-
-        roomOptions = new ArrayList<>();
-        roomOptions.add("Kitchen");
-        roomOptions.add("Ballroom");
-        roomOptions.add("Conservatory");
-        roomOptions.add("Dining Room");
-        roomOptions.add("Billiard Room");
-        roomOptions.add("Library");
-        roomOptions.add("Study");
-        roomOptions.add("Hall");
-        roomOptions.add("Lounge");
-    }
-
     private void cardSetup() {
         List<Card> playerCards = new ArrayList<>();
-        for (String s : playerOptions){
-            playerCards.add(new Card(s, "Player"));
-        }
+        playerCards.add(new Card("Miss Scarlett", "Player"));
+        playerCards.add(new Card("Col. Mustard", "Player"));
+        playerCards.add(new Card("Mrs. White", "Player"));
+        playerCards.add(new Card("Mr. Green", "Player"));
+        playerCards.add(new Card("Mrs. Peacock", "Player"));
+        playerCards.add(new Card("Prof. Plum", "Player"));
 
         List<Card> roomCards = new ArrayList<>();
-        for (String s : roomOptions){
-            roomCards.add(new Card(s, "Room"));
-        }
+        roomCards.add(new Card("Kitchen", "Room"));
+        roomCards.add(new Card("Ballroom", "Room"));
+        roomCards.add(new Card("Conservatory", "Room"));
+        roomCards.add(new Card("Dining Room", "Room"));
+        roomCards.add(new Card("Billiard Room", "Room"));
+        roomCards.add(new Card("Library", "Room"));
+        roomCards.add(new Card("Study", "Room"));
+        roomCards.add(new Card("Hall", "Room"));
+        roomCards.add(new Card("Lounge", "Room"));
 
         List<Card> weaponCards = new ArrayList<>();
-        for (String s : weaponOptions){
-            weaponCards.add(new Card(s, "Weapon"));
-        }
+        weaponCards.add(new Card("Candlestick", "Weapon"));
+        weaponCards.add(new Card("Dagger", "Weapon"));
+        weaponCards.add(new Card("Lead Pipe", "Weapon"));
+        weaponCards.add(new Card("Revolver", "Weapon"));
+        weaponCards.add(new Card("Rope", "Weapon"));
+        weaponCards.add(new Card("Spanner", "Weapon"));
+
+        generateSolutions(playerCards, roomCards, weaponCards);
 
         Collections.shuffle(playerCards);
         Collections.shuffle(roomCards);
@@ -127,15 +109,39 @@ public class Cluedo {
             if (counter > players.size() - 1)
                 counter = 0;
         }
+
+        for (Player player : players) {
+            player.setPotentialSolutions();
+        }
+    }
+
+    private void generateSolutions(List<Card> playerCards, List<Card> roomCards, List<Card> weaponCards) {
+        List<List<Card>> sols = new ArrayList<>();
+        List<Card> sol = new ArrayList<>();
+        for (int i = 0; i < playerCards.size(); i++) {
+            for (int j = 0; j < roomCards.size(); j++) {
+                for (int k = 0; k < weaponCards.size(); k++) {
+                    sol = Arrays.asList(playerCards.get(i), roomCards.get(j), weaponCards.get(k));
+                    sols.add(sol);
+                }
+            }
+        }
+
+        for (Player player : players) {
+            player.setPotentialSolutions(sols);
+        }
     }
 
     private void weaponSetup() {
-        Collection<Room> rooms = board.getRooms().values();
-        List<Room> roomShuffler = new ArrayList<>(rooms);
+       /* List<Room> roomShuffler = board.getRooms();
         Collections.shuffle(roomShuffler);
-        for (int i = 0; i < 6; i++){
-            roomShuffler.get(i).setWeapon(new Weapon(weaponOptions.get(i), roomShuffler.get(i)));
-        }
+        roomShuffler.get(0).setWeapon(new Weapon("Candlestick", roomShuffler.get(0)));
+        roomShuffler.get(1).setWeapon(new Weapon("Dagger", roomShuffler.get(1)));
+        roomShuffler.get(2).setWeapon(new Weapon("Lead Pipe", roomShuffler.get(2)));
+        roomShuffler.get(3).setWeapon(new Weapon("Revolver", roomShuffler.get(3)));
+        roomShuffler.get(4).setWeapon(new Weapon("Rope", roomShuffler.get(4)));
+        roomShuffler.get(5).setWeapon(new Weapon("Spanner", roomShuffler.get(5)));
+        */
     }
 
     public static void main(String... args) {
