@@ -4,13 +4,14 @@ import java.util.*;
 import java.util.List;
 
 public class Cluedo {
-    private Player move;
+    private int move;
     private Board board;
     private List<Card> solution;
     private List<Player> players;
     private List<String> playerOptions;
     private List<String> weaponOptions;
     private List<String> roomOptions;
+    private boolean gameWon = false;
 
     public Cluedo() {
         solution = new ArrayList<>();
@@ -28,7 +29,7 @@ public class Cluedo {
     }
 
     private void selectFirstTurn() {
-        move = players.get((int) (Math.random() * players.size()));
+        move = (int) (Math.random() * players.size());
     }
 
     private void playerSetup() {
@@ -159,6 +160,24 @@ public class Cluedo {
         Collections.shuffle(roomShuffler);
         for (int i = 0; i < 6; i++){
             roomShuffler.get(i).setWeapon(new Weapon(weaponOptions.get(i), roomShuffler.get(i)));
+        }
+    }
+
+    public void gameRun(){
+        while (!gameWon){
+            Player current = players.get(move);
+            int diceRoll = (int) (Math.random() * 5) + 1;
+            System.out.println("It is " +  current.getName() + "'s turn. You roll a " + diceRoll + ".");
+            current.move(diceRoll, board);
+
+            if (current.getRoom() != null){
+                System.out.println("Would you like to make an accusation? (yes/no)");
+                Scanner reader = new Scanner(System.in);
+                String r = reader.next();
+                if (r.equals("yes")){
+                    current.makeAccusation();
+                }
+            }
         }
     }
 
