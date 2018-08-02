@@ -10,23 +10,36 @@ public class Cluedo {
     private List<Card> solution;
     private List<Player> players;
 
-    public Cluedo(Player move, Board board) {
-        this.move = move;
-        this.board = board;
+    public Cluedo() {
         solution = new ArrayList<>();
         players = new ArrayList<>();
         setup();
     }
 
     private void setup() {
+        board = new Board();
         playerSetup();
         cardSetup();
+        weaponSetup();
+        selectFirstTurn();
+    }
+
+    private void selectFirstTurn() {
+        move = players.get((int) (Math.random() * players.size()));
     }
 
     private void playerSetup() {
         Scanner reader = new Scanner(System.in);
-        System.out.println("Enter the number of players");
-        int p = reader.nextInt();
+        int p;
+        while (true) {
+            System.out.println("Enter the number of players (Between 1 and 6)");
+            p = reader.nextInt();
+            if (p > 6 || p < 1) {
+                System.out.println("Invalid number of players, there must be between 1 and 6 players.");
+            } else {
+                break;
+            }
+        }
         reader.close();
 
         List<Player> availablePlayers = new ArrayList<>();
@@ -39,6 +52,10 @@ public class Cluedo {
 
         for (int i = 0; i < p; i++)
             players.add(availablePlayers.get(i));
+
+        for (int i = 0; i < players.size(); i++) {
+            System.out.println("Player " + i + ": " + players.get(i).getName());
+        }
     }
 
     private void cardSetup() {
@@ -88,12 +105,23 @@ public class Cluedo {
         for (Card card : remainingCards) {
             players.get(counter).giveCard(card);
             counter++;
-            if (counter > players.size())
+            if (counter > players.size() - 1)
                 counter = 0;
         }
     }
 
-    public static void main(String... args) {
+    private void weaponSetup() {
+        List<Room> roomShuffler = board.getRooms();
+        Collections.shuffle(roomShuffler);
+        roomShuffler.get(0).setWeapon(new Weapon("Candlestick", roomShuffler.get(0)));
+        roomShuffler.get(1).setWeapon(new Weapon("Dagger", roomShuffler.get(1)));
+        roomShuffler.get(2).setWeapon(new Weapon("Lead Pipe", roomShuffler.get(2)));
+        roomShuffler.get(3).setWeapon(new Weapon("Revolver", roomShuffler.get(3)));
+        roomShuffler.get(4).setWeapon(new Weapon("Rope", roomShuffler.get(4)));
+        roomShuffler.get(5).setWeapon(new Weapon("Spanner", roomShuffler.get(5)));
+    }
 
+    public static void main(String... args) {
+        Cluedo cluedo = new Cluedo();
     }
 }

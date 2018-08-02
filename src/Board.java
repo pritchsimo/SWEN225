@@ -13,6 +13,11 @@ public class Board {
 		addRooms();
 	}
 
+	public Board() {
+	    generateBoard();
+	    addRooms();
+    }
+
 	/** Generates the board based on the amount of players
 	 *
 	 *  # - Wall Block/Corner
@@ -102,4 +107,21 @@ public class Board {
 	public static char[][] getBoard() {
 		return board;
 	}
+
+	private void addRooms() {
+	    rooms = new ArrayList<>();
+	    rooms.add(new Room("Kitchen", Arrays.asList(new Point(5, 8))));
+	    rooms.add(new Room("Ballroom", Arrays.asList(new Point(8, 6), new Point(17, 6), new Point(10, 9), new Point(15, 9))));
+	    rooms.add(new Room("Conservatory", Arrays.asList(new Point(19, 6))));
+	    rooms.add(new Room("Dining Room", Arrays.asList(new Point(7, 17), new Point(9, 13))));
+	    rooms.add(new Room("Billiard Room", Arrays.asList(new Point(18, 10), new Point(23, 14))));
+	    rooms.add(new Room("Library", Arrays.asList(new Point(21, 14), new Point(17, 17))));
+	    rooms.add(new Room("Study", Arrays.asList(new Point(18, 21))));
+	    rooms.add(new Room("Hall", Arrays.asList(new Point(16, 21), new Point(12, 18), new Point(13, 18))));
+	    rooms.add(new Room("Lounge", Arrays.asList(new Point(7, 19))));
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
 }
