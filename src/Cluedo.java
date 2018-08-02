@@ -1,8 +1,7 @@
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 
 public class Cluedo {
     private Player move;
@@ -86,6 +85,8 @@ public class Cluedo {
         weaponCards.add(new Card("Rope", "Weapon"));
         weaponCards.add(new Card("Spanner", "Weapon"));
 
+        generateSolutions(playerCards, roomCards, weaponCards);
+
         Collections.shuffle(playerCards);
         Collections.shuffle(roomCards);
         Collections.shuffle(weaponCards);
@@ -108,10 +109,31 @@ public class Cluedo {
             if (counter > players.size() - 1)
                 counter = 0;
         }
+
+        for (Player player : players) {
+            player.setPotentialSolutions();
+        }
+    }
+
+    private void generateSolutions(List<Card> playerCards, List<Card> roomCards, List<Card> weaponCards) {
+        List<List<Card>> sols = new ArrayList<>();
+        List<Card> sol = new ArrayList<>();
+        for (int i = 0; i < playerCards.size(); i++) {
+            for (int j = 0; j < roomCards.size(); j++) {
+                for (int k = 0; k < weaponCards.size(); k++) {
+                    sol = Arrays.asList(playerCards.get(i), roomCards.get(j), weaponCards.get(k));
+                    sols.add(sol);
+                }
+            }
+        }
+
+        for (Player player : players) {
+            player.setPotentialSolutions(sols);
+        }
     }
 
     private void weaponSetup() {
-        List<Room> roomShuffler = board.getRooms();
+       /* List<Room> roomShuffler = board.getRooms();
         Collections.shuffle(roomShuffler);
         roomShuffler.get(0).setWeapon(new Weapon("Candlestick", roomShuffler.get(0)));
         roomShuffler.get(1).setWeapon(new Weapon("Dagger", roomShuffler.get(1)));
@@ -119,6 +141,7 @@ public class Cluedo {
         roomShuffler.get(3).setWeapon(new Weapon("Revolver", roomShuffler.get(3)));
         roomShuffler.get(4).setWeapon(new Weapon("Rope", roomShuffler.get(4)));
         roomShuffler.get(5).setWeapon(new Weapon("Spanner", roomShuffler.get(5)));
+        */
     }
 
     public static void main(String... args) {
