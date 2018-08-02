@@ -33,7 +33,7 @@ public class Player {
         return name;
     }
 
-    public void move(int diceRoll, Board board){
+    public void move(int diceRoll, Board board) {
         List<Point> doors;
 
         Scanner reader = new Scanner(System.in);
@@ -49,10 +49,10 @@ public class Player {
         reader.close();
 
         double shortestPath = 1000;   //arbitrary large number
-        Point closestDoor = new Point(0,0);
-        for (Point p: doors){
-            double distance = Math.sqrt(Math.pow(Math.abs(this.coords.x - p.x),2) + Math.pow(Math.abs(this.coords.y - p.y),2));
-            if (distance < shortestPath){    //finds closest door as some rooms have multiple doors
+        Point closestDoor = new Point(0, 0);
+        for (Point p : doors) {
+            double distance = Math.sqrt(Math.pow(Math.abs(this.coords.x - p.x), 2) + Math.pow(Math.abs(this.coords.y - p.y), 2));
+            if (distance < shortestPath) {    //finds closest door as some rooms have multiple doors
                 shortestPath = distance;
                 closestDoor = p;
             }
@@ -63,19 +63,19 @@ public class Player {
 
         System.out.println("You need to move " + direction(dx, dy));
 
-        for (int i = 0; i < diceRoll; i++){
+        for (int i = 0; i < diceRoll; i++) {
             reader = new Scanner(System.in);
             while (true) {
                 System.out.println("Move: (w/a/s/d)");
                 String move = reader.next();
                 if (move.equals("w")) {
-                    if (moveDirection("upwards", diceRoll-i-1, 0, -1, board)) break;
+                    if (moveDirection("upwards", diceRoll - i - 1, 0, -1, board)) break;
                 } else if (move.equals("a")) {
-                    if (moveDirection("right", diceRoll-i-1, 1, 0, board)) break;
+                    if (moveDirection("right", diceRoll - i - 1, 1, 0, board)) break;
                 } else if (move.equals("s")) {
-                    if (moveDirection("downwards", diceRoll-i-1, 0, 1, board)) break;
+                    if (moveDirection("downwards", diceRoll - i - 1, 0, 1, board)) break;
                 } else if (move.equals("d")) {
-                    if (moveDirection("left", diceRoll-i-1, -1, 0, board)) break;
+                    if (moveDirection("left", diceRoll - i - 1, -1, 0, board)) break;
                 }
                 System.out.println("Invalid key pressed. Please press a valid key.");
             }
@@ -83,22 +83,22 @@ public class Player {
     }
 
 
-    private boolean moveDirection(String direction, int movesRemaining, int dx, int dy, Board board){
-        if (board.getBoard()[coords.x + dx][coords.y + dy] == '.'){
+    private boolean moveDirection(String direction, int movesRemaining, int dx, int dy, Board board) {
+        if (board.getBoard()[coords.x + dx][coords.y + dy] == '.') {
             //need to update board
 
             coords.translate(dx, dy);
-            System.out.println("You moved " + direction +". " + movesRemaining + " moves remaining.");
+            System.out.println("You moved " + direction + ". " + movesRemaining + " moves remaining.");
             squareChar = '.';
             return true;
-        } else if (doorSquare(coords.x + dx, coords.y + dy, board) != null){
+        } else if (doorSquare(coords.x + dx, coords.y + dy, board) != null) {
             System.out.println("You moved " + direction + ". " + movesRemaining + " moves remaining.");
-            System.out.println("You are outside the " + doorSquare(coords.x + dx,  coords.y + dy, board) + ".");
+            System.out.println("You are outside the " + doorSquare(coords.x + dx, coords.y + dy, board) + ".");
             Scanner reader = new Scanner(System.in);
-            while (true){
+            while (true) {
                 System.out.println("Would you like to go in? (yes/no)");
                 String response = reader.next();
-                if (response.toLowerCase().equals("yes")){
+                if (response.toLowerCase().equals("yes")) {
                     //need to update board
 
                     Point roomSquare = roomSquare(coords.x + dx, coords.y + dy, board);
@@ -106,7 +106,7 @@ public class Player {
                     room = board.getRooms().get(doorSquare(coords.x + dx, coords.y + dy, board).toLowerCase());
                     squareChar = board.getBoard()[roomSquare.x][roomSquare.y];
                     return true;
-                } else if (response.equals("no")){
+                } else if (response.equals("no")) {
                     squareChar = board.getBoard()[coords.x + dx][coords.y + dy];
                     coords.translate(dx, dy);
                     return true;
@@ -119,86 +119,164 @@ public class Player {
         }
     }
 
-    private String direction(int dx, int dy){
+    private String direction(int dx, int dy) {
         if (dx > 0 && dy == 0) return dx + " to the right.";     //east
         else if (dx > 0 && dy > 0) return dx + " to the right and " + dy + " downwards.";   //south-east
         else if (dx == 0 && dy > 0) return dy + " downwards.";      //south
-        else if (dx < 0 && dy > 0) return dx*-1 + " to the left and " + dy + " downwards.";    //south-west
-        else if (dx < 0 && dy == 0) return dx*-1 + " to the left.";      //west
-        else if (dx < 0 && dy < 0) return dx*-1 + " to the left and " + dy*-1 + " upwards.";    //north-west
-        else if (dx == 0 && dy < 0)return dy*-1 + " upwards.";    //north
-        else return dx + " to the right and " + dy*-1 + " upwards.";      //north-east
+        else if (dx < 0 && dy > 0) return dx * -1 + " to the left and " + dy + " downwards.";    //south-west
+        else if (dx < 0 && dy == 0) return dx * -1 + " to the left.";      //west
+        else if (dx < 0 && dy < 0) return dx * -1 + " to the left and " + dy * -1 + " upwards.";    //north-west
+        else if (dx == 0 && dy < 0) return dy * -1 + " upwards.";    //north
+        else return dx + " to the right and " + dy * -1 + " upwards.";      //north-east
     }
 
-    private String doorSquare(int x, int y, Board board){
+    private String doorSquare(int x, int y, Board board) {
         if (board.getBoard()[x][y] == 'K') return "Kitchen";
-        else if(board.getBoard()[x][y] == 'B')return "Ballroom";
-        else if (board.getBoard()[x][y] == 'C')return "Conservatory";
-        else if (board.getBoard()[x][y] == 'I')return "Billiard Room";
-        else if (board.getBoard()[x][y] == 'L')return "Library";
-        else if (board.getBoard()[x][y] == 'S')return "Study";
-        else if (board.getBoard()[x][y] == 'H')return "Hall";
-        else if (board.getBoard()[x][y] == 'O')return "Lounge";
-        else if (board.getBoard()[x][y] == 'D')return "Dining Room";
-        else if (board.getBoard()[x][y] == 'A')return "Accusation Room";
+        else if (board.getBoard()[x][y] == 'B') return "Ballroom";
+        else if (board.getBoard()[x][y] == 'C') return "Conservatory";
+        else if (board.getBoard()[x][y] == 'I') return "Billiard Room";
+        else if (board.getBoard()[x][y] == 'L') return "Library";
+        else if (board.getBoard()[x][y] == 'S') return "Study";
+        else if (board.getBoard()[x][y] == 'H') return "Hall";
+        else if (board.getBoard()[x][y] == 'O') return "Lounge";
+        else if (board.getBoard()[x][y] == 'D') return "Dining Room";
+        else if (board.getBoard()[x][y] == 'A') return "Accusation Room";
 
         return null;
     }
 
-    private Point roomSquare(int x, int y, Board board){
-        if (board.getBoard()[x+1][y] == 'R' || board.getBoard()[x+1][y] == '[' || board.getBoard()[x+1][y] == ']') return new Point(x+1, y);
-        else if (board.getBoard()[x][y+1] == 'R' || board.getBoard()[x][y+1] == '[' || board.getBoard()[x][y+1] == ']') return new Point(x, y+1);
-        else if (board.getBoard()[x-1][y] == 'R' || board.getBoard()[x-1][y] == '[' || board.getBoard()[x-1][y] == ']') return new Point(x-1, y);
-        else return new Point(x, y-1);
+    private Point roomSquare(int x, int y, Board board) {
+        if (board.getBoard()[x + 1][y] == 'R' || board.getBoard()[x + 1][y] == '[' || board.getBoard()[x + 1][y] == ']')
+            return new Point(x + 1, y);
+        else if (board.getBoard()[x][y + 1] == 'R' || board.getBoard()[x][y + 1] == '[' || board.getBoard()[x][y + 1] == ']')
+            return new Point(x, y + 1);
+        else if (board.getBoard()[x - 1][y] == 'R' || board.getBoard()[x - 1][y] == '[' || board.getBoard()[x - 1][y] == ']')
+            return new Point(x - 1, y);
+        else return new Point(x, y - 1);
     }
 
-    public void makeAccusation(){
+    public void makeAccusation() {
         System.out.println("Which player would you like to accuse: ");
 
         //not finished
     }
 
-    public void printKnownEvidence(List<String> p, List<String> w, List<String> r){
+    public void makeSuggestion() {
+        List<String> allPlayers = Arrays.asList("Miss Scarlett", "Col. Mustard", "Mrs. White", "Mr. Green", "Mrs. Peacock", "Prof. Plum");
+        List<String> allWeapons = Arrays.asList("Candlestick", "Dagger", "Lead Pipe", "Revolver", "Rope", "Spanner");
+        //List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
+        List<String> suggestion = new ArrayList<>();
+
+        Scanner reader = new Scanner(System.in);
+        while (true) {
+            System.out.println("Which player would you like to suggest: ");
+            for (int i = 0; i < allPlayers.size(); i++) {
+                System.out.println(i + 1 + allPlayers.get(i));
+            }
+            int r = reader.nextInt();
+            if (r < 1 || r > 6) {
+                System.out.println("Please enter a player between 1 and 6");
+            } else {
+                suggestion.add(allPlayers.get(r-1));
+                break;
+            }
+        }
+        reader.close();
+
+        reader = new Scanner(System.in);
+        while (true) {
+            System.out.println("Which weapon would you like to suggest: ");
+            for (int i = 0; i < allWeapons.size(); i++) {
+                System.out.println(i + 1 + allWeapons.get(i));
+            }
+            int r = reader.nextInt();
+            if (r < 1 || r > 6) {
+                System.out.println("Please enter a weapon between 1 and 6");
+            } else {
+                suggestion.add(allWeapons.get(r-1));
+                break;
+            }
+        }
+        reader.close();
+
+        suggestion.add(room.getName());
+        //player to left.refuteSuggestion
+    }
+
+    private void refuteSuggestion(List<String> suggestion) {
+        List<Card> refutables = new ArrayList<>();
+        System.out.println("The suggestion made is: ");
+        for (String s : suggestion) {
+            System.out.println(s);
+        }
+
+        System.out.println("\nYou have the following conflicting cards: ");
+        for (int i = 0; i < cards.size(); i++) {
+            for (String suggestive : suggestion) {
+                if (cards.get(i).equals(suggestive)) {
+                    refutables.add(cards.get(i));
+                    System.out.println(cards.get(i).getName());
+                }
+            }
+        }
+
+        Scanner reader = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nWhich card would you like to use to refute the suggestion?");
+            for (int i = 0; i < refutables.size(); i++) {
+                System.out.println(i + 1 + refutables.get(i).getName());
+            }
+            int r = reader.nextInt();
+            if (r < 1 || r > refutables.size()) {
+                System.out.println("Please enter a card between 1 and " + refutables.size());
+            } else {
+                //recieveRefutable() NOT FINISHED
+                break;
+            }
+        }
+    }
+
+    public void printKnownEvidence(List<String> p, List<String> w, List<String> r) {
         System.out.println("Suspects:");
-        for (String s: p){
+        for (String s : p) {
             System.out.println(evidence(s));
         }
 
         System.out.println("Weapons:");
-        for (String s: w){
+        for (String s : w) {
             System.out.println(evidence(s));
         }
 
         System.out.println("Rooms:");
-        for (String s: r){
+        for (String s : r) {
             System.out.println(evidence(s));
         }
     }
 
-    private String evidence(String suspect){
+    private String evidence(String suspect) {
         if (knownEvidence.contains(suspect)) return suspect + " [X]";
         else return suspect + " [ ]";
     }
 
     public void setPotentialSolutions(List<List<Card>> sols) {
-	    potentialSolutions = new ArrayList<>();
-	    potentialSolutions = sols;
+        potentialSolutions = new ArrayList<>();
+        potentialSolutions = sols;
     }
 
     public void setPotentialSolutions() {
-	    for (int i = 0; i < potentialSolutions.size(); i++) {
-	        for (Card card : cards) {
-	            if (card.equals(potentialSolutions.get(i).get(0)) || card.equals(potentialSolutions.get(i).get(1)) || card.equals(potentialSolutions.get(i).get(2))) {
-	                potentialSolutions.remove(i);
-	                i--;
-	                break;
+        for (int i = 0; i < potentialSolutions.size(); i++) {
+            for (Card card : cards) {
+                if (card.equals(potentialSolutions.get(i).get(0)) || card.equals(potentialSolutions.get(i).get(1)) || card.equals(potentialSolutions.get(i).get(2))) {
+                    potentialSolutions.remove(i);
+                    i--;
+                    break;
                 }
             }
         }
 
         //for debugging prints all combos
         for (List<Card> s : potentialSolutions) {
-	        System.out.println(s.get(0).getName());
+            System.out.println(s.get(0).getName());
             System.out.println(s.get(1).getName());
             System.out.println(s.get(2).getName() + "\n");
         }

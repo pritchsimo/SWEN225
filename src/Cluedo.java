@@ -138,7 +138,7 @@ public class Cluedo {
 
     private void generateSolutions(List<Card> playerCards, List<Card> roomCards, List<Card> weaponCards) {
         List<List<Card>> sols = new ArrayList<>();
-        List<Card> sol = new ArrayList<>();
+        List<Card> sol;
         for (int i = 0; i < playerCards.size(); i++) {
             for (int j = 0; j < roomCards.size(); j++) {
                 for (int k = 0; k < weaponCards.size(); k++) {

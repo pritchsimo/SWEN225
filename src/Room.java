@@ -16,6 +16,10 @@ public class Room {
 		this.weapon = weapon;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public List<Point> getDoorPos() {
 		return doorPos;
 	}
