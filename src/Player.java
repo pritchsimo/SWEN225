@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
@@ -8,7 +7,7 @@ public class Player {
 	private Point coords;
 	private String name;
 	private List<Card> cards;
-	private List<List<Card>> potentialSolutions;
+	private List<Card> potentialSolutions;
 	private boolean inRoom;
 	private char squareChar;       //represents what tile is when they are not on it
     private HashMap<String, List<Point>> roomNames;
@@ -25,10 +24,6 @@ public class Player {
 	public void giveCard(Card card) {
 		cards.add(card);
 	}
-
-	public String getName() {
-	    return name;
-    }
 
 	private void roomCoords(){
 	    roomNames = new HashMap<>();
@@ -142,7 +137,7 @@ public class Player {
 
     private String doorSquare(int x, int y, Board board){
 	    if (board.getBoard()[x][y] == 'K') return "Kitchen";
-	    else if (board.getBoard()[x][y] == 'B')return "Ballroom";
+	    else if(board.getBoard()[x][y] == 'B')return "Ballroom";
 	    else if (board.getBoard()[x][y] == 'C')return "Conservatory";
 	    else if (board.getBoard()[x][y] == 'I')return "Billiard Room";
 	    else if (board.getBoard()[x][y] == 'L')return "Library";
@@ -162,21 +157,4 @@ public class Player {
         else return new Point(x, y-1);
     }
 
-    public void setPotentialSolutions(List<List<Card>> sols) {
-	    potentialSolutions = new ArrayList<>();
-	    potentialSolutions = sols;
-    }
-
-    public void setPotentialSolutions() {
-	    for (int i = 0; i < potentialSolutions.size(); i++) {
-	        for (Card card : cards) {
-	            if (card.equals(potentialSolutions.get(i).get(0)) || card.equals(potentialSolutions.get(i).get(1)) || card.equals(potentialSolutions.get(i).get(2))) {
-	                potentialSolutions.remove(i);
-	                i--;
-	                break;
-                }
-            }
-        }
-        
-    }
 }

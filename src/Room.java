@@ -15,4 +15,8 @@ public class Room {
 	public void setWeapon(Weapon weapon) {
 		this.weapon = weapon;
 	}
+
+	public List<Point> getDoorPos() {
+		return doorPos;
+	}
 }

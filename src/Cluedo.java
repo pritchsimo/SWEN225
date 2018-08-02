@@ -1,7 +1,8 @@
 import java.awt.*;
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 public class Cluedo {
     private Player move;
@@ -85,8 +86,6 @@ public class Cluedo {
         weaponCards.add(new Card("Rope", "Weapon"));
         weaponCards.add(new Card("Spanner", "Weapon"));
 
-        generateSolutions(playerCards, roomCards, weaponCards);
-
         Collections.shuffle(playerCards);
         Collections.shuffle(roomCards);
         Collections.shuffle(weaponCards);
@@ -108,27 +107,6 @@ public class Cluedo {
             counter++;
             if (counter > players.size() - 1)
                 counter = 0;
-        }
-
-        for (Player player : players) {
-            player.setPotentialSolutions();
-        }
-    }
-
-    private void generateSolutions(List<Card> playerCards, List<Card> roomCards, List<Card> weaponCards) {
-        List<List<Card>> sols = new ArrayList<>();
-        List<Card> sol = new ArrayList<>();
-        for (int i = 0; i < playerCards.size(); i++) {
-            for (int j = 0; j < roomCards.size(); j++) {
-                for (int k = 0; k < weaponCards.size(); k++) {
-                    sol = Arrays.asList(playerCards.get(i), roomCards.get(j), weaponCards.get(k));
-                    sols.add(sol);
-                }
-            }
-        }
-
-        for (Player player : players) {
-            player.setPotentialSolutions(sols);
         }
     }
 

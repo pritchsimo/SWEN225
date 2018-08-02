@@ -1,11 +1,12 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Board {
 	private String boardRepresentation;
-	private List<Room> rooms;
+	private HashMap<String, Room> rooms;
 	private char[][] board;
 
 	public Board() {
@@ -84,19 +85,19 @@ public class Board {
 	}
 
 	private void addRooms() {
-		rooms = new ArrayList<>();
-		rooms.add(new Room("Kitchen", Arrays.asList(new Point(5, 8))));
-		rooms.add(new Room("Ballroom", Arrays.asList(new Point(8, 6), new Point(17, 6), new Point(10, 9), new Point(15, 9))));
-		rooms.add(new Room("Conservatory", Arrays.asList(new Point(19, 6))));
-		rooms.add(new Room("Dining Room", Arrays.asList(new Point(7, 17), new Point(9, 13))));
-		rooms.add(new Room("Billiard Room", Arrays.asList(new Point(18, 10), new Point(23, 14))));
-		rooms.add(new Room("Library", Arrays.asList(new Point(21, 14), new Point(17, 17))));
-		rooms.add(new Room("Study", Arrays.asList(new Point(18, 21))));
-		rooms.add(new Room("Hall", Arrays.asList(new Point(16, 21), new Point(12, 18), new Point(13, 18))));
-		rooms.add(new Room("Lounge", Arrays.asList(new Point(7, 19))));
+		rooms = new HashMap<>();
+		rooms.put("kitchen", new Room("Kitchen", Arrays.asList(new Point(5, 8))));
+		rooms.put("ballroom", new Room("Ballroom", Arrays.asList(new Point(8, 6), new Point(17, 6), new Point(10, 9), new Point(15, 9))));
+		rooms.put("conservatory", new Room("Conservatory", Arrays.asList(new Point(19, 6))));
+		rooms.put("dining room", new Room("Dining Room", Arrays.asList(new Point(7, 17), new Point(9, 13))));
+		rooms.put("billiard room", new Room("Billiard Room", Arrays.asList(new Point(18, 10), new Point(23, 14))));
+		rooms.put("library", new Room("Library", Arrays.asList(new Point(21, 14), new Point(17, 17))));
+		rooms.put("study", new Room("Study", Arrays.asList(new Point(18, 21))));
+		rooms.put("hall", new Room("Hall", Arrays.asList(new Point(16, 21), new Point(12, 18), new Point(13, 18))));
+		rooms.put("lounge", new Room("Lounge", Arrays.asList(new Point(7, 19))));
 	}
 
-	public List<Room> getRooms() {
+	public HashMap<String, Room> getRooms() {
 		return rooms;
 	}
 
