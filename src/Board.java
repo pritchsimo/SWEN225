@@ -13,11 +13,6 @@ public class Board {
 		addRooms();
 	}
 
-	public Board() {
-	    generateBoard();
-	    addRooms();
-    }
-
 	/** Generates the board based on the amount of players
 	 *
 	 *  # - Wall Block/Corner
