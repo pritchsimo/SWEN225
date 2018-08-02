@@ -281,4 +281,8 @@ public class Player {
             System.out.println(s.get(2).getName() + "\n");
         }
     }
+
+    public Room getRoom() {
+        return room;
+    }
 }
