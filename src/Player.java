@@ -9,8 +9,10 @@ public class Player {
     private String name;
     private List<Card> cards;
     private List<String> knownEvidence;
+    private List<List<Card>> potentialSolutions;
     private Room room;
     private char squareChar;       //represents what tile is when they are not on it
+
     private HashMap<String, List<Point>> roomNames;
 
     public Player(Point startCoord, String name) {
