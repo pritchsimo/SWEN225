@@ -3,6 +3,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
+//test
 public class Cluedo {
     private int move;
     private Board board;
