@@ -3,7 +3,6 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
-//test
 public class Cluedo {
     private int move;
     private Board board;
@@ -60,6 +59,20 @@ public class Cluedo {
 
         for (int i = 0; i < players.size(); i++) {
             System.out.println("Player " + i + ": " + players.get(i).getName());
+        }
+
+        //give each player a list of players in a clockwise direction
+        for (int j = 0; j < players.size(); j++) {
+            List<Player> plrs = new ArrayList<>();
+            int x = j + 1;
+            for (int k = 0; k < players.size() - 1; k++) {
+                if (x == players.size()) {
+                    x = 0;
+                }
+                plrs.add(players.get(x));
+                x++;
+            }
+            players.get(j).setNextPlayers(plrs);
         }
     }
 

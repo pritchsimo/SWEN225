@@ -9,7 +9,8 @@ public class Player {
     private String name;
     private List<Card> cards;
     private List<String> knownEvidence;
-    private List<List<Card>> potentialSolutions;
+    private List<List<Card>> potentialSolutions; //probably redundant
+    private List<Player> nextPlayers;
     private Room room;
     private char squareChar;       //represents what tile is when they are not on it
 
@@ -200,10 +201,16 @@ public class Player {
         reader.close();
 
         suggestion.add(room.getName());
-        //player to left.refuteSuggestion
+        for (int i = 0; i < nextPlayers.size(); i++) {
+            if (nextPlayers.get(i).refuteSuggestion(suggestion) != null) {
+                successfullyRefuted(refuteSuggestion(suggestion));
+                return;
+            }
+        }
+        System.out.println("No players were able to refute your suggestion...");
     }
 
-    private void refuteSuggestion(List<String> suggestion) {
+    public Card refuteSuggestion(List<String> suggestion) {
         List<Card> refutables = new ArrayList<>();
         System.out.println("The suggestion made is: ");
         for (String s : suggestion) {
@@ -234,6 +241,11 @@ public class Player {
                 break;
             }
         }
+        return null; /*FIXME*/
+    }
+
+    private void successfullyRefuted(Card card) {
+        knownEvidence.add(card.getName());
     }
 
     public void printKnownEvidence(List<String> p, List<String> w, List<String> r) {
@@ -275,14 +287,18 @@ public class Player {
         }
 
         //for debugging prints all combos
-        for (List<Card> s : potentialSolutions) {
+        /*for (List<Card> s : potentialSolutions) {
             System.out.println(s.get(0).getName());
             System.out.println(s.get(1).getName());
             System.out.println(s.get(2).getName() + "\n");
-        }
+        }*/
     }
 
     public Room getRoom() {
         return room;
+    }
+
+    public void setNextPlayers(List<Player> Players) {
+
     }
 }
