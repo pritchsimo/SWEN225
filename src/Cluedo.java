@@ -14,14 +14,18 @@ public class Cluedo {
     private boolean gameWon = false;
 
     public Cluedo() {
+        Scanner scanner = new Scanner(System.in);
         solution = new ArrayList<>();
         players = new ArrayList<>();
-        setup();
+        setup(scanner);
+
+        gameRun(scanner);
+        scanner.close();
     }
 
-    private void setup() {
+    private void setup(Scanner s) {
         board = new Board();
-        playerSetup();
+        playerSetup(s);
         listSetup();
         cardSetup();
         weaponSetup();
@@ -32,19 +36,17 @@ public class Cluedo {
         move = (int) (Math.random() * players.size());
     }
 
-    private void playerSetup() {
-        Scanner reader = new Scanner(System.in);
+    private void playerSetup(Scanner s) {
         int p;
         while (true) {
             System.out.println("Enter the number of players (Between 1 and 6)");
-            p = reader.nextInt();
+            p = s.nextInt();
             if (p > 6 || p < 1) {
                 System.out.println("Invalid number of players, there must be between 1 and 6 players.");
             } else {
                 break;
             }
         }
-        reader.close();
 
         List<Player> availablePlayers = new ArrayList<>();
         availablePlayers.add(new Player(new Point(8, 25), "Miss Scarlett"));
@@ -163,21 +165,22 @@ public class Cluedo {
         }
     }
 
-    public void gameRun(){
+    public void gameRun(Scanner s){
         while (!gameWon){
             Player current = players.get(move);
-            int diceRoll = (int) (Math.random() * 5) + 1;
-            System.out.println("It is " +  current.getName() + "'s turn. You roll a " + diceRoll + ".");
-            current.move(diceRoll, board);
+            int dice1 = (int) (Math.random() * 5) + 1;
+            int dice2 = (int) (Math.random() * 5) + 1;
+            System.out.println("It is " +  current.getName() + "'s turn. You roll a " + (dice1 + dice2) + ".");
+            current.move(dice1 + dice2, board, s);
 
-            if (current.getRoom() != null){
-                System.out.println("Would you like to make an accusation? (yes/no)");
-                Scanner reader = new Scanner(System.in);
-                String r = reader.next();
-                if (r.equals("yes")){
-                    current.makeAccusation();
-                }
-            }
+//            if (current.getRoom() != null){
+//                System.out.println("Would you like to make an accusation? (yes/no)");
+//                Scanner reader = new Scanner(System.in);
+//                String r = reader.next();
+//                if (r.equals("yes")){
+//                    current.makeAccusation();
+//                }
+//            }
         }
     }
 
