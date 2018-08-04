@@ -168,6 +168,7 @@ public class Player {
         //List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
         List<String> suggestion = new ArrayList<>();
 
+        //Player Suspect
         Scanner reader = new Scanner(System.in);
         while (true) {
             System.out.println("Which player would you like to suggest: ");
@@ -184,6 +185,7 @@ public class Player {
         }
         reader.close();
 
+        //Weapon Suspected
         reader = new Scanner(System.in);
         while (true) {
             System.out.println("Which weapon would you like to suggest: ");
@@ -200,7 +202,9 @@ public class Player {
         }
         reader.close();
 
+        //Room Suspected
         suggestion.add(room.getName());
+
         for (int i = 0; i < nextPlayers.size(); i++) {
             if (nextPlayers.get(i).refuteSuggestion(suggestion) != null) {
                 successfullyRefuted(refuteSuggestion(suggestion));
@@ -227,6 +231,8 @@ public class Player {
             }
         }
 
+        if (refutables.isEmpty()) return null;
+
         Scanner reader = new Scanner(System.in);
         while (true) {
             System.out.println("\nWhich card would you like to use to refute the suggestion?");
@@ -237,15 +243,14 @@ public class Player {
             if (r < 1 || r > refutables.size()) {
                 System.out.println("Please enter a card between 1 and " + refutables.size());
             } else {
-                //recieveRefutable() NOT FINISHED
-                break;
+                return (refutables.get(r - 1));
             }
         }
-        return null; /*FIXME*/
     }
 
     private void successfullyRefuted(Card card) {
         knownEvidence.add(card.getName());
+        System.out.println(card.getName() + " has been refuted");
     }
 
     public void printKnownEvidence(List<String> p, List<String> w, List<String> r) {
