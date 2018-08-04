@@ -195,7 +195,27 @@ public class Cluedo {
 //                    current.makeAccusation();
 //                }
 //            }
+
+            //TODO: Add accusation as a room
+            if (current.getRoom().getName().equals("Accusation")) {
+                List<String> accusation = current.makeAccusation();
+                for (int i = 0; i < accusation.size(); i++) {
+                    if (accusation.get(i) != solution.get(i).getName()) {
+                        doPlayerLose();
+                        break;
+                    }
+                }
+                doPlayerWin();
+            }
         }
+    }
+
+    private void doPlayerWin() {
+
+    }
+
+    private void doPlayerLose() {
+
     }
 
     public static void main(String... args) {
