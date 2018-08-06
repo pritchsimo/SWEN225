@@ -8,25 +8,30 @@ public class Cluedo {
     private Board board;
     private List<Card> solution;
     private List<Player> players;
+    List<Player> availablePlayers;
     private List<String> playerOptions;
     private List<String> weaponOptions;
     private List<String> roomOptions;
     private boolean gameWon = false;
 
-    public Cluedo() {
-        Scanner scanner = new Scanner(System.in);
+    public Cluedo(boolean test) {
+
         solution = new ArrayList<>();
         players = new ArrayList<>();
-        setup(scanner);
+        availablePlayers = new ArrayList<>();
 
-        gameRun(scanner);
-        scanner.close();
+        if (!test){
+            Scanner scanner = new Scanner(System.in);
+            setup(scanner);
+            gameRun(scanner);
+            scanner.close();
+        }
     }
 
     private void setup(Scanner s) {
         board = new Board();
-        playerSetup(s);
         listSetup();
+        playerSetup(s);
         cardSetup();
         weaponSetup();
         selectFirstTurn();
@@ -34,6 +39,16 @@ public class Cluedo {
 
     private void selectFirstTurn() {
         move = (int) (Math.random() * players.size());
+    }
+
+    /*For testing purposes*/
+    public void testSetup(int numPlayers, Point playerPos, int diceRoll, Scanner scanner){
+        for (int i = 0; i < numPlayers; i++) {
+            players.add(availablePlayers.get(i));
+        }
+
+        players.get(0).setCoords(playerPos);
+        players.get(0).move(diceRoll, board, scanner);
     }
 
     private void playerSetup(Scanner s) {
@@ -47,14 +62,6 @@ public class Cluedo {
                 break;
             }
         }
-
-        List<Player> availablePlayers = new ArrayList<>();
-        availablePlayers.add(new Player(new Point(8, 25), "Miss Scarlett"));
-        availablePlayers.add(new Player(new Point(1, 18), "Col. Mustard"));
-        availablePlayers.add(new Player(new Point(10, 1), "Mrs. White"));
-        availablePlayers.add(new Player(new Point(15, 1), "Mr. Green"));
-        availablePlayers.add(new Player(new Point(24, 7), "Mrs. Peacock"));
-        availablePlayers.add(new Player(new Point(24, 20), "Prof. Plum"));
 
         for (int i = 0; i < p; i++)
             players.add(availablePlayers.get(i));
@@ -105,6 +112,13 @@ public class Cluedo {
         roomOptions.add("Study");
         roomOptions.add("Hall");
         roomOptions.add("Lounge");
+
+        availablePlayers.add(new Player(new Point(8, 25), "Miss Scarlett"));
+        availablePlayers.add(new Player(new Point(1, 18), "Col. Mustard"));
+        availablePlayers.add(new Player(new Point(10, 1), "Mrs. White"));
+        availablePlayers.add(new Player(new Point(15, 1), "Mr. Green"));
+        availablePlayers.add(new Player(new Point(24, 7), "Mrs. Peacock"));
+        availablePlayers.add(new Player(new Point(24, 20), "Prof. Plum"));
     }
 
     private void cardSetup() {
@@ -187,6 +201,12 @@ public class Cluedo {
             System.out.println("It is " +  current.getName() + "'s turn. You roll a " + (dice1 + dice2) + ".");
             current.move(dice1 + dice2, board, s);
 
+            if (move < players.size()-1){
+                move++;
+            } else {
+                move = 0;
+            }
+
 //            if (current.getRoom() != null){
 //                System.out.println("Would you like to make an accusation? (yes/no)");
 //                Scanner reader = new Scanner(System.in);
@@ -219,6 +239,6 @@ public class Cluedo {
     }
 
     public static void main(String... args) {
-        Cluedo cluedo = new Cluedo();
+        Cluedo cluedo = new Cluedo(false);
     }
 }
