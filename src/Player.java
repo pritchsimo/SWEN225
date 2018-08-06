@@ -35,10 +35,10 @@ public class Player {
 
     public void move(int diceRoll, Board board, Scanner s) {
         List<Point> doors;
-
+        String r;
         while (true) {     //checks for correct input of room name
             System.out.println("Which room do you wish to head towards? ");
-            String r = s.nextLine();
+            r = s.nextLine();
             //doors = board.getRooms().get("kitchen").getDoorPos();
 
             if (board.getRooms().containsKey(r.toLowerCase())) {
@@ -70,16 +70,16 @@ public class Player {
                     System.out.println("You are in the " + room.getName() + ". Make an suggestion? (suggestion) or");
                 }
                 System.out.println("Move: (w/a/s/d)");
-                String move = s.nextLine();
-                if (move.equals("w")) {
+                r = s.nextLine();
+                if (r.equals("w")) {
                     if (moveDirection("upwards", diceRoll - i - 1, 0, -1, board, s)) break;
-                } else if (move.equals("a")) {
-                    if (moveDirection("right", diceRoll - i - 1, 1, 0, board, s)) break;
-                } else if (move.equals("s")) {
-                    if (moveDirection("downwards", diceRoll - i - 1, 0, 1, board, s)) break;
-                } else if (move.equals("d")) {
+                } else if (r.equals("a")) {
                     if (moveDirection("left", diceRoll - i - 1, -1, 0, board, s)) break;
-                } else if (move.equals("suggestion")){
+                } else if (r.equals("s")) {
+                    if (moveDirection("downwards", diceRoll - i - 1, 0, 1, board, s)) break;
+                } else if (r.equals("d")) {
+                    if (moveDirection("right", diceRoll - i - 1, 1, 0, board, s)) break;
+                } else if (r.equals("suggestion")){
                     makeSuggestion();
                     return;
                 }
@@ -88,11 +88,12 @@ public class Player {
         }
         if (room != null) {
             System.out.println("You are in the " + room.getName() + ". Make an suggestion? (yes/no)");
+            r = s.nextLine();
+            if (r.equals("yes")){
+                makeSuggestion();
+            }
         }
-        String r = s.nextLine();
-        if (r.equals("yes")){
-            makeSuggestion();
-        }
+
 
     }
 
@@ -101,6 +102,7 @@ public class Player {
         if (board.getBoard()[coords.x + dx][coords.y + dy] == '.') {
             coords.translate(dx, dy);
             System.out.println("You moved " + direction + ". " + movesRemaining + " moves remaining.");
+            //System.out.println("x: " + coords.x + " y: " + coords.y + " Token: " + board.getBoard()[coords.x][coords.y]);   //debugging
             //squareChar = '.';
             return true;
         } else if (doorSquare(coords.x + dx, coords.y + dy, board) != null && room == null) {
@@ -112,7 +114,7 @@ public class Player {
                 if (response.toLowerCase().equals("yes")) {
                     Point roomSquare = roomSquare(coords.x + dx, coords.y + dy, board);
                     coords.move(roomSquare.x, roomSquare.y);
-                    room = board.getRooms().get(doorSquare(coords.x + dx, coords.y + dy, board).toLowerCase());
+                    room = board.getRooms().get(doorSquare(coords.x, coords.y, board).toLowerCase());
                     //squareChar = board.getBoard()[roomSquare.x][roomSquare.y];
                     return true;
                 } else if (response.equals("no")) {
@@ -129,6 +131,8 @@ public class Player {
             return true;
         } else {
             System.out.println("There is a wall in the way. Please choose a different direction.");
+            System.out.println("x: " + coords.x + " y: " + coords.y + " Token: " + board.getBoard()[coords.x][coords.y]);   //debugging
+            System.out.println("Next x: " + (coords.x + dx) + " y: " + (coords.y + dy) + " Token: " + board.getBoard()[coords.x + dx][coords.y + dy]);    //debugging
             return false;
         }
     }
@@ -298,5 +302,9 @@ public class Player {
 
     public Room getRoom() {
         return room;
+    }
+
+    public void setCoords(Point coords) {
+        this.coords = coords;
     }
 }
