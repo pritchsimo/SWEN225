@@ -69,6 +69,20 @@ public class Cluedo {
         for (int i = 0; i < players.size(); i++) {
             System.out.println("Player " + i + ": " + players.get(i).getName());
         }
+
+        //give each player a list of players in a clockwise direction
+        for (int j = 0; j < players.size(); j++) {
+            List<Player> plrs = new ArrayList<>();
+            int x = j + 1;
+            for (int k = 0; k < players.size() - 1; k++) {
+                if (x == players.size()) {
+                    x = 0;
+                }
+                plrs.add(players.get(x));
+                x++;
+            }
+            players.get(j).setNextPlayers(plrs);
+        }
     }
 
     private void listSetup(){
@@ -201,7 +215,27 @@ public class Cluedo {
 //                    current.makeAccusation();
 //                }
 //            }
+
+            //TODO: Add accusation as a room
+            if (current.getRoom().getName().equals("Accusation")) {
+                List<String> accusation = current.makeAccusation();
+                for (int i = 0; i < accusation.size(); i++) {
+                    if (accusation.get(i) != solution.get(i).getName()) {
+                        doPlayerLose();
+                        break;
+                    }
+                }
+                doPlayerWin();
+            }
         }
+    }
+
+    private void doPlayerWin() {
+
+    }
+
+    private void doPlayerLose() {
+
     }
 
     public static void main(String... args) {

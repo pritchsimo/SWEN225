@@ -9,7 +9,8 @@ public class Player {
     private String name;
     private List<Card> cards;
     private List<String> knownEvidence;
-    private List<List<Card>> potentialSolutions;
+    private List<List<Card>> potentialSolutions; //probably redundant
+    private List<Player> nextPlayers;
     private Room room;
     //private char squareChar;       //represents what tile is when they are not on it
 
@@ -173,10 +174,61 @@ public class Player {
         else return new Point(x, y - 1);
     }
 
-    public void makeAccusation() {
-        System.out.println("Which player would you like to accuse: ");
+    public List<String> makeAccusation() {
+        //TODO: combine this method with makeSuggestion?
+        List<String> allPlayers = Arrays.asList("Miss Scarlett", "Col. Mustard", "Mrs. White", "Mr. Green", "Mrs. Peacock", "Prof. Plum");
+        List<String> allWeapons = Arrays.asList("Candlestick", "Dagger", "Lead Pipe", "Revolver", "Rope", "Spanner");
+        List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
+        List<String> accusation = new ArrayList<>();
 
-        //not finished
+        Scanner reader = new Scanner(System.in);
+        while (true) {
+            System.out.println("Which player would you like to accuse: ");
+            for (int i = 0; i < allPlayers.size(); i++) {
+                System.out.println(i + 1 + allPlayers.get(i));
+            }
+            int r = reader.nextInt();
+            if (r < 1 || r > 6) {
+                System.out.println("Please enter a player between 1 and 6");
+            } else {
+                accusation.add(allPlayers.get(r-1));
+                break;
+            }
+        }
+        reader.close();
+
+        //Weapon Suspected
+        reader = new Scanner(System.in);
+        while (true) {
+            System.out.println("Which weapon would you like to assert is the murder weapon: ");
+            for (int i = 0; i < allWeapons.size(); i++) {
+                System.out.println(i + 1 + allWeapons.get(i));
+            }
+            int r = reader.nextInt();
+            if (r < 1 || r > 6) {
+                System.out.println("Please enter a weapon between 1 and 6");
+            } else {
+                accusation.add(allWeapons.get(r-1));
+                break;
+            }
+        }
+        reader.close();
+
+        reader = new Scanner(System.in);
+        while(true) {
+            System.out.println("Which room would you like to assert the murder happened in: ");
+            for (int i = 0; i < allRooms.size(); i++) {
+                System.out.println(i + 1 + allRooms.get(i));
+            }
+            int r = reader.nextInt();
+            if (r < 1 || r > 9) {
+                System.out.println("Please enter a room between 1 and 9");
+            } else {
+                accusation.add(allRooms.get(r-1));
+                break;
+            }
+        }
+        return accusation;
     }
 
     public void makeSuggestion() {
@@ -185,6 +237,7 @@ public class Player {
         //List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
         List<String> suggestion = new ArrayList<>();
 
+        //Player Suspect
         Scanner reader = new Scanner(System.in);
         while (true) {
             System.out.println("Which player would you like to suggest: ");
@@ -201,6 +254,7 @@ public class Player {
         }
         reader.close();
 
+        //Weapon Suspected
         reader = new Scanner(System.in);
         while (true) {
             System.out.println("Which weapon would you like to suggest: ");
@@ -217,11 +271,19 @@ public class Player {
         }
         reader.close();
 
+        //Room Suspected
         suggestion.add(room.getName());
-        //player to left.refuteSuggestion
+
+        for (int i = 0; i < nextPlayers.size(); i++) {
+            if (nextPlayers.get(i).refuteSuggestion(suggestion) != null) {
+                successfullyRefuted(refuteSuggestion(suggestion));
+                return;
+            }
+        }
+        System.out.println("No players were able to refute your suggestion...");
     }
 
-    private void refuteSuggestion(List<String> suggestion) {
+    public Card refuteSuggestion(List<String> suggestion) {
         List<Card> refutables = new ArrayList<>();
         System.out.println("The suggestion made is: ");
         for (String s : suggestion) {
@@ -238,6 +300,8 @@ public class Player {
             }
         }
 
+        if (refutables.isEmpty()) return null;
+
         Scanner reader = new Scanner(System.in);
         while (true) {
             System.out.println("\nWhich card would you like to use to refute the suggestion?");
@@ -248,10 +312,14 @@ public class Player {
             if (r < 1 || r > refutables.size()) {
                 System.out.println("Please enter a card between 1 and " + refutables.size());
             } else {
-                //recieveRefutable() NOT FINISHED
-                break;
+                return (refutables.get(r - 1));
             }
         }
+    }
+
+    private void successfullyRefuted(Card card) {
+        knownEvidence.add(card.getName());
+        System.out.println(card.getName() + " has been refuted");
     }
 
     public void printKnownEvidence(List<String> p, List<String> w, List<String> r) {
@@ -293,18 +361,23 @@ public class Player {
         }
 
         //for debugging prints all combos
-//        for (List<Card> s : potentialSolutions) {
-//            System.out.println(s.get(0).getName());
-//            System.out.println(s.get(1).getName());
-//            System.out.println(s.get(2).getName() + "\n");
-//        }
+        /*for (List<Card> s : potentialSolutions) {
+            System.out.println(s.get(0).getName());
+            System.out.println(s.get(1).getName());
+            System.out.println(s.get(2).getName() + "\n");
+        }*/
+
     }
 
     public Room getRoom() {
         return room;
     }
 
+
     public void setCoords(Point coords) {
         this.coords = coords;
+    }
+    public void setNextPlayers(List<Player> players) {
+        nextPlayers = players;
     }
 }
