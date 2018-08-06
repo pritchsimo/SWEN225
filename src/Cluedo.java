@@ -218,9 +218,9 @@ public class Cluedo {
 
             //TODO: Add accusation as a room
             if (current.getRoom().getName().equals("Accusation")) {
-                List<String> accusation = current.makeAccusation();
+                List<String> accusation = current.makeSuggestion(true);
                 for (int i = 0; i < accusation.size(); i++) {
-                    if (accusation.get(i) != solution.get(i).getName()) {
+                    if (!accusation.get(i).equals(solution.get(i).getName())) {
                         doPlayerLose();
                         break;
                     }
@@ -235,7 +235,8 @@ public class Cluedo {
     }
 
     private void doPlayerLose() {
-
+        System.out.println("The accusation is incorrect, you have been removed from the game");
+        players.remove(move);
     }
 
     public static void main(String... args) {
