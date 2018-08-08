@@ -5,34 +5,21 @@ import java.util.List;
 
 public class Cluedo {
     private int move;
-    private Board board;
-    private List<Card> solution;
-    private List<Player> players;
-    List<Player> availablePlayers;
-    private List<String> playerOptions;
-    private List<String> weaponOptions;
-    private List<String> roomOptions;
+    private Board board = new Board();
+    private List<Card> solution = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
+    private List<Player> availablePlayers = new ArrayList<>();
+    private List<String> playerOptions = new ArrayList<>();
+    private List<String> weaponOptions = new ArrayList<>();
+    private List<String> roomOptions = new ArrayList<>();
     private boolean gameWon = false;
 
-    public Cluedo(boolean test) {
-
-        solution = new ArrayList<>();
-        players = new ArrayList<>();
-        availablePlayers = new ArrayList<>();
-
-        if (!test){
-            Scanner scanner = new Scanner(System.in);
-            setup(scanner);
-            gameRun(scanner);
-            scanner.close();
-        }
+    public Cluedo(){
+        listSetup();
     }
 
-    private void setup(Scanner s) {
-        board = new Board();
-        listSetup();
-        playerSetup(s);
-        cardSetup();
+    public void setup(boolean test) {
+        cardSetup(test);
         weaponSetup();
         selectFirstTurn();
     }
@@ -41,33 +28,13 @@ public class Cluedo {
         move = (int) (Math.random() * players.size());
     }
 
-    /*For testing purposes*/
-    public void testSetup(int numPlayers, Point playerPos, int diceRoll, Scanner scanner){
-        for (int i = 0; i < numPlayers; i++) {
-            players.add(availablePlayers.get(i));
-        }
 
-        players.get(0).setCoords(playerPos);
-        players.get(0).move(diceRoll, board, scanner);
-    }
-
-    private void playerSetup(Scanner s) {
-        int p;
-        while (true) {
-            System.out.println("Enter the number of players (Between 1 and 6)");
-            p = s.nextInt();
-            if (p > 6 || p < 1) {
-                System.out.println("Invalid number of players, there must be between 1 and 6 players.");
-            } else {
-                break;
-            }
-        }
-
-        for (int i = 0; i < p; i++)
+    public void playerSetup(int numPlayers) {
+        for (int i = 0; i < numPlayers; i++)
             players.add(availablePlayers.get(i));
 
-        for (int i = 0; i < players.size(); i++) {
-            System.out.println("Player " + i + ": " + players.get(i).getName());
+        for (int i = 0; i < players.size(); i++) {     //might add to text client
+            System.out.println("Player " + (i+1) + ": " + players.get(i).getName());
         }
 
         //give each player a list of players in a clockwise direction
@@ -86,7 +53,7 @@ public class Cluedo {
     }
 
     private void listSetup(){
-        playerOptions = new ArrayList<>();
+        //playerOptions = new ArrayList<>();
         playerOptions.add("Miss Scarlett");
         playerOptions.add("Col. Mustard");
         playerOptions.add("Mrs. White");
@@ -94,7 +61,7 @@ public class Cluedo {
         playerOptions.add("Mrs. Peacock");
         playerOptions.add("Prof. Plum");
 
-        weaponOptions = new ArrayList<>();
+        //weaponOptions = new ArrayList<>();
         weaponOptions.add("Candlestick");
         weaponOptions.add("Dagger");
         weaponOptions.add("Lead Pipe");
@@ -102,7 +69,7 @@ public class Cluedo {
         weaponOptions.add("Rope");
         weaponOptions.add("Spanner");
 
-        roomOptions = new ArrayList<>();
+        //roomOptions = new ArrayList<>();
         roomOptions.add("Kitchen");
         roomOptions.add("Ballroom");
         roomOptions.add("Conservatory");
@@ -121,7 +88,7 @@ public class Cluedo {
         availablePlayers.add(new Player(new Point(24, 20), "Prof. Plum"));
     }
 
-    private void cardSetup() {
+    private void cardSetup(boolean test) {
         List<Card> playerCards = new ArrayList<>();
         for (String s : playerOptions){
             playerCards.add(new Card(s, "Player"));
@@ -153,17 +120,18 @@ public class Cluedo {
         remainingCards.addAll(weaponCards);
 
         Collections.shuffle(remainingCards);
+        if (!test){
+            int counter = 0;
+            for (Card card : remainingCards) {
+                players.get(counter).giveCard(card);
+                counter++;
+                if (counter > players.size() - 1)
+                    counter = 0;
+            }
 
-        int counter = 0;
-        for (Card card : remainingCards) {
-            players.get(counter).giveCard(card);
-            counter++;
-            if (counter > players.size() - 1)
-                counter = 0;
-        }
-
-        for (Player player : players) {
-            player.setPotentialSolutions();
+            for (Player player : players) {
+                player.setPotentialSolutions();
+            }
         }
     }
 
@@ -193,41 +161,31 @@ public class Cluedo {
         }
     }
 
-    public void gameRun(Scanner s){
-        while (!gameWon){
-            Player current = players.get(move);
-            int dice1 = (int) (Math.random() * 5) + 1;
-            int dice2 = (int) (Math.random() * 5) + 1;
-            System.out.println("It is " +  current.getName() + "'s turn. You roll a " + (dice1 + dice2) + ".");
-            current.move(dice1 + dice2, board, s);
-
-            if (move < players.size()-1){
-                move++;
-            } else {
-                move = 0;
-            }
-
-//            if (current.getRoom() != null){
-//                System.out.println("Would you like to make an accusation? (yes/no)");
-//                Scanner reader = new Scanner(System.in);
-//                String r = reader.next();
-//                if (r.equals("yes")){
-//                    current.makeAccusation();
-//                }
-//            }
-
-            //TODO: Add accusation as a room
-            if (current.getRoom().getName().equals("Accusation")) {
-                List<String> accusation = current.makeSuggestion(true);
-                for (int i = 0; i < accusation.size(); i++) {
-                    if (!accusation.get(i).equals(solution.get(i).getName())) {
-                        doPlayerLose();
-                        break;
-                    }
-                }
-                doPlayerWin();
-            }
+    public Player getMove(){
+        if (move < players.size()-1){
+            move++;
+            return players.get(move);
         }
+        move = 0;
+        return players.get(move);
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public List<Player> getAvailablePlayers() {
+        return availablePlayers;
+    }
+
+
+    public Board getBoard() {
+        return board;
+    }
+
+
+    public boolean isGameWon() {
+        return gameWon;
     }
 
     private void doPlayerWin() {
@@ -239,7 +197,5 @@ public class Cluedo {
         players.remove(move);
     }
 
-    public static void main(String... args) {
-        Cluedo cluedo = new Cluedo(false);
-    }
+
 }
