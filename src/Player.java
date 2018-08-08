@@ -8,8 +8,8 @@ public class Player {
     private String name;
     private List<Card> cards;
     private List<String> knownEvidence;
-    private List<List<Card>> potentialSolutions; //probably redundant
     private List<Player> nextPlayers;
+    private List<String> currentSuggestion;
     private Room room;
     private Board board;
 
@@ -123,120 +123,20 @@ public class Player {
     }
 
 
-    public List<String> makeSuggestion(boolean isAccusation) {
-        List<String> allPlayers = Arrays.asList("Miss Scarlett", "Col. Mustard", "Mrs. White", "Mr. Green", "Mrs. Peacock", "Prof. Plum");
-        List<String> allWeapons = Arrays.asList("Candlestick", "Dagger", "Lead Pipe", "Revolver", "Rope", "Spanner");
-        List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
-        List<String> suggestion = new ArrayList<>();
+    public void setCurrentSuggestion(boolean isAccusation, List<String> suggestion) {
+        currentSuggestion = suggestion;
+    }
 
-        String keyword;
-        if (isAccusation) {
-            keyword = "accuse: ";
-        } else {
-            keyword = "suggest: ";
-        }
+    public List<String> getCurrentSuggestion() {
+        return currentSuggestion;
+    }
 
-        //Player Suspect
-        Scanner s = new Scanner(System.in);
-        while (true) {
-            System.out.println("Which player would you like to " + keyword);
-            for (int i = 0; i < allPlayers.size(); i++) {
-                System.out.println(i + 1 + ". "+allPlayers.get(i));
-            }
-            int r = s.nextInt();
-            if (r < 1 || r > 6) {
-                System.out.println("Please enter a player between 1 and 6");
-            } else {
-                suggestion.add(allPlayers.get(r-1));
-                break;
-            }
-        }
-
-        //Weapon Suspected
-        s = new Scanner(System.in);
-        while (true) {
-            System.out.println("Which weapon would you like to " + keyword);
-            for (int i = 0; i < allWeapons.size(); i++) {
-                System.out.println(i + 1 + ". " + allWeapons.get(i));
-            }
-            int r = s.nextInt();
-            if (r < 1 || r > 6) {
-                System.out.println("Please enter a weapon between 1 and 6");
-            } else {
-                suggestion.add(allWeapons.get(r-1));
-                break;
-            }
-        }
-
-        //Room Suspected
-        if (isAccusation) {
-            s = new Scanner(System.in);
-            while(true) {
-                System.out.println("Which room would you like to assert the murder happened in: ");
-                for (int i = 0; i < allRooms.size(); i++) {
-                    System.out.println(i + 1 + allRooms.get(i));
-                }
-                int r = s.nextInt();
-                if (r < 1 || r > 9) {
-                    System.out.println("Please enter a room between 1 and 9");
-                } else {
-                    suggestion.add(allRooms.get(r-1));
-                    break;
-                }
-            }
-        } else {
-            suggestion.add(room.getName());
-        }
-
-        if (isAccusation) {
-            return suggestion;
-        } else {
-            for (int i = 0; i < nextPlayers.size(); i++) {
-                if (nextPlayers.get(i).refuteSuggestion(suggestion) != null) {
-                    successfullyRefuted(refuteSuggestion(suggestion));
-                    return null;
-                }
-            }
-            System.out.println("No players were able to refute your suggestion...");
-        }
+    public Card refuteSuggestion(List<String> suggestion) {
+     //TODO redo player side of suggestions
         return null;
     }
 
-
-    public Card refuteSuggestion(List<String> suggestion) {
-        List<Card> refutables = new ArrayList<>();
-        System.out.println("The suggestion made is: ");
-        for (String string : suggestion) {
-            System.out.println(string);
-        }
-
-        System.out.println("\nYou have the following conflicting cards: ");
-        for (int i = 0; i < cards.size(); i++) {
-            for (String suggestive : suggestion) {
-                if (cards.get(i).equals(suggestive)) {
-                    refutables.add(cards.get(i));
-                    System.out.println(cards.get(i).getName());
-                }
-            }
-        }
-        if (refutables.isEmpty()) return null;
-
-        Scanner s = new Scanner(System.in);
-        while (true) {
-            System.out.println("\nWhich card would you like to use to refute the suggestion?");
-            for (int i = 0; i < refutables.size(); i++) {
-                System.out.println(i + 1 + refutables.get(i).getName());
-            }
-            int r = s.nextInt();
-            if (r < 1 || r > refutables.size()) {
-                System.out.println("Please enter a card between 1 and " + refutables.size());
-            } else {
-                return (refutables.get(r - 1));
-            }
-        }
-    }
-
-    private void successfullyRefuted(Card card) {
+    public void successfullyRefuted(Card card) {
         knownEvidence.add(card.getName());
         System.out.println(card.getName() + " has been refuted");
     }
@@ -263,29 +163,8 @@ public class Player {
         else return suspect + " [ ]";
     }
 
-    public void setPotentialSolutions(List<List<Card>> sols) {
-        potentialSolutions = new ArrayList<>();
-        potentialSolutions = sols;
-    }
-
-    public void setPotentialSolutions() {
-        for (int i = 0; i < potentialSolutions.size(); i++) {
-            for (Card card : cards) {
-                if (card.equals(potentialSolutions.get(i).get(0)) || card.equals(potentialSolutions.get(i).get(1)) || card.equals(potentialSolutions.get(i).get(2))) {
-                    potentialSolutions.remove(i);
-                    i--;
-                    break;
-                }
-            }
-        }
-
-        //for debugging prints all combos
-        /*for (List<Card> s : potentialSolutions) {
-            System.out.println(s.get(0).getName());
-            System.out.println(s.get(1).getName());
-            System.out.println(s.get(2).getName() + "\n");
-        }*/
-
+    public List<Card> getCards() {
+        return cards;
     }
 
     public Room getRoom() {
@@ -302,7 +181,26 @@ public class Player {
         return coords;
     }
 
+    public List<Player> getNextPlayers() {
+        return nextPlayers;
+    }
+
     public void setNextPlayers(List<Player> players) {
         nextPlayers = players;
     }
 }
+
+/* this should probably go in the main method after a suggestion is made?
+        if (isAccusation) {
+            return suggestion;
+        } else {
+            for (int i = 0; i < player.getNextPlayers().size(); i++) {
+                if (player.getNextPlayers().get(i).refuteSuggestion(suggestion) != null) {
+                 //   successfullyRefuted(refuteSuggestion(suggestion));
+                    return null;
+                }
+            }
+            System.out.println("No players were able to refute your suggestion...");
+        }
+        return null;
+        */
