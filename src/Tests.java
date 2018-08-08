@@ -1,6 +1,5 @@
+import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.jupiter.api.Test;
-
 import java.awt.*;
 import java.util.List;
 
@@ -19,7 +18,6 @@ public class Tests {
         p1.enterRoom();
         assertTrue(p1.getCoords().equals(new Point(9, 6)));
         assertTrue(p1.getRoom() != null);
-
     }
 
     private void setupMockPlayer(Cluedo game, Point coords, int playerNumber, List<Card> hand) {

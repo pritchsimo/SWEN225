@@ -2,6 +2,8 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TextClient {
@@ -129,6 +131,107 @@ public class TextClient {
         return false;
     }
 
+    private static void makeSuggestion(Player player, boolean isAccusation) {
+        List<String> allPlayers = Arrays.asList("Miss Scarlett", "Col. Mustard", "Mrs. White", "Mr. Green", "Mrs. Peacock", "Prof. Plum");
+        List<String> allWeapons = Arrays.asList("Candlestick", "Dagger", "Lead Pipe", "Revolver", "Rope", "Spanner");
+        List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
+        List<String> suggestion = new ArrayList<>();
+
+        if (isAccusation) System.out.println("Please enter your accusation: ");
+        else System.out.println("Please enter your suggestion");
+
+        //Player
+        while (true) {
+            int response = inputNumber("Which player?" + listToOutputString(allPlayers));
+            if (response < 1 || response > 6) {
+                System.out.println("Please enter a player between 1 and 6");
+            } else {
+                suggestion.add(allPlayers.get(response-1));
+                break;
+            }
+        }
+
+        //Weapon
+        while (true) {
+            int response = inputNumber("Which weapon?" + listToOutputString(allWeapons));
+            if (response < 1 || response > 6) {
+                System.out.println("Please enter a weapon between 1 and 6");
+            } else {
+                suggestion.add(allWeapons.get(response-1));
+                break;
+            }
+        }
+
+        //Room if accusation
+        if (isAccusation) {
+            while (true) {
+                int response = inputNumber("Which room?" + listToOutputString(allRooms));
+                if (response < 1 || response > 9) {
+                    System.out.println("Please enter a room between 1 and 9");
+                } else {
+                    suggestion.add(allRooms.get(response-1));
+                    break;
+                }
+            }
+            player.setCurrentSuggestion(true, suggestion);
+        } else {
+            suggestion.add(player.getRoom().getName());
+            player.setCurrentSuggestion(false, suggestion);
+        }
+    }
+
+    private static boolean refuteSuggestion(Player suggestor, Player refutor) {
+        List<String> refutables = new ArrayList<>();
+        List<String> suggestion = suggestor.getCurrentSuggestion();
+        List<Card> cards = refutor.getCards();
+
+        System.out.println("The suggestion made is: ");
+        for (String string : suggestor.getCurrentSuggestion()) {
+            System.out.println(string);
+        }
+
+        System.out.println("\nYou have the following conflicting cards: ");
+        for (int i = 0; i < refutor.getCards().size(); i++) {
+            for (String suggestive : suggestion) {
+                if (cards.get(i).getName().equals(suggestive)) {
+                    refutables.add(cards.get(i).getName());
+                    System.out.println(cards.get(i).getName());
+                }
+            }
+        }
+        if (refutables.isEmpty()) return false;
+
+        System.out.println("Which card would you like to use the refute the suggestion? ");
+        while (true) {
+            int response = inputNumber(listToOutputString(refutables));
+            if (response < 1 || response > cards.size()) {
+                System.out.println("Please enter a card between 1 and " + cards.size());
+            } else {
+                suggestor.successfullyRefuted(cards.get(response - 1));
+                System.out.println(cards.get(response - 1) + " has been refuted by " + refutor.getName());
+                return true;
+            }
+        }
+    }
+
+    /** Returns a string from a list of strings that can be displayed to the player when they need to make an input.
+     *  The format of the string is as follows:
+     *
+     *  "
+     *  1. String1
+     *  2. String2
+     *  3. String3
+     *  "
+     *
+     * **/
+    private static String listToOutputString(List<String> list) {
+        String s = "";
+        for (int i = 0; i < list.size(); i++) {
+            s += "\n" + i + ". " + list.get(i);
+        }
+        return s;
+    }
+
     public static void main(String... args) {
         Cluedo cluedo = new Cluedo();
         playerSetup(cluedo);
@@ -153,6 +256,17 @@ public class TextClient {
                 doPlayerWin();
             }*/
 
+            /* if a suggestion is made
+            makeSuggestion(current, false);
+            for (int i = 0; i < current.getNextPlayers().size(); i++) {
+                if (refuteSuggestion(current, current.getNextPlayers().get(i))) {
+                    break;
+                }
+                if (i == current.getNextPlayers().size() - 1) {
+                    System.out.println("No players were able to refute your suggestion");
+                }
+            }
+            */
 
         }
 
