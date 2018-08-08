@@ -142,6 +142,17 @@ public class TextClient {
             enterRoom(current, cluedo);
             movePlayer(current, (dice1+dice2), cluedo);
 
+/*            if (current.getRoom().getName().equals("Accusation")) {
+                List<String> accusation = current.makeSuggestion(true);
+                for (int i = 0; i < accusation.size(); i++) {
+                    if (!accusation.get(i).equals(solution.get(i).getName())) {
+                        doPlayerLose();
+                        break;
+                    }
+                }
+                doPlayerWin();
+            }*/
+
 
         }
 

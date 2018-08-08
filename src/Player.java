@@ -137,7 +137,7 @@ public class Player {
         }
 
         //Player Suspect
-        Scanner reader = new Scanner(System.in);
+        Scanner s = new Scanner(System.in);
         while (true) {
             System.out.println("Which player would you like to " + keyword);
             for (int i = 0; i < allPlayers.size(); i++) {
@@ -153,7 +153,7 @@ public class Player {
         }
 
         //Weapon Suspected
-        reader = new Scanner(System.in);
+        s = new Scanner(System.in);
         while (true) {
             System.out.println("Which weapon would you like to " + keyword);
             for (int i = 0; i < allWeapons.size(); i++) {
@@ -170,13 +170,13 @@ public class Player {
 
         //Room Suspected
         if (isAccusation) {
-            reader = new Scanner(System.in);
+            s = new Scanner(System.in);
             while(true) {
                 System.out.println("Which room would you like to assert the murder happened in: ");
                 for (int i = 0; i < allRooms.size(); i++) {
                     System.out.println(i + 1 + allRooms.get(i));
                 }
-                int r = reader.nextInt();
+                int r = s.nextInt();
                 if (r < 1 || r > 9) {
                     System.out.println("Please enter a room between 1 and 9");
                 } else {
@@ -221,7 +221,7 @@ public class Player {
         }
         if (refutables.isEmpty()) return null;
 
-        Scanner reader = new Scanner(System.in);
+        Scanner s = new Scanner(System.in);
         while (true) {
             System.out.println("\nWhich card would you like to use to refute the suggestion?");
             for (int i = 0; i < refutables.size(); i++) {
