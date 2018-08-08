@@ -8,7 +8,8 @@ public class Player {
     private String name;
     private List<Card> cards;
     private List<String> knownEvidence;
-    private List<List<Card>> potentialSolutions;
+    private List<List<Card>> potentialSolutions; //probably redundant
+    private List<Player> nextPlayers;
     private Room room;
     private Board board;
 
@@ -31,7 +32,6 @@ public class Player {
     public String getName() {
         return name;
     }
-
     public boolean translate(String direction, int distance){
         int dx = 0, dy = 0;
         if (direction.equals("left")) dx = -1;
@@ -81,6 +81,7 @@ public class Player {
         room = doorSquare(board.getBoard()[coords.x][coords.y]);
         coords.move(roomSquare.x, roomSquare.y);
         System.out.println("You are in the " + room.getName() + ". Make a suggestion? (suggestion) or");
+    
     }
 
     public String direction(int dx, int dy) {
@@ -121,20 +122,24 @@ public class Player {
         else return new Point(x, y - 1);
     }
 
-    public void makeAccusation() {
-        System.out.println("Which player would you like to accuse: ");
 
-        //not finished
-    }
-
-    public void makeSuggestion(Scanner s) {
+    public List<String> makeSuggestion(boolean isAccusation) {
         List<String> allPlayers = Arrays.asList("Miss Scarlett", "Col. Mustard", "Mrs. White", "Mr. Green", "Mrs. Peacock", "Prof. Plum");
         List<String> allWeapons = Arrays.asList("Candlestick", "Dagger", "Lead Pipe", "Revolver", "Rope", "Spanner");
-        //List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
+        List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
         List<String> suggestion = new ArrayList<>();
 
+        String keyword;
+        if (isAccusation) {
+            keyword = "accuse: ";
+        } else {
+            keyword = "suggest: ";
+        }
+
+        //Player Suspect
+        Scanner reader = new Scanner(System.in);
         while (true) {
-            System.out.println("Which player would you like to suggest: ");
+            System.out.println("Which player would you like to " + keyword);
             for (int i = 0; i < allPlayers.size(); i++) {
                 System.out.println(i + 1 + ". "+allPlayers.get(i));
             }
@@ -147,8 +152,10 @@ public class Player {
             }
         }
 
+        //Weapon Suspected
+        reader = new Scanner(System.in);
         while (true) {
-            System.out.println("Which weapon would you like to suggest: ");
+            System.out.println("Which weapon would you like to " + keyword);
             for (int i = 0; i < allWeapons.size(); i++) {
                 System.out.println(i + 1 + ". " + allWeapons.get(i));
             }
@@ -161,11 +168,42 @@ public class Player {
             }
         }
 
-        suggestion.add(room.getName());
-        //player to left.refuteSuggestion
+        //Room Suspected
+        if (isAccusation) {
+            reader = new Scanner(System.in);
+            while(true) {
+                System.out.println("Which room would you like to assert the murder happened in: ");
+                for (int i = 0; i < allRooms.size(); i++) {
+                    System.out.println(i + 1 + allRooms.get(i));
+                }
+                int r = reader.nextInt();
+                if (r < 1 || r > 9) {
+                    System.out.println("Please enter a room between 1 and 9");
+                } else {
+                    suggestion.add(allRooms.get(r-1));
+                    break;
+                }
+            }
+        } else {
+            suggestion.add(room.getName());
+        }
+
+        if (isAccusation) {
+            return suggestion;
+        } else {
+            for (int i = 0; i < nextPlayers.size(); i++) {
+                if (nextPlayers.get(i).refuteSuggestion(suggestion) != null) {
+                    successfullyRefuted(refuteSuggestion(suggestion));
+                    return null;
+                }
+            }
+            System.out.println("No players were able to refute your suggestion...");
+        }
+        return null;
     }
 
-    private void refuteSuggestion(List<String> suggestion, Scanner s) {
+
+    public Card refuteSuggestion(List<String> suggestion) {
         List<Card> refutables = new ArrayList<>();
         System.out.println("The suggestion made is: ");
         for (String string : suggestion) {
@@ -181,7 +219,9 @@ public class Player {
                 }
             }
         }
+        if (refutables.isEmpty()) return null;
 
+        Scanner reader = new Scanner(System.in);
         while (true) {
             System.out.println("\nWhich card would you like to use to refute the suggestion?");
             for (int i = 0; i < refutables.size(); i++) {
@@ -191,10 +231,14 @@ public class Player {
             if (r < 1 || r > refutables.size()) {
                 System.out.println("Please enter a card between 1 and " + refutables.size());
             } else {
-                //recieveRefutable() NOT FINISHED
-                break;
+                return (refutables.get(r - 1));
             }
         }
+    }
+
+    private void successfullyRefuted(Card card) {
+        knownEvidence.add(card.getName());
+        System.out.println(card.getName() + " has been refuted");
     }
 
     public void printKnownEvidence(List<String> p, List<String> w, List<String> r) {
@@ -236,22 +280,29 @@ public class Player {
         }
 
         //for debugging prints all combos
-//        for (List<Card> s : potentialSolutions) {
-//            System.out.println(s.get(0).getName());
-//            System.out.println(s.get(1).getName());
-//            System.out.println(s.get(2).getName() + "\n");
-//        }
+        /*for (List<Card> s : potentialSolutions) {
+            System.out.println(s.get(0).getName());
+            System.out.println(s.get(1).getName());
+            System.out.println(s.get(2).getName() + "\n");
+        }*/
+
     }
 
     public Room getRoom() {
         return room;
     }
 
+
     public void setCoords(Point coords) {
         this.coords = coords;
     }
 
+
     public Point getCoords() {
         return coords;
+    }
+
+    public void setNextPlayers(List<Player> players) {
+        nextPlayers = players;
     }
 }

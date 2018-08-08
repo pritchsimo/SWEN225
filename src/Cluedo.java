@@ -36,6 +36,20 @@ public class Cluedo {
         for (int i = 0; i < players.size(); i++) {     //might add to text client
             System.out.println("Player " + (i+1) + ": " + players.get(i).getName());
         }
+
+        //give each player a list of players in a clockwise direction
+        for (int j = 0; j < players.size(); j++) {
+            List<Player> plrs = new ArrayList<>();
+            int x = j + 1;
+            for (int k = 0; k < players.size() - 1; k++) {
+                if (x == players.size()) {
+                    x = 0;
+                }
+                plrs.add(players.get(x));
+                x++;
+            }
+            players.get(j).setNextPlayers(plrs);
+        }
     }
 
     private void listSetup(){
@@ -169,11 +183,19 @@ public class Cluedo {
         return board;
     }
 
+
     public boolean isGameWon() {
         return gameWon;
     }
 
+    private void doPlayerWin() {
 
+    }
+
+    private void doPlayerLose() {
+        System.out.println("The accusation is incorrect, you have been removed from the game");
+        players.remove(move);
+    }
 
 
 }
