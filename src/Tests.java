@@ -1,6 +1,8 @@
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -29,6 +31,20 @@ public class Tests {
         Player p2 = cluedo.getPlayers().get(1);
         Player p3 = cluedo.getPlayers().get(2);
 
+
+    }
+
+    @Test
+    public void testRefutableCards() {
+        Cluedo cluedo = new Cluedo();
+        List<Card> hand = Arrays.asList(new Card("Prof. Peacock", "Player"), new Card("Candlestick", "Weapon"), new Card("Lounge", "Room"));
+        setupMockPlayer(cluedo, null, 0, hand);
+        Player p1 = cluedo.getPlayers().get(0);
+        List<String> suggestion = Arrays.asList("Prof. Peacock", "Dagger", "Lounge");
+        List<String> correctAnswer = Arrays.asList("Prof. Peacock", "Lounge");
+
+        assertTrue(p1.refutableCards(suggestion).get(0).getName().equals(correctAnswer.get(0)));
+        assertTrue(p1.refutableCards(suggestion).get(1).getName().equals(correctAnswer.get(1)));
 
     }
 

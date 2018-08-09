@@ -12,6 +12,7 @@ public class Cluedo {
     private List<String> playerOptions = new ArrayList<>();
     private List<String> weaponOptions = new ArrayList<>();
     private List<String> roomOptions = new ArrayList<>();
+    private Map<Room, Weapon> weaponMap;
     private boolean gameWon = false;
 
     public Cluedo(){
@@ -38,17 +39,17 @@ public class Cluedo {
         }
 
         //give each player a list of players in a clockwise direction
-        for (int j = 0; j < players.size(); j++) {
+        for (int i = 0; i < players.size(); i++) {
             List<Player> plrs = new ArrayList<>();
-            int x = j + 1;
-            for (int k = 0; k < players.size() - 1; k++) {
-                if (x == players.size()) {
-                    x = 0;
+            int k = i + 1;
+            for (int j = 0; j < players.size() - 1; j++) {
+                if (k == players.size()) {
+                    k = 0;
                 }
-                plrs.add(players.get(x));
-                x++;
+                plrs.add(players.get(k));
+                k++;
             }
-            players.get(j).setNextPlayers(plrs);
+            players.get(i).setNextPlayers(plrs);
         }
     }
 
@@ -134,8 +135,11 @@ public class Cluedo {
         List<Room> roomShuffler = new ArrayList<>(rooms);
         Collections.shuffle(roomShuffler);
         for (int i = 0; i < 6; i++){
-            roomShuffler.get(i).setWeapon(new Weapon(weaponOptions.get(i), roomShuffler.get(i)));
+            Weapon w = new Weapon(weaponOptions.get(i), roomShuffler.get(i));
+            roomShuffler.get(i).setWeapon(w);
+            weaponMap.put(roomShuffler.get(i), w);
         }
+        //TODO swap weapons/peoples
     }
 
     public Player getMove(){
@@ -164,15 +168,4 @@ public class Cluedo {
     public boolean isGameWon() {
         return gameWon;
     }
-
-    private void doPlayerWin() {
-
-    }
-
-    private void doPlayerLose() {
-        System.out.println("The accusation is incorrect, you have been removed from the game");
-        players.remove(move);
-    }
-
-
 }

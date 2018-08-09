@@ -124,7 +124,7 @@ public class Player {
     }
 
 
-    public void setCurrentSuggestion(boolean isAccusation, List<String> suggestion) {
+    public void setCurrentSuggestion(List<String> suggestion) {
         currentSuggestion = suggestion;
     }
 
