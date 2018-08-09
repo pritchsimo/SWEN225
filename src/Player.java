@@ -32,6 +32,7 @@ public class Player {
     public String getName() {
         return name;
     }
+
     public boolean translate(String direction, int distance){
         int dx = 0, dy = 0;
         if (direction.equals("left")) dx = -1;
@@ -127,6 +128,22 @@ public class Player {
         currentSuggestion = suggestion;
     }
 
+    public List<Card> refutableCards(List<String> suggestion){
+        List<Card> refutables = new ArrayList<>();
+
+        System.out.println("\nYou have the following conflicting cards: ");
+        for (int i = 0; i < cards.size(); i++) {
+            for (String suggestive : suggestion) {
+                if (cards.get(i).getName().equals(suggestive)) {
+                    refutables.add(cards.get(i));
+                    System.out.println(cards.get(i).getName());
+                }
+            }
+        }
+        return refutables;
+    }
+
+
     public List<String> getCurrentSuggestion() {
         return currentSuggestion;
     }
@@ -184,18 +201,3 @@ public class Player {
         nextPlayers = players;
     }
 }
-
-/* this should probably go in the main method after a suggestion is made?
-        if (isAccusation) {
-            return suggestion;
-        } else {
-            for (int i = 0; i < player.getNextPlayers().size(); i++) {
-                if (player.getNextPlayers().get(i).refuteSuggestion(suggestion) != null) {
-                 //   successfullyRefuted(refuteSuggestion(suggestion));
-                    return null;
-                }
-            }
-            System.out.println("No players were able to refute your suggestion...");
-        }
-        return null;
-        */

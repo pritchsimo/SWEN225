@@ -75,39 +75,38 @@ public class TextClient {
 
 
         for (int i = 0; i < diceRoll; i++) {
-            //while (true) {
             if (player.getRoom() != null) {
-                System.out.println("You are in the " + player.getRoom().getName() + ". Make a suggestion? (suggestion) or");
+                System.out.println("You are in the " + player.getRoom().getName() + ". Do you wish to stop moving? (yes) or ");
 
             }
             while (true){
                 response = inputString("Move: (w/a/s/d)");
                 if (response.equals("w")) {
                     if (player.translate("upwards", 1)) {
-                        System.out.println("You moved upwards." + (diceRoll-i-1) + " moves remaining.");
+                        System.out.println("You moved upwards. " + (diceRoll-i-1) + " moves remaining.");
                         break;
+                    } else {
+
                     }
                 } else if (response.equals("a")) {
                     if (player.translate("left", 1)) {
-                        System.out.println("You moved left." + (diceRoll-i-1) + " moves remaining.");
+                        System.out.println("You moved left. " + (diceRoll-i-1) + " moves remaining.");
                         break;
                     }
                 } else if (response.equals("s")) {
                     if (player.translate("downwards", 1)) {
-                        System.out.println("You moved downwards." + (diceRoll-i-1) + " moves remaining.");
+                        System.out.println("You moved downwards. " + (diceRoll-i-1) + " moves remaining.");
                         break;
                     }
                 } else if (response.equals("d")) {
                     if (player.translate("right", 1)) {
-                        System.out.println("You moved right." + (diceRoll-i-1) + " moves remaining.");
+                        System.out.println("You moved right. " + (diceRoll-i-1) + " moves remaining.");
                         break;
                     }
-                } else if (response.equals("suggestion") && player.getRoom() != null){
-                    //player.makeSuggestion();         need to fix
+                } else if (response.equals("yes")){
                     return;
                 }
                 System.out.println("Invalid input. Please enter a valid input.");
-                //}
             }
         }
     }
@@ -142,6 +141,11 @@ public class TextClient {
         List<String> allWeapons = Arrays.asList("Candlestick", "Dagger", "Lead Pipe", "Revolver", "Rope", "Spanner");
         List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
         List<String> suggestion = new ArrayList<>();
+
+        if (!isAccusation){
+            String input = inputString("Do you wish to make an suggestion? ");
+            if (input.equals("no")) return;
+        }
 
         if (isAccusation) System.out.println("Please enter your accusation: ");
         else System.out.println("Please enter your suggestion");
@@ -193,36 +197,37 @@ public class TextClient {
      * @return true/false depending on weather the player was able to refute the suggestion
      */
     private static boolean refuteSuggestion(Player suggestor, Player refutor) {
-        List<String> refutables = new ArrayList<>();
         List<String> suggestion = suggestor.getCurrentSuggestion();
-        List<Card> cards = refutor.getCards();
 
         System.out.println("The suggestion made is: ");
         for (String string : suggestor.getCurrentSuggestion()) {
             System.out.println(string);
         }
 
-        System.out.println("\nYou have the following conflicting cards: ");
-        for (int i = 0; i < refutor.getCards().size(); i++) {
-            for (String suggestive : suggestion) {
-                if (cards.get(i).getName().equals(suggestive)) {
-                    refutables.add(cards.get(i).getName());
-                    System.out.println(cards.get(i).getName());
-                }
-            }
-        }
+        List<Card> refutables = refutor.refutableCards(suggestion);
         if (refutables.isEmpty()) return false;
+
+        List<String> refutableStrings = new ArrayList<>();
+        for (Card c : refutables) {
+            refutableStrings.add(c.getName());
+        }
 
         System.out.println("Which card would you like to use the refute the suggestion? ");
         while (true) {
-            int response = inputNumber(listToOutputString(refutables));
-            if (response < 1 || response > cards.size()) {
-                System.out.println("Please enter a card between 1 and " + cards.size());
-            } else {
-                suggestor.successfullyRefuted(cards.get(response - 1));
-                System.out.println(cards.get(response - 1) + " has been refuted by " + refutor.getName());
-                return true;
-            }
+            int response = inputNumber(listToOutputString(refutableStrings));
+            if (refuteSelection(response, suggestor, refutor, refutables)) break;
+        }
+        return true;
+    }
+
+    private static boolean refuteSelection(int response, Player suggestor, Player refutor, List<Card> cards){
+        if (response < 1 || response > cards.size()) {
+            System.out.println("Please enter a card between 1 and " + cards.size());
+            return false;
+        } else {
+            suggestor.successfullyRefuted(cards.get(response - 1));
+            System.out.println(cards.get(response - 1).getName() + " has been refuted by " + refutor.getName());
+            return true;
         }
     }
 
@@ -266,19 +271,12 @@ public class TextClient {
             enterRoom(current, cluedo);
             movePlayer(current, (dice1+dice2), cluedo);
 
-/*            if (current.getRoom().getName().equals("Accusation")) {
-                List<String> accusation = current.makeSuggestion(true);
-                for (int i = 0; i < accusation.size(); i++) {
-                    if (!accusation.get(i).equals(solution.get(i).getName())) {
-                        doPlayerLose();
-                        break;
-                    }
-                }
-                doPlayerWin();
-            }*/
+            if (current.getRoom() != null){
+                makeSuggestion(current, false);
+                suggest(current);
+            }
 
-//            makeSuggestion(current, false)
-//            suggest(current);
+
 
         }
 
