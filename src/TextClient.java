@@ -131,6 +131,12 @@ public class TextClient {
         return false;
     }
 
+    /**
+     * Allows a player to make a suggestion about the murder using a person, weapon or room
+     *
+     * @param player the player making the suggestion
+     * @param isAccusation the suggestion will be differend depending on weather it is a suggestion or an accusation
+     */
     private static void makeSuggestion(Player player, boolean isAccusation) {
         List<String> allPlayers = Arrays.asList("Miss Scarlett", "Col. Mustard", "Mrs. White", "Mr. Green", "Mrs. Peacock", "Prof. Plum");
         List<String> allWeapons = Arrays.asList("Candlestick", "Dagger", "Lead Pipe", "Revolver", "Rope", "Spanner");
@@ -180,6 +186,12 @@ public class TextClient {
         }
     }
 
+    /**
+     * Allows the refutor to refute the suggestion made by a player
+     * @param suggestor the player making the suggestion
+     * @param refutor the player that has the opportunity to refute the suggestion
+     * @return true/false depending on weather the player was able to refute the suggestion
+     */
     private static boolean refuteSuggestion(Player suggestor, Player refutor) {
         List<String> refutables = new ArrayList<>();
         List<String> suggestion = suggestor.getCurrentSuggestion();
@@ -212,6 +224,15 @@ public class TextClient {
                 return true;
             }
         }
+    }
+
+    private static void suggest(Player current) {
+        for (int i = 0; i < current.getNextPlayers().size(); i++) {
+            if (refuteSuggestion(current, current.getNextPlayers().get(i))) {
+                return;
+            }
+        }
+        System.out.println("No players were able to refute your suggestion");
     }
 
     /** Returns a string from a list of strings that can be displayed to the player when they need to make an input.
@@ -256,20 +277,10 @@ public class TextClient {
                 doPlayerWin();
             }*/
 
-            /* if a suggestion is made
-            makeSuggestion(current, false);
-            for (int i = 0; i < current.getNextPlayers().size(); i++) {
-                if (refuteSuggestion(current, current.getNextPlayers().get(i))) {
-                    break;
-                }
-                if (i == current.getNextPlayers().size() - 1) {
-                    System.out.println("No players were able to refute your suggestion");
-                }
-            }
-            */
+//            makeSuggestion(current, false)
+//            suggest(current);
 
         }
-
 
     }
 }

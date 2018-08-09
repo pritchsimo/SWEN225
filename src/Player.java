@@ -131,11 +131,6 @@ public class Player {
         return currentSuggestion;
     }
 
-    public Card refuteSuggestion(List<String> suggestion) {
-     //TODO redo player side of suggestions
-        return null;
-    }
-
     public void successfullyRefuted(Card card) {
         knownEvidence.add(card.getName());
         System.out.println(card.getName() + " has been refuted");
