@@ -20,6 +20,18 @@ public class Tests {
         assertTrue(p1.getRoom() != null);
     }
 
+    @Test
+    public void test2(){
+        Cluedo cluedo = new Cluedo();
+        setupMockPlayer(cluedo, new Point(7, 6), 0, null);
+        cluedo.setup(true);
+        Player p1 = cluedo.getPlayers().get(0);
+        Player p2 = cluedo.getPlayers().get(1);
+        Player p3 = cluedo.getPlayers().get(2);
+
+
+    }
+
     private void setupMockPlayer(Cluedo game, Point coords, int playerNumber, List<Card> hand) {
         Player p = new Player(coords, game.getAvailablePlayers().get(playerNumber).getName());
         game.getPlayers().add(p);
