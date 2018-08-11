@@ -46,6 +46,9 @@ public class Player {
             if (room == null && (square == '.' || doorSquare(square) != null)) {
                 coords.translate(dx, dy);
                 //return true;
+            } else if (room == null && !(square == '.' || doorSquare(square) != null)) {
+                System.out.println("There is a wall in the way. Please choose a different direction.");
+                return false;
             } else if (room != null) {
                 if (square == 'R') {
                     coords.translate(dx, dy);
@@ -81,7 +84,6 @@ public class Player {
         Point roomSquare = roomSquare(coords.x, coords.y);
         room = doorSquare(board.getBoard()[coords.x][coords.y]);
         coords.move(roomSquare.x, roomSquare.y);
-        System.out.println("You are in the " + room.getName() + ". Make a suggestion? (suggestion) or");
     
     }
 
@@ -131,7 +133,7 @@ public class Player {
     public List<Card> refutableCards(List<String> suggestion){
         List<Card> refutables = new ArrayList<>();
 
-        System.out.println("\nYou have the following conflicting cards: ");
+        System.out.println("\n" + this.name + ", you have the following conflicting cards: ");
         for (int i = 0; i < cards.size(); i++) {
             for (String suggestive : suggestion) {
                 if (cards.get(i).getName().equals(suggestive)) {
@@ -150,29 +152,6 @@ public class Player {
 
     public void successfullyRefuted(Card card) {
         knownEvidence.add(card.getName());
-        System.out.println(card.getName() + " has been refuted");
-    }
-
-    public void printKnownEvidence(List<String> p, List<String> w, List<String> r) {
-        System.out.println("Suspects:");
-        for (String s : p) {
-            System.out.println(evidence(s));
-        }
-
-        System.out.println("Weapons:");
-        for (String s : w) {
-            System.out.println(evidence(s));
-        }
-
-        System.out.println("Rooms:");
-        for (String s : r) {
-            System.out.println(evidence(s));
-        }
-    }
-
-    private String evidence(String suspect) {
-        if (knownEvidence.contains(suspect)) return suspect + " [X]";
-        else return suspect + " [ ]";
     }
 
     public List<Card> getCards() {
@@ -199,5 +178,9 @@ public class Player {
 
     public void setNextPlayers(List<Player> players) {
         nextPlayers = players;
+    }
+
+    public List<String> getKnownEvidence() {
+        return knownEvidence;
     }
 }

@@ -175,4 +175,15 @@ public class Cluedo {
     }
 
 
+    public List<String> getPlayerOptions() {
+        return playerOptions;
+    }
+
+    public List<String> getWeaponOptions() {
+        return weaponOptions;
+    }
+
+    public List<String> getRoomOptions() {
+        return roomOptions;
+    }
 }
