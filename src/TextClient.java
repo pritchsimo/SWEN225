@@ -192,10 +192,10 @@ public class TextClient {
                     break;
                 }
             }
-            player.setCurrentSuggestion(true, suggestion);
+            player.setCurrentSuggestion(suggestion);
         } else {
             suggestion.add(player.getRoom().getName());
-            player.setCurrentSuggestion(false, suggestion);
+            player.setCurrentSuggestion(suggestion);
         }
     }
 
@@ -209,13 +209,14 @@ public class TextClient {
         List<String> suggestion = suggestor.getCurrentSuggestion();
 
         System.out.println("The suggestion made is: ");
-        for (String string : suggestor.getCurrentSuggestion()) {
+        for (String string : suggestion) {
             System.out.println(string);
         }
 
         List<Card> refutables = refutor.refutableCards(suggestion);
         if (refutables.isEmpty()) return false;
 
+        //converts refutables to a list of strings for printing purposes
         List<String> refutableStrings = new ArrayList<>();
         for (Card c : refutables) {
             refutableStrings.add(c.getName());
