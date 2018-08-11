@@ -168,4 +168,26 @@ public class Cluedo {
     public boolean isGameWon() {
         return gameWon;
     }
+
+    private void doPlayerWin() {
+
+    }
+
+    private void doPlayerLose() {
+        System.out.println("The accusation is incorrect, you have been removed from the game");
+        players.remove(move);
+    }
+
+
+    public List<String> getPlayerOptions() {
+        return playerOptions;
+    }
+
+    public List<String> getWeaponOptions() {
+        return weaponOptions;
+    }
+
+    public List<String> getRoomOptions() {
+        return roomOptions;
+    }
 }
