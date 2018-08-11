@@ -76,39 +76,44 @@ public class TextClient {
 
 
         for (int i = 0; i < diceRoll; i++) {
-            if (player.getRoom() != null) {
-                System.out.println("You are in the " + player.getRoom().getName() + ". Do you wish to stop moving? (yes) or ");
+            if (!enterRoom(player, game)){
+                if (player.getRoom() != null) {
+                    System.out.println("You are in the " + player.getRoom().getName() + ". Do you wish to stop moving? (yes) or ");
 
-            }
-            while (true){
-                response = inputString("Move: (w/a/s/d)");
-                if (response.equals("w")) {
-                    if (player.translate("upwards", 1)) {
-                        System.out.println("You moved upwards. " + (diceRoll-i-1) + " moves remaining.");
-                        break;
-                    } else {
-
-                    }
-                } else if (response.equals("a")) {
-                    if (player.translate("left", 1)) {
-                        System.out.println("You moved left. " + (diceRoll-i-1) + " moves remaining.");
-                        break;
-                    }
-                } else if (response.equals("s")) {
-                    if (player.translate("downwards", 1)) {
-                        System.out.println("You moved downwards. " + (diceRoll-i-1) + " moves remaining.");
-                        break;
-                    }
-                } else if (response.equals("d")) {
-                    if (player.translate("right", 1)) {
-                        System.out.println("You moved right. " + (diceRoll-i-1) + " moves remaining.");
-                        break;
-                    }
-                } else if (response.equals("yes")){
-                    return;
                 }
-                System.out.println("Invalid input. Please enter a valid input.");
+                while (true){
+                    response = inputString("Move: (w/a/s/d)");
+                    if (response.equals("w")) {
+                        if (player.translate("upwards", 1)) {
+                            System.out.println("You moved upwards. " + (diceRoll-i-1) + " moves remaining.");
+                            break;
+                        }
+
+                    } else if (response.equals("a")) {
+                        if (player.translate("left", 1)) {
+                            System.out.println("You moved left. " + (diceRoll-i-1) + " moves remaining.");
+                            break;
+                        }
+                    } else if (response.equals("s")) {
+                        if (player.translate("downwards", 1)) {
+                            System.out.println("You moved downwards. " + (diceRoll-i-1) + " moves remaining.");
+                            break;
+                        }
+                    } else if (response.equals("d")) {
+                        if (player.translate("right", 1)) {
+                            System.out.println("You moved right. " + (diceRoll-i-1) + " moves remaining.");
+                            break;
+                        }
+                    } else if (response.equals("yes") && player.getRoom() != null){
+                        System.out.println();
+                        return;
+                    } else if (!response.equals("w") || !response.equals("a") || !response.equals("s") || !response.equals("d") || !(response.equals("yes") && player.getRoom() != null)){
+                        System.out.println("Invalid input. Please enter a valid input.");
+                    }
+
+                }
             }
+
         }
     }
 
@@ -119,10 +124,11 @@ public class TextClient {
             while (true) {
                 String response = inputString("Would you like to go in? (yes/no)");
                 if (response.toLowerCase().equals("yes")) {
+                    System.out.println();
                     player.enterRoom();
                     return true;
                 } else if (response.equals("no")) {
-                    return true;
+                    return false;
                 }
                 System.out.println("Please enter correct response.");
 
@@ -137,16 +143,19 @@ public class TextClient {
      * @param player the player making the suggestion
      * @param isAccusation the suggestion will be differend depending on weather it is a suggestion or an accusation
      */
-    private static void makeSuggestion(Player player, boolean isAccusation) {
+    private static void makeSuggestion(Player player, boolean isAccusation, Cluedo game) {
         List<String> allPlayers = Arrays.asList("Miss Scarlett", "Col. Mustard", "Mrs. White", "Mr. Green", "Mrs. Peacock", "Prof. Plum");
         List<String> allWeapons = Arrays.asList("Candlestick", "Dagger", "Lead Pipe", "Revolver", "Rope", "Spanner");
         List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
         List<String> suggestion = new ArrayList<>();
 
         if (!isAccusation){
-            String input = inputString("Do you wish to make an suggestion? ");
+            String input = inputString("Do you wish to make an suggestion? (yes/no)");
             if (input.equals("no")) return;
         }
+
+        System.out.println("\nYour evidence:\n");
+        printKnownEvidence(player, game.getPlayerOptions(), game.getWeaponOptions(), game.getRoomOptions());
 
         if (isAccusation) System.out.println("Please enter your accusation: ");
         else System.out.println("Please enter your suggestion");
@@ -279,9 +288,35 @@ public class TextClient {
     private static String listToOutputString(List<String> list) {
         String s = "";
         for (int i = 0; i < list.size(); i++) {
-            s += "\n" + i + ". " + list.get(i);
+            s += "\n" + (i+1) + ". " + list.get(i);
         }
         return s;
+    }
+
+    private static void printKnownEvidence(Player player, List<String> p, List<String> w, List<String> r) {
+        System.out.println("Suspects:");
+        for (String s : p) {
+            if (player.getKnownEvidence().contains(s)) System.out.println(String.format("%-20s[X]", s));
+            else System.out.println(String.format("%-20s[ ]", s));
+        }
+
+        System.out.println();
+
+        System.out.println("Weapons:");
+        for (String s : w) {
+            if (player.getKnownEvidence().contains(s)) System.out.println(String.format("%-20s[X]", s));
+            else System.out.println(String.format("%-20s[ ]", s));
+        }
+
+        System.out.println();
+
+        System.out.println("Rooms:");
+        for (String s : r) {
+            if (player.getKnownEvidence().contains(s)) System.out.println(String.format("%-20s[X]", s));
+            else System.out.println(String.format("%-20s[ ]", s));
+        }
+
+        System.out.println();
     }
 
     public static void main(String... args) {
@@ -293,12 +328,15 @@ public class TextClient {
             Player current = cluedo.getMove();
             int dice1 = (int) (Math.random() * 5) + 1;
             int dice2 = (int) (Math.random() * 5) + 1;
-            System.out.println("It is " +  current.getName() + "'s turn. You roll a " + (dice1 + dice2) + ".");
+
+            int diceRoll = 12;
+            System.out.println("It is " +  current.getName() + "'s turn. You roll a " + diceRoll + ".");    //change back to (dice1 + dice2)
             enterRoom(current, cluedo);
-            movePlayer(current, (dice1+dice2), cluedo);
+            movePlayer(current, diceRoll, cluedo);    //change back to (dice1 + dice2)
 
             if (current.getRoom() != null){
-                makeSuggestion(current, false);
+
+                makeSuggestion(current, false, cluedo);
                 moveSuggestionToRoom(current, cluedo);
                 suggest(current);
             }
