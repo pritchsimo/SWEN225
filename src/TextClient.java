@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class TextClient {
 
@@ -199,6 +200,30 @@ public class TextClient {
         }
     }
 
+    private static void moveSuggestionToRoom(Player player, Cluedo cleudo) {
+        for (Player p : cleudo.getPlayers()) {
+            if (p.getName().equals(player.getCurrentSuggestion().get(0))) {
+                p.setCoords(player.getRoom().getMiddleOfRoom());
+                break;
+            }
+        }
+
+        Map<Room, Weapon> map = cleudo.getWeaponMap();
+        Weapon temp;
+        for (Room r : map.keySet()) {
+            if (r.getName().equals(player.getCurrentSuggestion().get(2))) {
+                temp = map.get(r);
+                for (Room ro : map.keySet()) {
+                    if (map.get(ro).getName().equals(player.getCurrentSuggestion().get(1))) {
+                        map.put(r, map.get(ro));
+                        map.put(ro, temp);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Allows the refutor to refute the suggestion made by a player
      * @param suggestor the player making the suggestion
@@ -310,7 +335,9 @@ public class TextClient {
             movePlayer(current, diceRoll, cluedo);    //change back to (dice1 + dice2)
 
             if (current.getRoom() != null){
+
                 makeSuggestion(current, false, cluedo);
+                moveSuggestionToRoom(current, cluedo);
                 suggest(current);
             }
 

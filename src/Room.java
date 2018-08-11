@@ -22,6 +22,10 @@ public class Room {
 		return name;
 	}
 
+	public Point getMiddleOfRoom() {
+		return middleOfRoom;
+	}
+
 	public List<Point> getDoorPos() {
 		return doorPos;
 	}
