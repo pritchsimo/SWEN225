@@ -45,7 +45,6 @@ public class Tests {
 
         assertTrue(p1.refutableCards(suggestion).get(0).getName().equals(correctAnswer.get(0)));
         assertTrue(p1.refutableCards(suggestion).get(1).getName().equals(correctAnswer.get(1)));
-
     }
 
     private void setupMockPlayer(Cluedo game, Point coords, int playerNumber, List<Card> hand) {

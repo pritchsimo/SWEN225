@@ -12,7 +12,7 @@ public class Cluedo {
     private List<String> playerOptions = new ArrayList<>();
     private List<String> weaponOptions = new ArrayList<>();
     private List<String> roomOptions = new ArrayList<>();
-    private Map<Room, Weapon> weaponMap;
+    private Map<Room, Weapon> weaponMap = new HashMap<>();
     private boolean gameWon = false;
 
     public Cluedo(){
@@ -139,7 +139,6 @@ public class Cluedo {
             roomShuffler.get(i).setWeapon(w);
             weaponMap.put(roomShuffler.get(i), w);
         }
-        //TODO swap weapons/peoples
     }
 
     public Player getMove(){
@@ -159,11 +158,13 @@ public class Cluedo {
         return availablePlayers;
     }
 
-
     public Board getBoard() {
         return board;
     }
 
+    public Map<Room, Weapon> getWeaponMap() {
+        return weaponMap;
+    }
 
     public boolean isGameWon() {
         return gameWon;
