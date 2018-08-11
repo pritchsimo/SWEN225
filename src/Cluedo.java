@@ -54,7 +54,6 @@ public class Cluedo {
     }
 
     private void listSetup(){
-        //playerOptions = new ArrayList<>();
         playerOptions.add("Miss Scarlett");
         playerOptions.add("Col. Mustard");
         playerOptions.add("Mrs. White");
@@ -62,7 +61,6 @@ public class Cluedo {
         playerOptions.add("Mrs. Peacock");
         playerOptions.add("Prof. Plum");
 
-        //weaponOptions = new ArrayList<>();
         weaponOptions.add("Candlestick");
         weaponOptions.add("Dagger");
         weaponOptions.add("Lead Pipe");
@@ -70,7 +68,6 @@ public class Cluedo {
         weaponOptions.add("Rope");
         weaponOptions.add("Spanner");
 
-        //roomOptions = new ArrayList<>();
         roomOptions.add("Kitchen");
         roomOptions.add("Ballroom");
         roomOptions.add("Conservatory");
@@ -137,7 +134,7 @@ public class Cluedo {
         for (int i = 0; i < 6; i++){
             Weapon w = new Weapon(weaponOptions.get(i), roomShuffler.get(i));
             roomShuffler.get(i).setWeapon(w);
-            weaponMap.put(roomShuffler.get(i), w);
+            //weaponMap.put(roomShuffler.get(i), w);
         }
     }
 

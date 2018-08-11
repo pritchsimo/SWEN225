@@ -66,8 +66,6 @@ public class Player {
                     room = null;
                 } else {
                     System.out.println("There is a wall in the way. Please choose a different direction.");
-//                  System.out.println("x: " + coords.x + " y: " + coords.y + " Token: " + board.getBoard()[coords.x][coords.y]);   //debugging
-//                  System.out.println("Next x: " + (coords.x + dx) + " y: " + (coords.y + dy) + " Token: " + board.getBoard()[coords.x + dx][coords.y + dy]);    //debugging
                     return false;
                 }
 
@@ -162,11 +160,13 @@ public class Player {
         return room;
     }
 
+    public void setRoom(Room room) {
+        this.room = room;
+    }
 
     public void setCoords(Point coords) {
         this.coords = coords;
     }
-
 
     public Point getCoords() {
         return coords;
