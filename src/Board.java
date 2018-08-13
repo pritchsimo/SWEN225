@@ -1,8 +1,6 @@
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 public class Board {
 	private String boardRepresentation;
@@ -15,7 +13,7 @@ public class Board {
 	}
 
 
-	/** Generates the board based on the amount of players
+	/* Generates the board based on the amount of players
 	 *
 	 *  # - Wall Block/Corner
 	 *  [ - Left Wall
@@ -43,7 +41,7 @@ public class Board {
 	 *  5 - Miss Scarlett
 	 *  6 - Col. Mustard
 	 *
-	 *  **/
+	 *  */
 	public void generateBoard() {
         boardRepresentation =
                         "##########################" +
@@ -83,13 +81,6 @@ public class Board {
 				i++;
 			}
 		}
-//
-//        for (int y = 0; y < 27; y++) {
-//            for (int x = 0; x < 26; x++) {
-//                System.out.print(board[x][y]);
-//            }
-//            System.out.print("\n");
-//        }
 	}
 
 	private void addRooms() {

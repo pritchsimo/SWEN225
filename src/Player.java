@@ -33,6 +33,12 @@ public class Player {
         return name;
     }
 
+    /**
+     * Moves the player, stopping them if there is a wall in the way
+     * @param direction Must be upwards, downwards, left or right
+     * @param distance How far the player needs to travel
+     * @return True if the move was successful, false if a wall was encountered
+     */
     public boolean translate(String direction, int distance){
         int dx = 0, dy = 0;
         if (direction.equals("left")) dx = -1;
@@ -69,8 +75,6 @@ public class Player {
                     return false;
                 }
 
-            } else if (room == null && square == 'R') {
-                //add something to let them know they should have entered the room
             } else {
                 return false;
             }
@@ -78,6 +82,9 @@ public class Player {
         return true;
     }
 
+    /**
+     * Moves the player into the room
+     */
     public void enterRoom(){
         Point roomSquare = roomSquare(coords.x, coords.y);
         room = doorSquare(board.getBoard()[coords.x][coords.y]);
@@ -85,17 +92,11 @@ public class Player {
     
     }
 
-    public String direction(int dx, int dy) {
-        if (dx > 0 && dy == 0) return dx + " to the right.";     //east
-        else if (dx > 0 && dy > 0) return dx + " to the right and " + dy + " downwards.";   //south-east
-        else if (dx == 0 && dy > 0) return dy + " downwards.";      //south
-        else if (dx < 0 && dy > 0) return dx * -1 + " to the left and " + dy + " downwards.";    //south-west
-        else if (dx < 0 && dy == 0) return dx * -1 + " to the left.";      //west
-        else if (dx < 0 && dy < 0) return dx * -1 + " to the left and " + dy * -1 + " upwards.";    //north-west
-        else if (dx == 0 && dy < 0) return dy * -1 + " upwards.";    //north
-        else return dx + " to the right and " + dy * -1 + " upwards.";      //north-east
-    }
-
+    /**
+     * Used to work out whether the player is in the doorway of a room
+     * @param square The current square that the player is on
+     * @return The Room that the player is outside, or null if not in a doorway
+     */
     public Room doorSquare(char square) {
         HashMap<String, Room> map = board.getRooms();
 
@@ -150,10 +151,6 @@ public class Player {
 
     public void successfullyRefuted(Card card) {
         knownEvidence.add(card.getName());
-    }
-
-    public List<Card> getCards() {
-        return cards;
     }
 
     public Room getRoom() {
