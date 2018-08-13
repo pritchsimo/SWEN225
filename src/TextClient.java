@@ -88,7 +88,7 @@ public class TextClient {
         int dx = closestDoor.x - player.getCoords().x;
         int dy = closestDoor.y - player.getCoords().y;
 
-        System.out.println("You need to move " + player.direction(dx, dy));
+        System.out.println("You need to move " + direction(dx, dy));
 
 
         for (int i = 0; i < diceRoll; i++) {
@@ -131,6 +131,17 @@ public class TextClient {
             }
 
         }
+    }
+
+    private static String direction(int dx, int dy) {
+        if (dx > 0 && dy == 0) return dx + " to the right.";     //east
+        else if (dx > 0 && dy > 0) return dx + " to the right and " + dy + " downwards.";   //south-east
+        else if (dx == 0 && dy > 0) return dy + " downwards.";      //south
+        else if (dx < 0 && dy > 0) return dx * -1 + " to the left and " + dy + " downwards.";    //south-west
+        else if (dx < 0 && dy == 0) return dx * -1 + " to the left.";      //west
+        else if (dx < 0 && dy < 0) return dx * -1 + " to the left and " + dy * -1 + " upwards.";    //north-west
+        else if (dx == 0 && dy < 0) return dy * -1 + " upwards.";    //north
+        else return dx + " to the right and " + dy * -1 + " upwards.";      //north-east
     }
 
     /**
@@ -223,15 +234,16 @@ public class TextClient {
         }
     }
 
-    private static void moveSuggestionToRoom(Player player, Cluedo cleudo) {
-        for (Player p : cleudo.getPlayers()) {
+    private static void moveSuggestionToRoom(Player player, Cluedo game) {
+        for (Player p : game.getPlayers()) {
             if (p.getName().equals(player.getCurrentSuggestion().get(0))) {
                 p.setCoords(player.getRoom().getMiddleOfRoom());
+                p.setRoom(player.getRoom());
                 break;
             }
         }
 
-        Map<Room, Weapon> map = cleudo.getWeaponMap();
+        Map<Room, Weapon> map = game.getWeaponMap();
         Weapon temp;
         for (Room r : map.keySet()) {
             if (r.getName().equals(player.getCurrentSuggestion().get(2))) {
@@ -352,19 +364,15 @@ public class TextClient {
             int dice1 = (int) (Math.random() * 5) + 1;
             int dice2 = (int) (Math.random() * 5) + 1;
 
-            int diceRoll = 12;
-            System.out.println("It is " +  current.getName() + "'s turn. You roll a " + diceRoll + ".");    //change back to (dice1 + dice2)
+            System.out.println("It is " +  current.getName() + "'s turn. You roll a " + (dice1+dice2) + ".");
             enterRoom(current, cluedo);
-            movePlayer(current, diceRoll, cluedo);    //change back to (dice1 + dice2)
+            movePlayer(current, (dice1+dice2), cluedo);
 
             if (current.getRoom() != null){
-
                 makeSuggestion(current, false, cluedo);
                 moveSuggestionToRoom(current, cluedo);
                 suggest(current);
             }
-
-
 
         }
 

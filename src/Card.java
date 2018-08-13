@@ -11,7 +11,4 @@ public class Card {
 		return name;
 	}
 
-	public String getType() {
-		return type;
-	}
 }

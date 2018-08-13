@@ -19,6 +19,10 @@ public class Cluedo {
         listSetup();
     }
 
+    /**
+     * Game initialisation
+     * @param test If setting up for a test
+     */
     public void setup(boolean test) {
         cardSetup(test);
         weaponSetup();
@@ -29,12 +33,11 @@ public class Cluedo {
         move = (int) (Math.random() * players.size());
     }
 
-
     public void playerSetup(int numPlayers) {
         for (int i = 0; i < numPlayers; i++)
             players.add(availablePlayers.get(i));
 
-        for (int i = 0; i < players.size(); i++) {     //might add to text client
+        for (int i = 0; i < players.size(); i++) {
             System.out.println("Player " + (i+1) + ": " + players.get(i).getName());
         }
 
