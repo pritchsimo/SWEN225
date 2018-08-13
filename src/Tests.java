@@ -122,9 +122,30 @@ public class Tests {
         assertNull(p1.getRoom());
     }
 
+    @Test
+    public void testRefutableCardsEmpty() {
+        Cluedo cluedo = new Cluedo();
+        List<Card> hand = Arrays.asList(new Card("Col. Mustard", "Player"), new Card("Candlestick", "Weapon"), new Card("Hall", "Room"));
+        setupMockPlayer(cluedo, null, 0, hand);
+        Player p1 = cluedo.getPlayers().get(0);
+        List<String> suggestion = Arrays.asList("Prof. Peacock", "Dagger", "Lounge");
+
+        assertTrue(p1.refutableCards(suggestion).isEmpty());
+    }
 
     @Test
-    public void testRefutableCards() {
+    public void testRefutableCardsSingle() {
+        Cluedo cluedo = new Cluedo();
+        List<Card> hand = Arrays.asList(new Card("Prof. Peacock", "Player"), new Card("Candlestick", "Weapon"), new Card("Hall", "Room"));
+        setupMockPlayer(cluedo, null, 0, hand);
+        Player p1 = cluedo.getPlayers().get(0);
+        List<String> suggestion = Arrays.asList("Prof. Peacock", "Dagger", "Lounge");
+
+        assertTrue(p1.refutableCards(suggestion).get(0).getName().equals("Prof. Peacock"));
+    }
+
+    @Test
+    public void testRefutableCardsMultiple() {
         Cluedo cluedo = new Cluedo();
         List<Card> hand = Arrays.asList(new Card("Prof. Peacock", "Player"), new Card("Candlestick", "Weapon"), new Card("Lounge", "Room"));
         setupMockPlayer(cluedo, null, 0, hand);
@@ -136,20 +157,46 @@ public class Tests {
         assertTrue(p1.refutableCards(suggestion).get(1).getName().equals(correctAnswer.get(1)));
     }
 
+    @Test
+    public void correctAccusation() {
+        Cluedo cluedo = new Cluedo();
+        cluedo.setup(true);
+
+        List<String> accusation = new ArrayList<>();
+        accusation.add(cluedo.getSolution().get(0).getName());
+        accusation.add(cluedo.getSolution().get(1).getName());
+        accusation.add(cluedo.getSolution().get(2).getName());
+        cluedo.accuse(accusation);
+
+        assertTrue(cluedo.isGameWon());
+    }
+
+    @Test
+    public void incorrectAccusation() {
+        Cluedo cluedo = new Cluedo();
+        cluedo.setup(true);
+        setupMockPlayer(cluedo, null, 0, null);
+
+        List<String> accusation = new ArrayList<>();
+        accusation.add("wrong");
+        accusation.add("wrong");
+        accusation.add("wrong");
+        cluedo.accuse(accusation);
+
+        assertTrue(!cluedo.isGameWon());
+        assertTrue(cluedo.getPlayers().isEmpty());
+    }
     private void setupMockPlayer(Cluedo game, Point coords, int playerNumber, List<Card> hand) {
         Player p = new Player(coords, game.getAvailablePlayers().get(playerNumber).getName());
         game.getPlayers().add(p);
         if (hand != null){
-            for (Card c: hand){
+            for (Card c : hand){
                 p.giveCard(c);
             }
         }
 
 
     }
-
-
-
 }
 
 
