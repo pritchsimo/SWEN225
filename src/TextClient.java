@@ -163,7 +163,7 @@ public class TextClient {
                 } else if (response.equals("no")) {
                     return false;
                 }
-                System.out.println("Please enter correct response.");
+                System.out.println("Invalid input. Please enter a valid input.");
 
             }
         }
@@ -174,18 +174,27 @@ public class TextClient {
      * Allows a player to make a suggestion about the murder using a person, weapon or room
      *
      * @param player the player making the suggestion
-     * @param isAccusation the suggestion will be different depending on weather it is a suggestion or an accusation
      * @param game
+     * @return False if it was a suggestion, True if was an accusation or no suggestion
      */
-    private static void makeSuggestion(Player player, boolean isAccusation, Cluedo game) {
+    private static boolean makeSuggestion(Player player, Cluedo game) {
         List<String> allPlayers = Arrays.asList("Miss Scarlett", "Col. Mustard", "Mrs. White", "Mr. Green", "Mrs. Peacock", "Prof. Plum");
         List<String> allWeapons = Arrays.asList("Candlestick", "Dagger", "Lead Pipe", "Revolver", "Rope", "Spanner");
         List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
         List<String> suggestion = new ArrayList<>();
 
-        if (!isAccusation){
-            String input = inputString("Do you wish to make an suggestion? (yes/no)");
-            if (input.equals("no")) return;
+        boolean isAccusation = false;
+        while (true){
+            String input = inputString("Do you wish to make an suggestion or accusation? (suggestion/accusation/no)");
+            if (input.equals("suggestion")){
+                break;
+            } else if (input.equals("accusation")){
+                isAccusation = true;
+                break;
+            } else if (input.equals("no")){
+                return true;
+            }
+            System.out.println("Invalid input. Please enter a valid input.");
         }
 
         System.out.println("\nYour evidence:\n");
@@ -216,21 +225,14 @@ public class TextClient {
             }
         }
 
-        //Room if accusation
         if (isAccusation) {
-            while (true) {
-                int response = inputNumber("Which room?" + listToOutputString(allRooms));
-                if (response < 1 || response > 9) {
-                    System.out.println("Please enter a room between 1 and 9");
-                } else {
-                    suggestion.add(allRooms.get(response-1));
-                    break;
-                }
-            }
+            suggestion.add(player.getRoom().getName());
             game.accuse(suggestion);
+            return true;
         } else {
             suggestion.add(player.getRoom().getName());
             player.setCurrentSuggestion(suggestion);
+            return false;
         }
     }
 
@@ -378,7 +380,10 @@ public class TextClient {
         playerSetup(cluedo);
         cluedo.setup(false);
 
-        while (!cluedo.isGameWon()){
+        while (!cluedo.isGameWon() || !cluedo.getPlayers().isEmpty()){
+            if (cluedo.getMove() == null){
+                break;
+            }
             Player current = cluedo.getMove();
             int dice1 = (int) (Math.random() * 5) + 1;
             int dice2 = (int) (Math.random() * 5) + 1;
@@ -387,17 +392,17 @@ public class TextClient {
             enterRoom(current, cluedo);
             movePlayer(current, (dice1+dice2), cluedo);
 
-            if (current.getRoom() != null && current.getRoom().getName().equalsIgnoreCase("accusation room")) {
-                makeSuggestion(current, true, cluedo);
-            }
-
             if (current.getRoom() != null){
-                makeSuggestion(current, false, cluedo);
-                moveSuggestionToRoom(current, cluedo);
-                suggest(current);
+                if (!makeSuggestion(current, cluedo)){
+                    moveSuggestionToRoom(current, cluedo);
+                    suggest(current);
+                }
+
             }
+        }
 
-
+        if (cluedo.getPlayers().isEmpty()){
+            System.out.println("Every player has been eliminated, the game has ended.");
         }
 
     }

@@ -142,6 +142,9 @@ public class Cluedo {
     }
 
     public Player getMove(){
+        if (players.size() == 0){
+            return null;
+        }
         if (move < players.size()-1){
             move++;
             return players.get(move);
