@@ -234,6 +234,11 @@ public class TextClient {
         }
     }
 
+    /** Players and weapons accused in a suggestion are moved to the room the suggestion takes place in.
+     *
+     * @param player player to be moved
+     * @param game game instance
+     */
     private static void moveSuggestionToRoom(Player player, Cluedo game) {
         for (Player p : game.getPlayers()) {
             if (p.getName().equals(player.getCurrentSuggestion().get(0))) {
@@ -243,6 +248,7 @@ public class TextClient {
             }
         }
 
+        //swaps weapons as there cannot be 2 weapons in the same room
         Map<Room, Weapon> map = game.getWeaponMap();
         Weapon temp;
         for (Room r : map.keySet()) {
@@ -290,6 +296,14 @@ public class TextClient {
         return true;
     }
 
+    /** Lets the player select a card to refute someone suggestion
+     *
+     * @param response users input
+     * @param suggestor the player suggesting
+     * @param refutor the player refuting
+     * @param cards possible cards the can use to refute
+     * @return false if invalid input, else true
+     */
     private static boolean refuteSelection(int response, Player suggestor, Player refutor, List<Card> cards){
         if (response < 1 || response > cards.size()) {
             System.out.println("Please enter a card between 1 and " + cards.size());

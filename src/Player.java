@@ -129,6 +129,11 @@ public class Player {
         currentSuggestion = suggestion;
     }
 
+    /** Creates and prints a list of cards that can be used to refute a suggestion
+     *
+     * @param suggestion suggestion made to be refuted
+     * @return list of refutable cards
+     */
     public List<Card> refutableCards(List<String> suggestion){
         List<Card> refutables = new ArrayList<>();
 
