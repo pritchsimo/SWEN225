@@ -227,7 +227,7 @@ public class TextClient {
                     break;
                 }
             }
-            player.setCurrentSuggestion(suggestion);
+            game.accuse(suggestion);
         } else {
             suggestion.add(player.getRoom().getName());
             player.setCurrentSuggestion(suggestion);
@@ -301,6 +301,11 @@ public class TextClient {
         }
     }
 
+
+    /** Lets each player refute the suggestion if applicable
+     *
+     * @param current player making the suggestion
+     */
     private static void suggest(Player current) {
         for (int i = 0; i < current.getNextPlayers().size(); i++) {
             if (refuteSuggestion(current, current.getNextPlayers().get(i))) {
@@ -368,11 +373,16 @@ public class TextClient {
             enterRoom(current, cluedo);
             movePlayer(current, (dice1+dice2), cluedo);
 
+            if (current.getRoom() != null && current.getRoom().getName().equalsIgnoreCase("accusation room")) {
+                makeSuggestion(current, true, cluedo);
+            }
+
             if (current.getRoom() != null){
                 makeSuggestion(current, false, cluedo);
                 moveSuggestionToRoom(current, cluedo);
                 suggest(current);
             }
+
 
         }
 
