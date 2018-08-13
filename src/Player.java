@@ -109,7 +109,6 @@ public class Player {
         else if (square == 'H') return map.get("hall");
         else if (square == 'O') return map.get("lounge");
         else if (square == 'D') return map.get("dining Room");
-        else if (square == 'A') return map.get("accusation Room");
 
         return null;
     }

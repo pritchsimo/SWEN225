@@ -32,7 +32,6 @@ public class Board {
 	 *  H - Hall Door
 	 *  O - Lounge Door
 	 *  D - Dining Room Door
-	 *  A - Accusation Room Door
 	 *
 	 *  1 - Mrs. White
 	 *  2 - Mr. Green
@@ -61,7 +60,7 @@ public class Board {
                         "#[RRRRRR]..#####.....L.I##" +
                         "#[RRRRRR]..#####...#^R^^##" +
                         "##_____R#..#####..#RRRRR##" +
-                        "##.....D...##A##.LRRRRRR]#" +
+                        "##.....D...#####.LRRRRRR]#" +
                         "#6..........HH....#RRRRR##" +
                         "##.....O..#^RR^#...#___###" +
                         "##^^^^^]..[RRRR]........4#" +
