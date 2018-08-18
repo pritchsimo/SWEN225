@@ -63,7 +63,7 @@ public class TextClient {
      * @param diceRoll how many spaces the player can move
      * @param game
      */
-    private static void movePlayer(Player player, int diceRoll, Cluedo game){
+    public static void movePlayer(Player player, int diceRoll, Cluedo game){
         List<Point> doors;
         String response;
         while (true) {     //checks for correct input of room name
@@ -150,7 +150,7 @@ public class TextClient {
      * @param player the player outside a room
      * @param game
      */
-    private static boolean enterRoom(Player player, Cluedo game){
+    public static boolean enterRoom(Player player, Cluedo game){
         char square = game.getBoard().getBoard()[player.getCoords().x][player.getCoords().y];
         if (player.doorSquare(square) != null){
             System.out.println("You are outside the " + player.doorSquare(square).getName() + ".");
@@ -177,7 +177,7 @@ public class TextClient {
      * @param game
      * @return False if it was a suggestion, True if was an accusation or no suggestion
      */
-    private static boolean makeSuggestion(Player player, Cluedo game) {
+    public static boolean makeSuggestion(Player player, Cluedo game) {
         List<String> allPlayers = Arrays.asList("Miss Scarlett", "Col. Mustard", "Mrs. White", "Mr. Green", "Mrs. Peacock", "Prof. Plum");
         List<String> allWeapons = Arrays.asList("Candlestick", "Dagger", "Lead Pipe", "Revolver", "Rope", "Spanner");
         List<String> allRooms = Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Study", "Hall", "Lounge");
@@ -241,7 +241,7 @@ public class TextClient {
      * @param player player to be moved
      * @param game game instance
      */
-    private static void moveSuggestionToRoom(Player player, Cluedo game) {
+    public static void moveSuggestionToRoom(Player player, Cluedo game) {
         for (Player p : game.getPlayers()) {
             if (p.getName().equals(player.getCurrentSuggestion().get(0))) {
                 p.setCoords(player.getRoom().getMiddleOfRoom());
@@ -273,7 +273,7 @@ public class TextClient {
      * @param refutor the player that has the opportunity to refute the suggestion
      * @return true/false depending on weather the player was able to refute the suggestion
      */
-    private static boolean refuteSuggestion(Player suggestor, Player refutor) {
+    public static boolean refuteSuggestion(Player suggestor, Player refutor) {
         List<String> suggestion = suggestor.getCurrentSuggestion();
 
         System.out.println("The suggestion made is: ");
@@ -306,7 +306,7 @@ public class TextClient {
      * @param cards possible cards the can use to refute
      * @return false if invalid input, else true
      */
-    private static boolean refuteSelection(int response, Player suggestor, Player refutor, List<Card> cards){
+    public static boolean refuteSelection(int response, Player suggestor, Player refutor, List<Card> cards){
         if (response < 1 || response > cards.size()) {
             System.out.println("Please enter a card between 1 and " + cards.size());
             return false;
@@ -322,7 +322,7 @@ public class TextClient {
      *
      * @param current player making the suggestion
      */
-    private static void suggest(Player current) {
+    public static void suggest(Player current) {
         for (int i = 0; i < current.getNextPlayers().size(); i++) {
             if (refuteSuggestion(current, current.getNextPlayers().get(i))) {
                 return;
