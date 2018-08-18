@@ -1,5 +1,5 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -13,11 +13,18 @@ public class GUI extends JFrame {
     public List<String> weaponOptions = new ArrayList<>();
     public List<String> roomOptions = new ArrayList<>();
 
+
+    JSplitPane split;
+
     //menu things
     private JMenuBar menubar;
     private JMenu options;
     private JMenuItem newGameMenuItem;
     private JMenuItem exitMenuItem;
+
+    private JPanel controls;
+    private ImageIcon dicePic1;
+    private ImageIcon dicePic2;
 
 
     public GUI(){
@@ -26,9 +33,20 @@ public class GUI extends JFrame {
 
     private void initUI(){
 
+        this.setLayout(new BorderLayout());
+        split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        split.setDividerSize(5);
+        split.setContinuousLayout(true);
+        split.setResizeWeight(1);
+        split.setBorder(BorderFactory.createEmptyBorder());
+
         createMenuBar();
         createBoard();
+        createInterface();
         listSetup();
+
+        this.add(split, BorderLayout.CENTER);
+        this.add(controls, BorderLayout.SOUTH);
 
         setTitle("Cluedo");
         setSize(500, 700);
@@ -43,34 +61,27 @@ public class GUI extends JFrame {
             }
         });
 
-        newGameMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                newGamePane();
-            }
-        });
+
     }
 
 
     private void createMenuBar() {
 
         menubar = new JMenuBar();
-        //ImageIcon exitIcon = new ImageIcon("src/main/resources/exit.png");
 
         options = new JMenu("Options");
-        //file.setMnemonic(KeyEvent.VK_F);
 
         newGameMenuItem = new JMenuItem("New Game");
-        //newGameMenuItem.setMnemonic(KeyEvent.VK_E);
-        //exitMenuItem.setToolTipText("Exit application");
-//        newGameMenuItem.addActionListener((ActionEvent event) -> {
-//            System.exit(0);
-//        });
+        newGameMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                newGamePane();
+            }
+        });
         options.add(newGameMenuItem);
 
         exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.setMnemonic(KeyEvent.VK_E);
-        //exitMenuItem.setToolTipText("Exit application");
         exitMenuItem.addActionListener((ActionEvent event) -> {
             System.exit(0);
         });
@@ -81,22 +92,96 @@ public class GUI extends JFrame {
     }
 
     private void createBoard(){
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        JPanel topPanel = new JPanel();
+        JPanel board = new JPanel();
+        board.setPreferredSize(new Dimension(500, 500));
 
-        topPanel.setBackground(Color.gray);    //need to createBoard
-        bottomPanel.add(topPanel);
+        board.setBackground(Color.gray);    //need to create board
 
-        bottomPanel.setBorder(new EmptyBorder(new Insets(20, 20, 150, 20)));
+        split.add(board);
 
-        add(bottomPanel);
-        pack();
+    }
+
+    private void createInterface(){
+        controls = new JPanel();
+        controls.setLayout(new BoxLayout(controls, BoxLayout.LINE_AXIS));
+        Border edge = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+        controls.setBorder(edge);
+
+        dicePic1 = new ImageIcon("DiceImages/3.jpg");    //need to change so that they can be updated
+        dicePic2 = new ImageIcon("DiceImages/2.jpg");
+        JLabel dice1 = new JLabel(dicePic1);
+        JLabel dice2 = new JLabel(dicePic2);
+
+        controls.add(dice1);
+        controls.add(dice2);
+
+        controls.add(Box.createRigidArea(new Dimension(30, 0)));
+
+        JPanel navigation = new JPanel();    //direction buttons
+        navigation.setMaximumSize(new Dimension(150, 60));
+        navigation.setLayout(new GridLayout(2, 3));
+
+        JButton upwards = new JButton("\u2191");
+        upwards.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                //go upwards
+            }
+        });
+        JButton left = new JButton("\u2190");
+        left.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                //go left
+            }
+        });
+        JButton downwards = new JButton("\u2193");
+        downwards.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                //go downwards
+            }
+        });
+        JButton right = new JButton("\u2192");
+        right.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                //go right
+            }
+        });
+
+        navigation.add(new JLabel(""));
+        navigation.add(upwards);
+        navigation.add(new JLabel(""));
+        navigation.add(left);
+        navigation.add(downwards);
+        navigation.add(right);
+
+        controls.add(navigation);
+        controls.add(Box.createRigidArea(new Dimension(20, 0)));
+
+        JButton showCardsButton = new JButton("Cards");     //cards button
+        showCardsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                //display cards
+            }
+        });
+
+        controls.add(showCardsButton);
+        controls.add(Box.createRigidArea(new Dimension(20, 0)));
+
+        JButton evidenceButton = new JButton("Evidence");    //evidence button
+        evidenceButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                //display evidence
+            }
+        });
+
+        controls.add(evidenceButton);
     }
 
     private void newGamePane(){
         int numPlayers;
         while (true){
-            numPlayers = Integer.parseInt(JOptionPane.showInputDialog(this, "How many players? (2-6)"));
+            String input = JOptionPane.showInputDialog(this, "How many players? (2-6)");
+            if (input == null) return;
+            numPlayers = Integer.parseInt(input);
             if (numPlayers < 2 || numPlayers > 6){
                 JOptionPane.showMessageDialog(this,"Please enter a valid number of players","Wrong Input",JOptionPane.WARNING_MESSAGE);
             } else {
@@ -153,10 +238,6 @@ public class GUI extends JFrame {
                 return;
             }
         }
-    }
-
-    private void showDiceRoll(){
-
     }
 
     private void listSetup(){
