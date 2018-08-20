@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -13,18 +14,25 @@ public class GUI extends JFrame {
     public List<String> weaponOptions = new ArrayList<>();
     public List<String> roomOptions = new ArrayList<>();
 
-
-    JSplitPane split;
-
-    //menu things
+    //menu
     private JMenuBar menubar;
     private JMenu options;
     private JMenuItem newGameMenuItem;
     private JMenuItem exitMenuItem;
 
+    //display
+    private JPanel board;
+    private ImageIcon boardPic;
+
+    private JSplitPane split;
     private JPanel controls;
     private ImageIcon dicePic1;
     private ImageIcon dicePic2;
+    private JTextArea textOutputArea;
+    private JScrollPane scroll;
+
+    //Cluedo
+    private Cluedo cluedo;
 
 
     public GUI(){
@@ -34,22 +42,18 @@ public class GUI extends JFrame {
     private void initUI(){
 
         this.setLayout(new BorderLayout());
-        split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        split.setDividerSize(5);
-        split.setContinuousLayout(true);
-        split.setResizeWeight(1);
-        split.setBorder(BorderFactory.createEmptyBorder());
 
         createMenuBar();
         createBoard();
         createInterface();
         listSetup();
 
-        this.add(split, BorderLayout.CENTER);
-        this.add(controls, BorderLayout.SOUTH);
+        this.add(board, BorderLayout.CENTER);
+        //this.add(controls, BorderLayout.SOUTH);
+        this.add(split, BorderLayout.SOUTH);
 
         setTitle("Cluedo");
-        setSize(500, 700);
+        setSize(800, 835);
         setLocationRelativeTo(null);
         this.addWindowListener(new WindowAdapter() {    //confirms user does want to leave
             @Override
@@ -60,15 +64,12 @@ public class GUI extends JFrame {
                 }
             }
         });
-
-
     }
 
 
     private void createMenuBar() {
 
         menubar = new JMenuBar();
-
         options = new JMenu("Options");
 
         newGameMenuItem = new JMenuItem("New Game");
@@ -76,6 +77,9 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 newGamePane();
+                if (cluedo != null){
+                    gameRun();
+                }
             }
         });
         options.add(newGameMenuItem);
@@ -92,16 +96,27 @@ public class GUI extends JFrame {
     }
 
     private void createBoard(){
-        JPanel board = new JPanel();
-        board.setPreferredSize(new Dimension(500, 500));
+        board = new JPanel();
+        //board.setPreferredSize(new Dimension(500, 500));
+        board.setLayout(new BoxLayout(board, BoxLayout.Y_AXIS));
+        Border edge = BorderFactory.createEmptyBorder(15, 70, 5, 5);
+        board.setBorder(edge);
+
+        boardPic = new ImageIcon("DiceImages/Board.png");
+        JLabel boardLabel = new JLabel(boardPic);
+        board.add(boardLabel);
 
         board.setBackground(Color.gray);    //need to create board
-
-        split.add(board);
 
     }
 
     private void createInterface(){
+        split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        split.setDividerSize(5);
+        split.setContinuousLayout(true);
+        split.setResizeWeight(1);
+        split.setBorder(BorderFactory.createEmptyBorder());
+
         controls = new JPanel();
         controls.setLayout(new BoxLayout(controls, BoxLayout.LINE_AXIS));
         Border edge = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -174,6 +189,40 @@ public class GUI extends JFrame {
         });
 
         controls.add(evidenceButton);
+        controls.add(Box.createRigidArea(new Dimension(20, 0)));
+
+        JButton makeSuggestion = new JButton("Make Suggestion");     //cards button
+        makeSuggestion.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                //make suggestion
+            }
+        });
+
+        controls.add(makeSuggestion);
+        controls.add(Box.createRigidArea(new Dimension(20, 0)));
+
+        JButton makeAccusation = new JButton("Make Accusation");    //evidence button
+        makeAccusation.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                //make accusation
+            }
+        });
+
+        controls.add(makeAccusation);
+
+        textOutputArea = new JTextArea(2, 0);
+        textOutputArea.setLineWrap(true);
+        textOutputArea.setWrapStyleWord(true); // pretty line wrap.
+        textOutputArea.setEditable(false);
+        scroll = new JScrollPane(textOutputArea);
+        DefaultCaret caret = (DefaultCaret) textOutputArea.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+        split.setTopComponent(controls);
+        split.setBottomComponent(scroll);
+
+
+
     }
 
     private void newGamePane(){
@@ -225,15 +274,19 @@ public class GUI extends JFrame {
             }
 
             if (result == JOptionPane.OK_OPTION) {
-                String s = "Player " + (i + 1) + "'s name: " + playerName.getText() + " Player Character: ";
+                cluedo = new Cluedo();
                 for (int j = 0; j < 6; j++){
                     JRadioButton b = buttons.get(j);
                     if (b.isSelected()){
-                        s += playerOptions.get(j);
+                        cluedo.addPlayer(playerOptions.get(j), playerName.getText());
                         playersLeft[j] = false;
                     }
                 }
-                System.out.println(s);     //temporary
+                cluedo.playerSetup();
+                cluedo.setup(false);
+
+                //add players to board
+
             } else {
                 return;
             }
@@ -266,6 +319,10 @@ public class GUI extends JFrame {
         roomOptions.add("Lounge");
     }
 
+    private void gameRun(){
+
+    }
+
 
     public static void main(String[] args) {
 
@@ -273,5 +330,6 @@ public class GUI extends JFrame {
             GUI gui = new GUI();
             gui.setVisible(true);
         });
+
     }
 }

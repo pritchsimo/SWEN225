@@ -43,18 +43,18 @@ public class TextClient {
     /**
      * Used to setup the amount of players
      */
-    private static void playerSetup(Cluedo game){
-        int numPlayers;
-        while (true) {
-            numPlayers = inputNumber("Enter the number of players: (Between 1 and 6)");
-            if (numPlayers > 6 || numPlayers < 1) {
-                System.out.println("Invalid number of players, there must be between 1 and 6 players.");
-            } else {
-                break;
-            }
-        }
-        game.playerSetup(numPlayers);
-    }
+//    private static void playerSetup(Cluedo game){
+//        int numPlayers;
+//        while (true) {
+//            numPlayers = inputNumber("Enter the number of players: (Between 1 and 6)");
+//            if (numPlayers > 6 || numPlayers < 1) {
+//                System.out.println("Invalid number of players, there must be between 1 and 6 players.");
+//            } else {
+//                break;
+//            }
+//        }
+//        game.playerSetup(numPlayers);
+//    }
 
     /**
      * Asks the player which room they wish to head towards, then takes user input to move
@@ -243,7 +243,7 @@ public class TextClient {
      */
     public static void moveSuggestionToRoom(Player player, Cluedo game) {
         for (Player p : game.getPlayers()) {
-            if (p.getName().equals(player.getCurrentSuggestion().get(0))) {
+            if (p.getCharacterName().equals(player.getCurrentSuggestion().get(0))) {
                 p.setCoords(player.getRoom().getMiddleOfRoom());
                 p.setRoom(player.getRoom());
                 break;
@@ -312,7 +312,7 @@ public class TextClient {
             return false;
         } else {
             suggestor.successfullyRefuted(cards.get(response - 1));
-            System.out.println(cards.get(response - 1).getName() + " has been refuted by " + refutor.getName());
+            System.out.println(cards.get(response - 1).getName() + " has been refuted by " + refutor.getCharacterName());
             return true;
         }
     }
@@ -377,7 +377,7 @@ public class TextClient {
 
     public static void main(String... args) {
         Cluedo cluedo = new Cluedo();
-        playerSetup(cluedo);
+        //playerSetup(cluedo);
         cluedo.setup(false);
 
         while (!cluedo.isGameWon() || !cluedo.getPlayers().isEmpty()){
@@ -388,7 +388,7 @@ public class TextClient {
             int dice1 = (int) (Math.random() * 5) + 1;
             int dice2 = (int) (Math.random() * 5) + 1;
 
-            System.out.println("It is " +  current.getName() + "'s turn. You roll a " + (dice1+dice2) + ".");
+            System.out.println("It is " +  current.getCharacterName() + "'s turn. You roll a " + (dice1+dice2) + ".");
             enterRoom(current, cluedo);
             movePlayer(current, (dice1+dice2), cluedo);
 
