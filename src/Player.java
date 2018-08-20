@@ -5,19 +5,22 @@ import java.util.List;
 
 public class Player {
     private Point coords;
-    private String name;
+    private String playerName;
+    private String characterName;
     private List<Card> cards;
     private List<String> knownEvidence;
     private List<Player> nextPlayers;
     private List<String> currentSuggestion;
     private Room room;
     private Board board;
+    private String colour;
 
     private HashMap<String, List<Point>> roomNames;
 
-    public Player(Point startCoord, String name) {
+    public Player(Point startCoord, String characterName, String playerName) {
         this.coords = startCoord;
-        this.name = name;
+        this.characterName = characterName;
+        this.playerName = playerName;
         this.cards = new ArrayList<>();
         this.knownEvidence = new ArrayList<>();
         this.room = null;
@@ -29,8 +32,8 @@ public class Player {
         knownEvidence.add(card.getName());
     }
 
-    public String getName() {
-        return name;
+    public String getCharacterName() {
+        return characterName;
     }
 
     /**
@@ -136,7 +139,7 @@ public class Player {
     public List<Card> refutableCards(List<String> suggestion){
         List<Card> refutables = new ArrayList<>();
 
-        System.out.println("\n" + this.name + ", you have the following conflicting cards: ");
+        System.out.println("\n" + this.characterName + ", you have the following conflicting cards: ");
         for (int i = 0; i < cards.size(); i++) {
             for (String suggestive : suggestion) {
                 if (cards.get(i).getName().equals(suggestive)) {
@@ -183,5 +186,13 @@ public class Player {
 
     public List<String> getKnownEvidence() {
         return knownEvidence;
+    }
+
+    public String getColour() {
+        return colour;
+    }
+
+    public void setColour(String colour) {
+        this.colour = colour;
     }
 }

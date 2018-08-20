@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -8,7 +7,7 @@ public class Cluedo {
     private Board board = new Board();
     private List<Card> solution = new ArrayList<>();
     private List<Player> players = new ArrayList<>();
-    private List<Player> availablePlayers = new ArrayList<>();
+    private HashMap<String, Point> availablePlayers = new HashMap<>();
     private List<String> playerOptions = new ArrayList<>();
     private List<String> weaponOptions = new ArrayList<>();
     private List<String> roomOptions = new ArrayList<>();
@@ -33,14 +32,11 @@ public class Cluedo {
         move = (int) (Math.random() * players.size());
     }
 
-    public void playerSetup(int numPlayers) {
-        for (int i = 0; i < numPlayers; i++)
-            players.add(availablePlayers.get(i));
+    public void addPlayer(String characterName, String playerName){
+        players.add(new Player(availablePlayers.get(characterName), characterName, playerName));
+    }
 
-        for (int i = 0; i < players.size(); i++) {
-            System.out.println("Player " + (i+1) + ": " + players.get(i).getName());
-        }
-
+    public void playerSetup() {
         //give each player a list of players in a clockwise direction
         for (int i = 0; i < players.size(); i++) {
             List<Player> plrs = new ArrayList<>();
@@ -81,12 +77,13 @@ public class Cluedo {
         roomOptions.add("Hall");
         roomOptions.add("Lounge");
 
-        availablePlayers.add(new Player(new Point(8, 25), "Miss Scarlett"));
-        availablePlayers.add(new Player(new Point(1, 18), "Col. Mustard"));
-        availablePlayers.add(new Player(new Point(10, 1), "Mrs. White"));
-        availablePlayers.add(new Player(new Point(15, 1), "Mr. Green"));
-        availablePlayers.add(new Player(new Point(24, 7), "Mrs. Peacock"));
-        availablePlayers.add(new Player(new Point(24, 20), "Prof. Plum"));
+        availablePlayers.put("Miss Scarlett", new Point(8, 25));
+        availablePlayers.put("Col. Mustard", new Point(1, 18));
+        availablePlayers.put("Mrs.White", new Point(10, 1));
+        availablePlayers.put("Mr. Green", new Point(15, 1));
+        availablePlayers.put("Mrs. Peacock", new Point(24, 7));
+        availablePlayers.put("Prof. Plum", new Point(24, 20));
+
     }
 
     private void cardSetup(boolean test) {
@@ -167,9 +164,9 @@ public class Cluedo {
         return players;
     }
 
-    public List<Player> getAvailablePlayers() {
-        return availablePlayers;
-    }
+    //public List<Player> getAvailablePlayers() {
+//        return availablePlayers;
+//    }
 
     public Board getBoard() {
         return board;
