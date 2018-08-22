@@ -31,6 +31,9 @@ public class GUI extends JFrame {
     private JTextArea textOutputArea;
     private JScrollPane scroll;
 
+    //Tabs
+    private JDialog cardPane;
+
     //Cluedo
     private Cluedo cluedo;
 
@@ -174,7 +177,7 @@ public class GUI extends JFrame {
         JButton showCardsButton = new JButton("Cards");     //cards button
         showCardsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                //display cards
+                cardPane();
             }
         });
 
@@ -285,12 +288,40 @@ public class GUI extends JFrame {
                 cluedo.playerSetup();
                 cluedo.setup(false);
 
+
                 //add players to board
 
             } else {
                 return;
             }
         }
+    }
+
+    private void cardPane() {
+        cardPane = new JDialog(this, "My Cards");
+        JButton exit = new JButton("Close");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardPane.dispose();
+            }
+        });
+
+        if (cluedo == null) return;
+
+        String[] cards = new String[cluedo.getMove().getCards().size()];
+        for (int i = 0; i < cluedo.getMove().getCards().size(); i++) {
+            cards[i] = " " + cluedo.getMove().getCards().get(i).getName();
+        }
+
+        cardPane.add(new JList(cards));
+
+        JPanel panel = new JPanel();
+        panel.add(exit);
+        cardPane.add(panel, BorderLayout.SOUTH);
+        cardPane.setSize(300, 500);
+        cardPane.setLocationRelativeTo(null);
+        cardPane.setVisible(true);
     }
 
     private void listSetup(){
