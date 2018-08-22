@@ -187,7 +187,7 @@ public class Tests {
         assertTrue(cluedo.getPlayers().isEmpty());
     }
     private void setupMockPlayer(Cluedo game, Point coords, int playerNumber, List<Card> hand) {
-        Player p = new Player(coords, game.getAvailablePlayers().get(playerNumber).getCharacterName());
+        Player p = new Player(coords, "Miss. Scarlett", "Mock Player");
         game.getPlayers().add(p);
         if (hand != null){
             for (Card c : hand){

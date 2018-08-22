@@ -164,9 +164,9 @@ public class Cluedo {
         return players;
     }
 
-    //public List<Player> getAvailablePlayers() {
-//        return availablePlayers;
-//    }
+  //  public List<Player> getAvailablePlayers() {
+   //     return availablePlayers;
+   // }
 
     public Board getBoard() {
         return board;
