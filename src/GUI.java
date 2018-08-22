@@ -33,16 +33,17 @@ public class GUI extends JFrame {
 
     //Tabs
     private JDialog cardPane;
+    private JDialog suggestionPane;
 
     //Cluedo
     private Cluedo cluedo;
 
 
-    public GUI(){
+    public GUI() {
         initUI();
     }
 
-    private void initUI(){
+    private void initUI() {
 
         this.setLayout(new BorderLayout());
 
@@ -61,8 +62,8 @@ public class GUI extends JFrame {
         this.addWindowListener(new WindowAdapter() {    //confirms user does want to leave
             @Override
             public void windowClosing(WindowEvent e) {
-                int a=JOptionPane.showConfirmDialog(gui,"Are you sure?");
-                if(a==JOptionPane.YES_OPTION){
+                int a = JOptionPane.showConfirmDialog(gui, "Are you sure?");
+                if (a == JOptionPane.YES_OPTION) {
                     gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 }
             }
@@ -80,7 +81,7 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 newGamePane();
-                if (cluedo != null){
+                if (cluedo != null) {
                     gameRun();
                 }
             }
@@ -98,7 +99,7 @@ public class GUI extends JFrame {
         setJMenuBar(menubar);
     }
 
-    private void createBoard(){
+    private void createBoard() {
         board = new JPanel();
         //board.setPreferredSize(new Dimension(500, 500));
         board.setLayout(new BoxLayout(board, BoxLayout.Y_AXIS));
@@ -113,7 +114,7 @@ public class GUI extends JFrame {
 
     }
 
-    private void createInterface(){
+    private void createInterface() {
         split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         split.setDividerSize(5);
         split.setContinuousLayout(true);
@@ -197,7 +198,7 @@ public class GUI extends JFrame {
         JButton makeSuggestion = new JButton("Make Suggestion");     //cards button
         makeSuggestion.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                //make suggestion
+                suggestionPane();
             }
         });
 
@@ -225,17 +226,16 @@ public class GUI extends JFrame {
         split.setBottomComponent(scroll);
 
 
-
     }
 
-    private void newGamePane(){
+    private void newGamePane() {
         int numPlayers;
-        while (true){
+        while (true) {
             String input = JOptionPane.showInputDialog(this, "How many players? (2-6)");
             if (input == null) return;
             numPlayers = Integer.parseInt(input);
-            if (numPlayers < 2 || numPlayers > 6){
-                JOptionPane.showMessageDialog(this,"Please enter a valid number of players","Wrong Input",JOptionPane.WARNING_MESSAGE);
+            if (numPlayers < 2 || numPlayers > 6) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid number of players", "Wrong Input", JOptionPane.WARNING_MESSAGE);
             } else {
                 break;
             }
@@ -253,7 +253,7 @@ public class GUI extends JFrame {
 
             List<JRadioButton> buttons = new ArrayList<>();
 
-            for (int j = 0; j < 6; j++){
+            for (int j = 0; j < 6; j++) {
                 JRadioButton player = new JRadioButton(playerOptions.get(j));
                 buttons.add(player);
                 bg.add(player);
@@ -262,25 +262,25 @@ public class GUI extends JFrame {
                 player.setEnabled(playersLeft[j]);
             }
             int result;
-            while (true){
+            while (true) {
                 result = JOptionPane.showConfirmDialog(null, myPanel,
                         "Player " + (i + 1), JOptionPane.OK_CANCEL_OPTION);
                 if (!playerName.getText().equals("") && (buttons.get(0).isSelected() || buttons.get(1).isSelected() || buttons.get(2).isSelected() ||
-                        buttons.get(3).isSelected() || buttons.get(4).isSelected() || buttons.get(5).isSelected())){
+                        buttons.get(3).isSelected() || buttons.get(4).isSelected() || buttons.get(5).isSelected())) {
                     break;
-                } else if (result == JOptionPane.CANCEL_OPTION){
+                } else if (result == JOptionPane.CANCEL_OPTION) {
                     return;
-                }else {
-                    JOptionPane.showMessageDialog(this,"Please enter a name and pick player","Wrong Input",JOptionPane.WARNING_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Please enter a name and pick player", "Wrong Input", JOptionPane.WARNING_MESSAGE);
                 }
 
             }
 
             if (result == JOptionPane.OK_OPTION) {
                 cluedo = new Cluedo();
-                for (int j = 0; j < 6; j++){
+                for (int j = 0; j < 6; j++) {
                     JRadioButton b = buttons.get(j);
-                    if (b.isSelected()){
+                    if (b.isSelected()) {
                         cluedo.addPlayer(playerOptions.get(j), playerName.getText());
                         playersLeft[j] = false;
                     }
@@ -324,7 +324,72 @@ public class GUI extends JFrame {
         cardPane.setVisible(true);
     }
 
-    private void listSetup(){
+
+    private void suggestionPane() {
+        suggestionPane = new JDialog(this, "Make a Suggestion");
+        JButton exit = new JButton("Close");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                suggestionPane.dispose();
+            }
+        });
+
+        if (cluedo == null) return;
+
+        //Radio Grid
+        GridBagConstraints panelConstraints = new GridBagConstraints();
+        panelConstraints.gridx = 0;
+        panelConstraints.gridy = GridBagConstraints.RELATIVE;
+        panelConstraints.anchor = GridBagConstraints.WEST;
+
+        //Panel Grid
+        GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        //Player layout
+        JPanel playerLayout = new JPanel();
+        playerLayout.setLayout(new GridBagLayout());
+        JLabel playerSuggestLabel = new JLabel("Which Player?");
+        JPanel playerPanel = new JPanel();
+        playerPanel.setLayout(new GridBagLayout());
+        ButtonGroup playerGroup = new ButtonGroup();
+        playerPanel.add(playerSuggestLabel, panelConstraints);
+        for (int i = 0; i < playerOptions.size(); i++) {
+            JRadioButton button = new JRadioButton(playerOptions.get(i));
+            playerPanel.add(button, panelConstraints);
+            playerGroup.add(button);
+        }
+        playerLayout.add(playerPanel, gbc);
+        suggestionPane.add(playerLayout);
+
+        /* FIXME: replacing players??
+        JPanel weaponLayout = new JPanel();
+        weaponLayout.setLayout(new GridBagLayout());
+        JLabel weaponSuggestLabel = new JLabel("Which Weapon?");
+        JPanel weaponPanel = new JPanel();
+        weaponPanel.setLayout(new GridBagLayout());
+        ButtonGroup weaponGroup = new ButtonGroup();
+        weaponPanel.add(weaponSuggestLabel, panelConstraints);
+        for (int i = 0; i < weaponOptions.size(); i++) {
+            JRadioButton button = new JRadioButton(weaponOptions.get(i));
+            weaponPanel.add(button, panelConstraints);
+            weaponGroup.add(button);
+        }
+        weaponLayout.add(weaponPanel, gbc);
+        suggestionPane.add(weaponLayout);
+*/
+        JPanel panel = new JPanel();
+        panel.add(exit);
+        suggestionPane.add(panel, BorderLayout.SOUTH);
+        suggestionPane.setSize(300, 800);
+        suggestionPane.setLocationRelativeTo(null);
+        suggestionPane.setVisible(true);
+    }
+
+    private void listSetup() {
         playerOptions.add("Miss Scarlett");
         playerOptions.add("Col. Mustard");
         playerOptions.add("Mrs. White");
@@ -350,7 +415,7 @@ public class GUI extends JFrame {
         roomOptions.add("Lounge");
     }
 
-    private void gameRun(){
+    private void gameRun() {
 
     }
 
