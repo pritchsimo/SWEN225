@@ -33,6 +33,7 @@ public class GUI extends JFrame {
 
     //Tabs
     private JDialog cardPane;
+    private JDialog evidencePane;
     private JDialog suggestionPane;
     private JDialog accusationPane;
 
@@ -189,7 +190,7 @@ public class GUI extends JFrame {
         JButton evidenceButton = new JButton("Evidence");    //evidence button
         evidenceButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                //display evidence
+                evidencePane();
             }
         });
 
@@ -325,16 +326,63 @@ public class GUI extends JFrame {
         cardPane.setVisible(true);
     }
 
-
-    private void suggestionPane() {
-        suggestionPane = new JDialog(this, "Make a Suggestion");
+    private void evidencePane() {
+        evidencePane = new JDialog(this, "My Evidence");
         JButton exit = new JButton("Close");
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                suggestionPane.dispose();
+                evidencePane.dispose();
             }
         });
+
+        if (cluedo == null) return;
+        
+        int base1 = playerOptions.size();
+        int base2 = base1 + weaponOptions.size();
+        int base3 = base2 + roomOptions.size();
+        String[] evidence = new String[base1 + weaponOptions.size() + roomOptions.size() + 5];
+        evidence[0] = "Players: ";
+        for (int i = 0; i < playerOptions.size(); i++) {
+            if (cluedo.getMove().getKnownEvidence().contains(playerOptions.get(i))) {
+                evidence[i + 1] = String.format("[X] %s", playerOptions.get(i));
+            } else {
+                evidence[i + 1] = String.format("[ ] %s", playerOptions.get(i));
+            }
+        }
+        evidence[base1 += 1] = " ";
+
+        evidence[base1 += 1] = "Weapons: ";
+        for (int i = 0; i < weaponOptions.size(); i++) {
+            if (cluedo.getMove().getKnownEvidence().contains(weaponOptions.get(i))) {
+                evidence[i + base1 + 1] = String.format("[X] %s", weaponOptions.get(i));
+            } else {
+                evidence[i + base1 + 1] = String.format("[ ] %s", weaponOptions.get(i));
+            }
+        }
+        evidence[base2 += 3] = " ";
+
+        evidence[base2 += 1] = "Rooms: ";
+        for (int i = 0; i < roomOptions.size(); i++) {
+            if (cluedo.getMove().getKnownEvidence().contains(roomOptions.get(i))) {
+                evidence[i + base2 + 1] = String.format("[X] %s", roomOptions.get(i));
+            } else {
+                evidence[i + base2 + 1] = String.format("[ ] %s", roomOptions.get(i));
+            }
+        }
+
+        evidencePane.add(new JList(evidence));
+
+        JPanel panel = new JPanel();
+        panel.add(exit);
+        evidencePane.add(panel, BorderLayout.SOUTH);
+        evidencePane.setSize(300, 700);
+        evidencePane.setLocationRelativeTo(null);
+        evidencePane.setVisible(true);
+    }
+
+    private void suggestionPane() {
+        suggestionPane = new JDialog(this, "Make a Suggestion");
 
         cluedo.getMove().setRoom(cluedo.getMove().doorSquare("L".charAt(0))); //FIXME keep until players can move to their own rooms
         if (cluedo == null) return;
@@ -401,7 +449,24 @@ public class GUI extends JFrame {
         
         suggestionPane.add(layout, BorderLayout.WEST);
 
+        JButton exit = new JButton("Close");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                suggestionPane.dispose();
+            }
+        });
+
+        JButton submit = new JButton("Make Suggestion");
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //
+            }
+        });
+
         JPanel panel = new JPanel();
+        panel.add(submit);
         panel.add(exit);
         suggestionPane.add(panel, BorderLayout.SOUTH);
         suggestionPane.setSize(300, 750);
@@ -410,15 +475,7 @@ public class GUI extends JFrame {
     }
 
     private void accusationPane() {
-        accusationPane = new JDialog(this, "Make a Accusation");
-        JButton exit = new JButton("Close");
-        exit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                accusationPane.dispose();
-            }
-        });
-
+        accusationPane = new JDialog(this, "Make an Accusation");
         if (cluedo == null) return;
 
         //Radio Grid
@@ -463,7 +520,7 @@ public class GUI extends JFrame {
         }
         layout.add(weaponPanel, gbc);
 
-        //Room Layout (Already Selected)
+        //Room Layout
         gbc.gridy = 2;
         JLabel roomSuggestLabel = new JLabel(" Which room?");
         JPanel roomPanel = new JPanel();
@@ -479,8 +536,26 @@ public class GUI extends JFrame {
 
         accusationPane.add(layout, BorderLayout.WEST);
 
+        JButton exit = new JButton("Close");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                accusationPane.dispose();
+            }
+        });
+
+        JButton submit = new JButton("Make Accusation");
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //make accusation
+            }
+        });
+
         JPanel panel = new JPanel();
+        panel.add(submit);
         panel.add(exit);
+
         accusationPane.add(panel, BorderLayout.SOUTH);
         accusationPane.setSize(300, 750);
         accusationPane.setLocationRelativeTo(null);
