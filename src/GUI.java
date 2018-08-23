@@ -31,11 +31,12 @@ public class GUI extends JFrame {
     private JTextArea textOutputArea;
     private JScrollPane scroll;
 
-    //Tabs
+    //Panes
     private JDialog cardPane;
     private JDialog evidencePane;
     private JDialog suggestionPane;
     private JDialog accusationPane;
+    private JDialog refutePane;
 
     //Cluedo
     private Cluedo cluedo;
@@ -347,7 +348,7 @@ public class GUI extends JFrame {
             if (cluedo.getMove().getKnownEvidence().contains(playerOptions.get(i))) {
                 evidence[i + 1] = String.format("[X] %s", playerOptions.get(i));
             } else {
-                evidence[i + 1] = String.format("[ ] %s", playerOptions.get(i));
+                evidence[i + 1] = String.format("[   ] %s", playerOptions.get(i));
             }
         }
         evidence[base1 += 1] = " ";
@@ -357,7 +358,7 @@ public class GUI extends JFrame {
             if (cluedo.getMove().getKnownEvidence().contains(weaponOptions.get(i))) {
                 evidence[i + base1 + 1] = String.format("[X] %s", weaponOptions.get(i));
             } else {
-                evidence[i + base1 + 1] = String.format("[ ] %s", weaponOptions.get(i));
+                evidence[i + base1 + 1] = String.format("[   ] %s", weaponOptions.get(i));
             }
         }
         evidence[base2 += 3] = " ";
@@ -367,7 +368,7 @@ public class GUI extends JFrame {
             if (cluedo.getMove().getKnownEvidence().contains(roomOptions.get(i))) {
                 evidence[i + base2 + 1] = String.format("[X] %s", roomOptions.get(i));
             } else {
-                evidence[i + base2 + 1] = String.format("[ ] %s", roomOptions.get(i));
+                evidence[i + base2 + 1] = String.format("[   ] %s", roomOptions.get(i));
             }
         }
 
@@ -382,6 +383,7 @@ public class GUI extends JFrame {
     }
 
     private void suggestionPane() {
+        List<String> suggestion = new ArrayList<>();
         suggestionPane = new JDialog(this, "Make a Suggestion");
 
         cluedo.getMove().setRoom(cluedo.getMove().doorSquare("L".charAt(0))); //FIXME keep until players can move to their own rooms
@@ -405,6 +407,7 @@ public class GUI extends JFrame {
         layout.setLayout(new GridBagLayout());
 
         //Player layout
+        List<JRadioButton> playerButtons = new ArrayList<>();
         JLabel playerSuggestLabel = new JLabel( " Which Player?");
         JPanel playerPanel = new JPanel();
         playerPanel.setLayout(new GridBagLayout());
@@ -414,10 +417,13 @@ public class GUI extends JFrame {
             JRadioButton button = new JRadioButton(playerOptions.get(i));
             playerPanel.add(button, panelConstraints);
             playerGroup.add(button);
+            playerButtons.add(button);
         }
         layout.add(playerPanel, gbc);
-        
+
+        //Weapon Layout
         gbc.gridy = 1;
+        List<JRadioButton> weaponButtons = new ArrayList<>();
         JLabel weaponSuggestLabel = new JLabel(" Which Weapon?");
         JPanel weaponPanel = new JPanel();
         weaponPanel.setLayout(new GridBagLayout());
@@ -427,6 +433,7 @@ public class GUI extends JFrame {
             JRadioButton button = new JRadioButton(weaponOptions.get(i));
             weaponPanel.add(button, panelConstraints);
             weaponGroup.add(button);
+            weaponButtons.add(button);
         }
         layout.add(weaponPanel, gbc);
 
@@ -446,7 +453,7 @@ public class GUI extends JFrame {
             } else button.setSelected(true);
         }
         layout.add(roomPanel, gbc);
-        
+
         suggestionPane.add(layout, BorderLayout.WEST);
 
         JButton exit = new JButton("Close");
@@ -461,7 +468,20 @@ public class GUI extends JFrame {
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                for (int i = 0; i < playerButtons.size(); i++) {
+                    if (playerButtons.get(i).isSelected()) {
+                        suggestion.add(playerOptions.get(i));
+                    }
+                }
+                for (int i = 0; i < weaponButtons.size(); i++) {
+                    if (weaponButtons.get(i).isSelected()) {
+                        suggestion.add(weaponOptions.get(i));
+                    }
+                }
+                suggestion.add(cluedo.getMove().getRoom().getName());
+                
+                cluedo.getMove().setCurrentSuggestion(suggestion);
+                doRefuteSuggestion(suggestion);
             }
         });
 
@@ -561,7 +581,65 @@ public class GUI extends JFrame {
         accusationPane.setLocationRelativeTo(null);
         accusationPane.setVisible(true);
     }
-    
+
+    private void doRefuteSuggestion(List<String> suggestion) {
+        //FIXME player creation needs fixing (e.g. player.getNextPlayers is empty even with multiple players)
+        for (Player p : cluedo.getMove().getNextPlayers()) {
+            if (p.refutableCards(suggestion) != null) {
+                refute(p, suggestion);
+            } else {
+                //TODO create dialog saying player p has no refutable cards
+            }
+        }
+    }
+
+    private void refute(Player p, List<String> suggestion) {
+        refutePane = new JDialog(this, "Refute Suggestion");
+        System.out.println("sadas");
+        //Radio Grid
+        GridBagConstraints radioConstraints = new GridBagConstraints();
+        radioConstraints.gridx = 0;
+        radioConstraints.gridy = GridBagConstraints.RELATIVE;
+        radioConstraints.anchor = GridBagConstraints.WEST;
+
+        //Panel Grid
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+
+        JPanel layout = new JPanel();
+        layout.setLayout(new GridBagLayout());
+
+        //Refutable Cards
+        List<Card> refutables = p.refutableCards(suggestion);
+
+        //Refution Radio Buttons
+        List<JRadioButton> buttons = new ArrayList<>();
+        JLabel makeRefuteLabel = new JLabel("Refute the Suggestion");
+        JPanel refutionPane = new JPanel();
+        refutionPane.setLayout(new GridBagLayout());
+        ButtonGroup buttonGroup = new ButtonGroup();
+        refutionPane.add(makeRefuteLabel);
+        for (Card c : refutables) {
+            JRadioButton button = new JRadioButton(c.getName());
+            refutionPane.add(button, radioConstraints);
+            buttonGroup.add(button);
+            buttons.add(button);
+        }
+        layout.add(refutionPane, gbc);
+
+        //TODO complete dialog view, refer to suggestion;
+        JButton submit = new JButton("Submit");
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: complete submission
+                refutePane.dispose();
+            }
+        });
+    }
+
     private void listSetup() {
         playerOptions.add("Miss Scarlett");
         playerOptions.add("Col. Mustard");
