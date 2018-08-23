@@ -34,6 +34,7 @@ public class GUI extends JFrame {
     //Tabs
     private JDialog cardPane;
     private JDialog suggestionPane;
+    private JDialog accusationPane;
 
     //Cluedo
     private Cluedo cluedo;
@@ -208,7 +209,7 @@ public class GUI extends JFrame {
         JButton makeAccusation = new JButton("Make Accusation");    //evidence button
         makeAccusation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                //make accusation
+                accusationPane();
             }
         });
 
@@ -335,7 +336,9 @@ public class GUI extends JFrame {
             }
         });
 
+        cluedo.getMove().setRoom(cluedo.getMove().doorSquare("L".charAt(0))); //FIXME keep until players can move to their own rooms
         if (cluedo == null) return;
+        if (cluedo.getMove().getRoom() == null) return;
 
         //Radio Grid
         GridBagConstraints panelConstraints = new GridBagConstraints();
@@ -344,15 +347,17 @@ public class GUI extends JFrame {
         panelConstraints.anchor = GridBagConstraints.WEST;
 
         //Panel Grid
-        GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
-                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0);
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.ipady = 35;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+
+        JPanel layout = new JPanel();
+        layout.setLayout(new GridBagLayout());
 
         //Player layout
-        JPanel playerLayout = new JPanel();
-        playerLayout.setLayout(new GridBagLayout());
-        JLabel playerSuggestLabel = new JLabel("Which Player?");
+        JLabel playerSuggestLabel = new JLabel( " Which Player?");
         JPanel playerPanel = new JPanel();
         playerPanel.setLayout(new GridBagLayout());
         ButtonGroup playerGroup = new ButtonGroup();
@@ -362,13 +367,10 @@ public class GUI extends JFrame {
             playerPanel.add(button, panelConstraints);
             playerGroup.add(button);
         }
-        playerLayout.add(playerPanel, gbc);
-        suggestionPane.add(playerLayout);
-
-        /* FIXME: replacing players??
-        JPanel weaponLayout = new JPanel();
-        weaponLayout.setLayout(new GridBagLayout());
-        JLabel weaponSuggestLabel = new JLabel("Which Weapon?");
+        layout.add(playerPanel, gbc);
+        
+        gbc.gridy = 1;
+        JLabel weaponSuggestLabel = new JLabel(" Which Weapon?");
         JPanel weaponPanel = new JPanel();
         weaponPanel.setLayout(new GridBagLayout());
         ButtonGroup weaponGroup = new ButtonGroup();
@@ -378,17 +380,113 @@ public class GUI extends JFrame {
             weaponPanel.add(button, panelConstraints);
             weaponGroup.add(button);
         }
-        weaponLayout.add(weaponPanel, gbc);
-        suggestionPane.add(weaponLayout);
-*/
+        layout.add(weaponPanel, gbc);
+
+        //Room Layout (Already Selected)
+        gbc.gridy = 2;
+        JLabel roomSuggestLabel = new JLabel(" Which room?");
+        JPanel roomPanel = new JPanel();
+        roomPanel.setLayout(new GridBagLayout());
+        ButtonGroup roomGroup = new ButtonGroup();
+        roomPanel.add(roomSuggestLabel, panelConstraints);
+        for (int i = 0; i < roomOptions.size(); i++) {
+            JRadioButton button = new JRadioButton(roomOptions.get(i));
+            roomPanel.add(button, panelConstraints);
+            roomGroup.add(button);
+            if (roomOptions.get(i) != cluedo.getMove().getRoom().getName()) {
+                button.setEnabled(false);
+            } else button.setSelected(true);
+        }
+        layout.add(roomPanel, gbc);
+        
+        suggestionPane.add(layout, BorderLayout.WEST);
+
         JPanel panel = new JPanel();
         panel.add(exit);
         suggestionPane.add(panel, BorderLayout.SOUTH);
-        suggestionPane.setSize(300, 800);
+        suggestionPane.setSize(300, 750);
         suggestionPane.setLocationRelativeTo(null);
         suggestionPane.setVisible(true);
     }
 
+    private void accusationPane() {
+        accusationPane = new JDialog(this, "Make a Accusation");
+        JButton exit = new JButton("Close");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                accusationPane.dispose();
+            }
+        });
+
+        if (cluedo == null) return;
+
+        //Radio Grid
+        GridBagConstraints panelConstraints = new GridBagConstraints();
+        panelConstraints.gridx = 0;
+        panelConstraints.gridy = GridBagConstraints.RELATIVE;
+        panelConstraints.anchor = GridBagConstraints.WEST;
+
+        //Panel Grid
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.ipady = 35;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+
+        JPanel layout = new JPanel();
+        layout.setLayout(new GridBagLayout());
+
+        //Player layout
+        JLabel playerSuggestLabel = new JLabel( " Which Player?");
+        JPanel playerPanel = new JPanel();
+        playerPanel.setLayout(new GridBagLayout());
+        ButtonGroup playerGroup = new ButtonGroup();
+        playerPanel.add(playerSuggestLabel, panelConstraints);
+        for (int i = 0; i < playerOptions.size(); i++) {
+            JRadioButton button = new JRadioButton(playerOptions.get(i));
+            playerPanel.add(button, panelConstraints);
+            playerGroup.add(button);
+        }
+        layout.add(playerPanel, gbc);
+
+        gbc.gridy = 1;
+        JLabel weaponSuggestLabel = new JLabel(" Which Weapon?");
+        JPanel weaponPanel = new JPanel();
+        weaponPanel.setLayout(new GridBagLayout());
+        ButtonGroup weaponGroup = new ButtonGroup();
+        weaponPanel.add(weaponSuggestLabel, panelConstraints);
+        for (int i = 0; i < weaponOptions.size(); i++) {
+            JRadioButton button = new JRadioButton(weaponOptions.get(i));
+            weaponPanel.add(button, panelConstraints);
+            weaponGroup.add(button);
+        }
+        layout.add(weaponPanel, gbc);
+
+        //Room Layout (Already Selected)
+        gbc.gridy = 2;
+        JLabel roomSuggestLabel = new JLabel(" Which room?");
+        JPanel roomPanel = new JPanel();
+        roomPanel.setLayout(new GridBagLayout());
+        ButtonGroup roomGroup = new ButtonGroup();
+        roomPanel.add(roomSuggestLabel, panelConstraints);
+        for (int i = 0; i < roomOptions.size(); i++) {
+            JRadioButton button = new JRadioButton(roomOptions.get(i));
+            roomPanel.add(button, panelConstraints);
+            roomGroup.add(button);
+        }
+        layout.add(roomPanel, gbc);
+
+        accusationPane.add(layout, BorderLayout.WEST);
+
+        JPanel panel = new JPanel();
+        panel.add(exit);
+        accusationPane.add(panel, BorderLayout.SOUTH);
+        accusationPane.setSize(300, 750);
+        accusationPane.setLocationRelativeTo(null);
+        accusationPane.setVisible(true);
+    }
+    
     private void listSetup() {
         playerOptions.add("Miss Scarlett");
         playerOptions.add("Col. Mustard");
