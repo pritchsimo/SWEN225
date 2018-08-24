@@ -312,10 +312,29 @@ public class GUI extends JFrame {
 
         if (cluedo == null) return;
 
-        String[] cards = new String[cluedo.getMove().getCards().size()];
-        for (int i = 0; i < cluedo.getMove().getCards().size(); i++) {
-            cards[i] = " " + cluedo.getMove().getCards().get(i).getName();
+        List<String> playerCards = new ArrayList<>();
+        List<String> weaponCards = new ArrayList<>();
+        List<String> roomCards = new ArrayList<>();
+        List<Card> allCards = cluedo.getMove().getCards();
+        List<String> cardTemp = new ArrayList<>();
+        for (int i = 0; i < allCards.size(); i++) {
+            if (allCards.get(i).getType().equals("Player")) {
+                playerCards.add(allCards.get(i).getName());
+            } else if (allCards.get(i).getType().equals("Weapon")){
+                weaponCards.add(allCards.get(i).getName());
+            } else {
+                roomCards.add(allCards.get(i).getName());
+            }
         }
+        cardTemp.add("Player Cards: ");
+        cardTemp.addAll(playerCards);
+        cardTemp.add(" ");
+        cardTemp.add("Weapon Cards: ");
+        cardTemp.addAll(weaponCards);
+        cardTemp.add(" ");
+        cardTemp.add("Room Cards: ");
+        cardTemp.addAll(roomCards);
+        String[] cards = cardTemp.toArray(new String[cardTemp.size()]);
 
         cardPane.add(new JList(cards));
 
