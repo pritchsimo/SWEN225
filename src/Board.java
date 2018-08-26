@@ -55,13 +55,12 @@ public class Board {
                         "##.................#^^^^^##" +
                         "##^^^#.....#####..IRRRRRR]#" +
                         "#[RRRR^^#..#####...[RRRRR]#" +
-                        "#[RRRRRR]..#####...[RRRRR]#" +
-                        "#[RRRRRRRD.#####...#____R##" +
-                        "#[RRRRRR]..#####......L.I##" +
+                        "#[RRRRRR]..#####...#____R##" +
+                        "#[RRRRRRRD.#####......L.I##" +
                         "#[RRRRRR]..#####...#^^R^^##" +
                         "#[RRRRRR]..#####..#RRRRRR##" +
                         "##_____R#..#####.LRRRRRRR]#" +
-						"##.....D..........#RRRRRR]#" +
+                        "##.....D..........#RRRRRR]#" +
                         "#6..........HHH....#_____##" +
                         "##........#^RRR^^H.......4#" +
                         "##^^^^^^O.[RRRRR]..S.....##" +
@@ -72,10 +71,10 @@ public class Board {
                         "##____####5#___#.####____##" +
                         "###########################";
 
-		board = new char[27][28];
+		board = new char[27][27];
 		char[] chars = boardRepresentation.toCharArray();
 		int i = 0;
-		for (int y = 0; y < 28; y++) {
+		for (int y = 0; y < 27; y++) {
 			for (int x = 0; x < 27; x++) {
 				board[x][y] = chars[i];
 				i++;
