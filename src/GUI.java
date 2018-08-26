@@ -435,11 +435,11 @@ public class GUI extends JFrame {
     private void suggestionPane() {
         List<String> suggestion = new ArrayList<>();
         suggestionPane = new JDialog(this, "Make a Suggestion");
-
-        cluedo.getMove().setRoom(cluedo.getMove().doorSquare("L".charAt(0))); //FIXME keep until players can move to their own rooms
+        System.out.println("yeet");
+        cluedo.getMove().setRoom(cluedo.getMove().doorSquare("L".charAt(0)));
         if (cluedo == null) return;
         if (cluedo.getMove().getRoom() == null) return;
-
+        System.out.println("yeet");
         //Radio Grid
         GridBagConstraints panelConstraints = new GridBagConstraints();
         panelConstraints.gridx = 0;
@@ -498,7 +498,7 @@ public class GUI extends JFrame {
             JRadioButton button = new JRadioButton(roomOptions.get(i));
             roomPanel.add(button, panelConstraints);
             roomGroup.add(button);
-            if (roomOptions.get(i) != cluedo.getMove().getRoom().getName()) {
+            if (!roomOptions.get(i).equals(cluedo.getMove().getRoom().getName())) {
                 button.setEnabled(false);
             } else button.setSelected(true);
         }
@@ -660,12 +660,11 @@ public class GUI extends JFrame {
     }
 
     private void doRefuteSuggestion(List<String> suggestion) {
-        //FIXME player creation needs fixing (e.g. player.getNextPlayers is empty even with multiple players)
         for (Player p : cluedo.getMove().getNextPlayers()) {
             if (p.refutableCards(suggestion) != null) {
                 refute(p, suggestion);
             } else {
-                //TODO create dialog saying player p has no refutable cards
+                JOptionPane.showMessageDialog(this, p.getPlayerName() + "Cannot refute the suggestion");
             }
         }
     }
@@ -754,11 +753,6 @@ public class GUI extends JFrame {
         movesRemaining = dice1+dice2;
 
         textOutputArea.append("It is " + current.getPlayerName() + "'s (" + current.getCharacterName() + ") turn. You roll a " + movesRemaining + ".\n");
-      
-      private void gameRun() {
-        for (int i = 0; i < 3; i++) {
-            System.out.println(cluedo.getSolution().get(i).getName());
-        }
     }
 
 //    private void gameRun() {
