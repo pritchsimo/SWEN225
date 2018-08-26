@@ -107,8 +107,8 @@ public class Cluedo {
         Collections.shuffle(weaponCards);
 
         solution.add(playerCards.remove(0));
-        solution.add(roomCards.remove(0));
         solution.add(weaponCards.remove(0));
+        solution.add(roomCards.remove(0));
 
         List<Card> remainingCards = new ArrayList<>();
         remainingCards.addAll(playerCards);
@@ -150,14 +150,15 @@ public class Cluedo {
         return players.get(move);
     }
 
-    public void accuse(List<String> accusation) {
+    public boolean accuse(List<String> accusation) {
         for (int i = 0; i < accusation.size(); i++) {
             if (!accusation.get(i).equals(solution.get(i).getName())) {
                 doPlayerLose();
-                return;
+                return false;
             }
         }
         doPlayerWin();
+        return true;
     }
 
     public List<Player> getPlayers() {
