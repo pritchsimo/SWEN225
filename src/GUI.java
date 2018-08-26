@@ -357,7 +357,8 @@ public class GUI extends JFrame {
         });
 
         if (cluedo == null) return;
-        
+
+        //Formatting evidence
         int base1 = playerOptions.size();
         int base2 = base1 + weaponOptions.size();
         int base3 = base2 + roomOptions.size();
@@ -514,6 +515,7 @@ public class GUI extends JFrame {
     }
 
     private void accusationPane() {
+        List<String> suggestion = new ArrayList<>();
         accusationPane = new JDialog(this, "Make an Accusation");
         if (cluedo == null) return;
 
@@ -539,10 +541,12 @@ public class GUI extends JFrame {
         playerPanel.setLayout(new GridBagLayout());
         ButtonGroup playerGroup = new ButtonGroup();
         playerPanel.add(playerSuggestLabel, panelConstraints);
+        List<JRadioButton> playerButtons = new ArrayList<>();
         for (int i = 0; i < playerOptions.size(); i++) {
             JRadioButton button = new JRadioButton(playerOptions.get(i));
             playerPanel.add(button, panelConstraints);
             playerGroup.add(button);
+            playerButtons.add(button);
         }
         layout.add(playerPanel, gbc);
 
@@ -552,10 +556,12 @@ public class GUI extends JFrame {
         weaponPanel.setLayout(new GridBagLayout());
         ButtonGroup weaponGroup = new ButtonGroup();
         weaponPanel.add(weaponSuggestLabel, panelConstraints);
+        List<JRadioButton> weaponButtons = new ArrayList<>();
         for (int i = 0; i < weaponOptions.size(); i++) {
             JRadioButton button = new JRadioButton(weaponOptions.get(i));
             weaponPanel.add(button, panelConstraints);
             weaponGroup.add(button);
+            weaponButtons.add(button);
         }
         layout.add(weaponPanel, gbc);
 
@@ -566,10 +572,12 @@ public class GUI extends JFrame {
         roomPanel.setLayout(new GridBagLayout());
         ButtonGroup roomGroup = new ButtonGroup();
         roomPanel.add(roomSuggestLabel, panelConstraints);
+        List<JRadioButton> roomButtons = new ArrayList<>();
         for (int i = 0; i < roomOptions.size(); i++) {
             JRadioButton button = new JRadioButton(roomOptions.get(i));
             roomPanel.add(button, panelConstraints);
             roomGroup.add(button);
+            roomButtons.add(button);
         }
         layout.add(roomPanel, gbc);
 
@@ -587,7 +595,27 @@ public class GUI extends JFrame {
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //make accusation
+                for (int i = 0; i < playerButtons.size(); i++) {
+                    if (playerButtons.get(i).isSelected()) {
+                        suggestion.add(playerOptions.get(i));
+                    }
+                }
+                for (int i = 0; i < weaponButtons.size(); i++) {
+                    if (weaponButtons.get(i).isSelected()) {
+                        suggestion.add(weaponOptions.get(i));
+                    }
+                }
+                for (int i = 0; i < roomButtons.size(); i++) {
+                    if (roomButtons.get(i).isSelected()) {
+                        suggestion.add(roomOptions.get(i));
+                    }
+                }
+                if (!cluedo.accuse(suggestion)) {
+                    JOptionPane.showMessageDialog(gui, "You submitted an incorrect accusation, you have now been removed from the game.");
+                } else {
+                    JOptionPane.showMessageDialog(gui, "You have made a correct accusation, you have won the game!");
+                }
+                accusationPane.dispose();
             }
         });
 
@@ -686,7 +714,9 @@ public class GUI extends JFrame {
     }
 
     private void gameRun() {
-
+        for (int i = 0; i < 3; i++) {
+            System.out.println(cluedo.getSolution().get(i).getName());
+        }
     }
 
 
@@ -696,6 +726,5 @@ public class GUI extends JFrame {
             GUI gui = new GUI();
             gui.setVisible(true);
         });
-
     }
 }
