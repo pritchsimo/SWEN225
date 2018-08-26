@@ -77,12 +77,12 @@ public class Cluedo {
         roomOptions.add("Hall");
         roomOptions.add("Lounge");
 
-        availablePlayers.put("Miss Scarlett", new Point(8, 25));
-        availablePlayers.put("Col. Mustard", new Point(1, 18));
-        availablePlayers.put("Mrs.White", new Point(10, 1));
-        availablePlayers.put("Mr. Green", new Point(15, 1));
-        availablePlayers.put("Mrs. Peacock", new Point(24, 7));
-        availablePlayers.put("Prof. Plum", new Point(24, 20));
+        availablePlayers.put("Miss Scarlett", new Point(10, 25));
+        availablePlayers.put("Col. Mustard", new Point(1, 19));
+        availablePlayers.put("Mrs. White", new Point(10, 1));
+        availablePlayers.put("Mr. Green", new Point(16, 1));
+        availablePlayers.put("Mrs. Peacock", new Point(25, 7));
+        availablePlayers.put("Prof. Plum", new Point(25, 20));
 
     }
 
@@ -207,4 +207,5 @@ public class Cluedo {
     public List<String> getRoomOptions() {
         return roomOptions;
     }
+
 }

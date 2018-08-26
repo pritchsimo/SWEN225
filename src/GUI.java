@@ -22,7 +22,7 @@ public class GUI extends JFrame {
 
     //display
     private JPanel board;
-    private ImageIcon boardPic;
+    private BoardPanel boardPanel;
 
     private JSplitPane split;
     private JPanel controls;
@@ -40,6 +40,8 @@ public class GUI extends JFrame {
 
     //Cluedo
     private Cluedo cluedo;
+    private Player current;
+    private int movesRemaining;
 
 
     public GUI() {
@@ -60,7 +62,7 @@ public class GUI extends JFrame {
         this.add(split, BorderLayout.SOUTH);
 
         setTitle("Cluedo");
-        setSize(800, 835);
+        setSize(900, 835);
         setLocationRelativeTo(null);
         this.addWindowListener(new WindowAdapter() {    //confirms user does want to leave
             @Override
@@ -71,6 +73,8 @@ public class GUI extends JFrame {
                 }
             }
         });
+
+
     }
 
 
@@ -84,9 +88,6 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 newGamePane();
-                if (cluedo != null) {
-                    gameRun();
-                }
             }
         });
         options.add(newGameMenuItem);
@@ -100,20 +101,18 @@ public class GUI extends JFrame {
 
         menubar.add(options);
         setJMenuBar(menubar);
+
     }
 
     private void createBoard() {
         board = new JPanel();
         //board.setPreferredSize(new Dimension(500, 500));
         board.setLayout(new BoxLayout(board, BoxLayout.Y_AXIS));
-        Border edge = BorderFactory.createEmptyBorder(15, 70, 5, 5);
+        Border edge = BorderFactory.createEmptyBorder(15, 115, 5, 5);
         board.setBorder(edge);
 
-        boardPic = new ImageIcon("DiceImages/Board.png");
-        JLabel boardLabel = new JLabel(boardPic);
-        board.add(boardLabel);
-
-        board.setBackground(Color.gray);    //need to create board
+        boardPanel = new BoardPanel();
+        board.add(boardPanel);
 
     }
 
@@ -146,25 +145,25 @@ public class GUI extends JFrame {
         JButton upwards = new JButton("\u2191");
         upwards.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                //go upwards
+                movePlayer("upwards");
             }
         });
         JButton left = new JButton("\u2190");
         left.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                //go left
+                movePlayer("left");
             }
         });
         JButton downwards = new JButton("\u2193");
         downwards.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                //go downwards
+                movePlayer("downwards");
             }
         });
         JButton right = new JButton("\u2192");
         right.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                //go right
+                movePlayer("right");
             }
         });
 
@@ -216,6 +215,16 @@ public class GUI extends JFrame {
         });
 
         controls.add(makeAccusation);
+        controls.add(Box.createRigidArea(new Dimension(20, 0)));
+
+        JButton endTurn = new JButton("End Turn");
+        endTurn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                setNextMove();
+            }
+        });
+
+        controls.add(endTurn);
 
         textOutputArea = new JTextArea(2, 0);
         textOutputArea.setLineWrap(true);
@@ -229,6 +238,23 @@ public class GUI extends JFrame {
         split.setBottomComponent(scroll);
 
 
+    }
+
+    private void movePlayer(String direction){
+        System.out.println("Move player " + direction);
+        if (current != null){
+            if (current.translate(direction, 1)){
+                if (movesRemaining == 0){
+                    textOutputArea.append("Unable to move. You have " + movesRemaining + " moves remaining.\n");
+                } else {
+                    boardPanel.repaint();
+                    movesRemaining--;
+                    textOutputArea.append("It is " + current.getPlayerName() + "'s (" + current.getCharacterName() + ") turn. You have " + movesRemaining + " moves remaining.\n");
+                }
+            }
+        } else {
+            System.out.println("Current == null");
+        }
     }
 
     private void newGamePane() {
@@ -246,6 +272,8 @@ public class GUI extends JFrame {
 
         boolean playersLeft[] = new boolean[6];
         Arrays.fill(playersLeft, true);
+
+        cluedo = new Cluedo();
 
         for (int i = 0; i < numPlayers; i++) {
             JTextField playerName = new JTextField(10);
@@ -272,6 +300,7 @@ public class GUI extends JFrame {
                         buttons.get(3).isSelected() || buttons.get(4).isSelected() || buttons.get(5).isSelected())) {
                     break;
                 } else if (result == JOptionPane.CANCEL_OPTION) {
+                    cluedo = null;
                     return;
                 } else {
                     JOptionPane.showMessageDialog(this, "Please enter a name and pick player", "Wrong Input", JOptionPane.WARNING_MESSAGE);
@@ -280,7 +309,7 @@ public class GUI extends JFrame {
             }
 
             if (result == JOptionPane.OK_OPTION) {
-                cluedo = new Cluedo();
+
                 for (int j = 0; j < 6; j++) {
                     JRadioButton b = buttons.get(j);
                     if (b.isSelected()) {
@@ -288,16 +317,17 @@ public class GUI extends JFrame {
                         playersLeft[j] = false;
                     }
                 }
-                cluedo.playerSetup();
-                cluedo.setup(false);
-
-
                 //add players to board
 
             } else {
+                cluedo = null;
                 return;
             }
         }
+        cluedo.playerSetup();
+        cluedo.setup(false);
+        boardPanel.setPlayers(cluedo.getPlayers());
+        setNextMove();
     }
 
     private void cardPane() {
@@ -659,6 +689,10 @@ public class GUI extends JFrame {
         });
     }
 
+    private void updateDice(int dice1, int dice2){
+        //TODO update dice
+    }
+
     private void listSetup() {
         playerOptions.add("Miss Scarlett");
         playerOptions.add("Col. Mustard");
@@ -685,9 +719,28 @@ public class GUI extends JFrame {
         roomOptions.add("Lounge");
     }
 
-    private void gameRun() {
+    private void setNextMove(){
+        current = cluedo.getMove();
+        int dice1 = (int) (Math.random() * 5) + 1;
+        int dice2 = (int) (Math.random() * 5) + 1;
+        movesRemaining = dice1+dice2;
 
+        textOutputArea.append("It is " + current.getPlayerName() + "'s (" + current.getCharacterName() + ") turn. You roll a " + movesRemaining + ".\n");
     }
+
+//    private void gameRun() {
+//        while (!cluedo.isGameWon() || !cluedo.getPlayers().isEmpty()){
+//            if (cluedo.getMove() == null){
+//                break;
+//            }
+//            current = cluedo.getMove();
+//            int dice1 = (int) (Math.random() * 5) + 1;
+//            int dice2 = (int) (Math.random() * 5) + 1;
+//            movesRemaining = dice1+dice2;
+//
+//            textOutputArea.append("It is " + current.getPlayerName() + "'s turn. You roll a " + movesRemaining + ".");
+//        }
+//    }
 
 
     public static void main(String[] args) {
