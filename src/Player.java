@@ -1,5 +1,6 @@
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.util.*;
 import java.util.List;
 
@@ -54,9 +55,8 @@ public class Player {
         for (int i = 0; i < distance; i++){
             if (room == null && (square == '.' || doorSquare(square) != null)) {
                 coords.translate(dx, dy);
-                //return true;
             } else if (room == null && !(square == '.' || doorSquare(square) != null)) {
-                System.out.println("There is a wall in the way. Please choose a different direction.");
+                System.out.println("Wall in the way (" + (coords.x+dx) + "," + (coords.y+dy) + ") Square: " + square);
                 return false;
             } else if (room != null) {
                 if (square == 'R') {
@@ -74,11 +74,10 @@ public class Player {
                     System.out.println("You are exiting the " + room.getName());
                     room = null;
                 } else {
-                    System.out.println("There is a wall in the way. Please choose a different direction.");
                     return false;
                 }
-
             } else {
+                System.out.println("Wall in the way (" + (coords.x+dx) + "," + (coords.y+dy) + ") Square: " + square);
                 return false;
             }
         }
@@ -93,6 +92,11 @@ public class Player {
         room = doorSquare(board.getBoard()[coords.x][coords.y]);
         coords.move(roomSquare.x, roomSquare.y);
     
+    }
+
+    public void draw(Graphics g, Color c){
+        g.setColor(c);
+        g.fillOval((int) (coords.x*23.75) + 1, (int) (coords.y*23.75) + 1, 20, 20);
     }
 
     /**
@@ -198,5 +202,9 @@ public class Player {
 
     public List<Card> getCards() {
         return cards;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 }
