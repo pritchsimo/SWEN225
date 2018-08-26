@@ -58,7 +58,6 @@ public class GUI extends JFrame {
         listSetup();
 
         this.add(board, BorderLayout.CENTER);
-        //this.add(controls, BorderLayout.SOUTH);
         this.add(split, BorderLayout.SOUTH);
 
         setTitle("Cluedo");
@@ -70,6 +69,30 @@ public class GUI extends JFrame {
                 int a = JOptionPane.showConfirmDialog(gui, "Are you sure?");
                 if (a == JOptionPane.YES_OPTION) {
                     gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                }
+            }
+        });
+
+        this.addMouseListener(new MouseAdapter() {
+            public void mouseReleased(MouseEvent e) {
+                System.out.println("Mouse clicked x:" + (e.getX()-115) + " y:" + (e.getY()-65));
+                if (current != null){
+                    if (current.getRoom() != null){
+                        Room r = current.getRoom();
+                        for (Point doorPos: r.getDoorPos()){
+                            System.out.println("x: " + ((int) (doorPos.x*23.75)+1) + " - " + ((int) (doorPos.x*23.75)+24.75) +
+                                                " y: " + ((int) (doorPos.y*23.75)+1) + " - " + ((int) (doorPos.y*23.75)+24.75));
+
+                            if (e.getX()-115 >= (int) (doorPos.x*23.75)+1 && e.getX()-115 <= (int) (doorPos.x*23.75)+24.75 &&
+                                    e.getY()-65 >= (int) (doorPos.y*23.75)+1 && e.getY()-65 <= (int) (doorPos.y*23.75)+24.75) {
+                                current.setRoom(null);
+                                current.setCoords(doorPos);
+                                movesRemaining--;
+                                boardPanel.repaint();
+                            }
+                        }
+
+                    }
                 }
             }
         });
@@ -241,15 +264,20 @@ public class GUI extends JFrame {
     }
 
     private void movePlayer(String direction){
-        System.out.println("Move player " + direction);
         if (current != null){
+            if (movesRemaining == 0){
+                textOutputArea.append("Unable to move. You have " + movesRemaining + " moves remaining.\n");
+                return;
+            }
             if (current.translate(direction, 1)){
-                if (movesRemaining == 0){
-                    textOutputArea.append("Unable to move. You have " + movesRemaining + " moves remaining.\n");
+                boardPanel.repaint();
+                movesRemaining--;
+
+                textOutputArea.append("It is " + current.getPlayerName() + "'s (" + current.getCharacterName() + ") turn. You have " + movesRemaining + " moves remaining.");
+                if (current.getRoom() != null){
+                    textOutputArea.append(" Click on a door square to exit room.\n");
                 } else {
-                    boardPanel.repaint();
-                    movesRemaining--;
-                    textOutputArea.append("It is " + current.getPlayerName() + "'s (" + current.getCharacterName() + ") turn. You have " + movesRemaining + " moves remaining.\n");
+                    textOutputArea.append("\n");
                 }
             }
         } else {
@@ -262,11 +290,15 @@ public class GUI extends JFrame {
         while (true) {
             String input = JOptionPane.showInputDialog(this, "How many players? (2-6)");
             if (input == null) return;
-            numPlayers = Integer.parseInt(input);
-            if (numPlayers < 2 || numPlayers > 6) {
+            try {
+                numPlayers = Integer.parseInt(input);
+                if (numPlayers < 2 || numPlayers > 6) {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid number of players", "Wrong Input", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e){
                 JOptionPane.showMessageDialog(this, "Please enter a valid number of players", "Wrong Input", JOptionPane.WARNING_MESSAGE);
-            } else {
-                break;
             }
         }
 
@@ -317,8 +349,6 @@ public class GUI extends JFrame {
                         playersLeft[j] = false;
                     }
                 }
-                //add players to board
-
             } else {
                 cluedo = null;
                 return;
@@ -435,9 +465,8 @@ public class GUI extends JFrame {
         List<String> suggestion = new ArrayList<>();
         suggestionPane = new JDialog(this, "Make a Suggestion");
 
-        cluedo.getMove().setRoom(cluedo.getMove().doorSquare("L".charAt(0))); //FIXME keep until players can move to their own rooms
         if (cluedo == null) return;
-        if (cluedo.getMove().getRoom() == null) return;
+        if (current == null) return;
 
         //Radio Grid
         GridBagConstraints panelConstraints = new GridBagConstraints();
@@ -497,7 +526,7 @@ public class GUI extends JFrame {
             JRadioButton button = new JRadioButton(roomOptions.get(i));
             roomPanel.add(button, panelConstraints);
             roomGroup.add(button);
-            if (roomOptions.get(i) != cluedo.getMove().getRoom().getName()) {
+            if (roomOptions.get(i) != current.getRoom().getName()) {
                 button.setEnabled(false);
             } else button.setSelected(true);
         }
@@ -527,10 +556,12 @@ public class GUI extends JFrame {
                         suggestion.add(weaponOptions.get(i));
                     }
                 }
-                suggestion.add(cluedo.getMove().getRoom().getName());
+                suggestion.add(current.getRoom().getName());
                 
-                cluedo.getMove().setCurrentSuggestion(suggestion);
+                current.setCurrentSuggestion(suggestion);
                 doRefuteSuggestion(suggestion);
+
+                movesRemaining = 0;
             }
         });
 
@@ -727,21 +758,6 @@ public class GUI extends JFrame {
 
         textOutputArea.append("It is " + current.getPlayerName() + "'s (" + current.getCharacterName() + ") turn. You roll a " + movesRemaining + ".\n");
     }
-
-//    private void gameRun() {
-//        while (!cluedo.isGameWon() || !cluedo.getPlayers().isEmpty()){
-//            if (cluedo.getMove() == null){
-//                break;
-//            }
-//            current = cluedo.getMove();
-//            int dice1 = (int) (Math.random() * 5) + 1;
-//            int dice2 = (int) (Math.random() * 5) + 1;
-//            movesRemaining = dice1+dice2;
-//
-//            textOutputArea.append("It is " + current.getPlayerName() + "'s turn. You roll a " + movesRemaining + ".");
-//        }
-//    }
-
 
     public static void main(String[] args) {
 

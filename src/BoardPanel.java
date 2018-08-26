@@ -45,9 +45,6 @@ public class BoardPanel extends JPanel {
                 p.draw(g, characterColor(p.getCharacterName()));
             }
         }
-
-
-
     }
 
     private Color characterColor(String characterName){
@@ -67,16 +64,19 @@ public class BoardPanel extends JPanel {
     }
 
     public void setPlayers(List<Player> players) {
-        this.players = players;
+        this.players = new ArrayList<>();
+        for (Player p: players){
+            this.players.add(p);
+        }
         for (Player p1: startingPlayers){
             int counter = 0;
-            for (Player p2: players){
+            for (Player p2: this.players){
                 if (!p1.getCharacterName().equals(p2.getCharacterName())){
                     counter++;
                 }
             }
-            if (counter == players.size()){
-                players.add(p1);
+            if (counter == this.players.size()){
+                this.players.add(p1);
             }
         }
         repaint();

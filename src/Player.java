@@ -1,6 +1,5 @@
 
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
 import java.util.*;
 import java.util.List;
 
@@ -53,31 +52,30 @@ public class Player {
         char square = board.getBoard()[coords.x + dx][coords.y + dy];
 
         for (int i = 0; i < distance; i++){
-            if (room == null && (square == '.' || doorSquare(square) != null)) {
-                coords.translate(dx, dy);
-            } else if (room == null && !(square == '.' || doorSquare(square) != null)) {
-                System.out.println("Wall in the way (" + (coords.x+dx) + "," + (coords.y+dy) + ") Square: " + square);
-                return false;
-            } else if (room != null) {
-                if (square == 'R') {
+            if (room == null){
+                if (square == '.' || doorSquare(square) != null) {
                     coords.translate(dx, dy);
+                } else if (square == 'R') {
+                    room = doorSquare(board.getBoard()[coords.x][coords.y]);
+                    room.playerEnter(this);
                 } else if (square == '[' && (direction.equals("left") || direction.equals("downwards") || direction.equals("upwards"))) {
-                    coords.translate(dx, dy);
+                    room = doorSquare(board.getBoard()[coords.x][coords.y]);
+                    room.playerEnter(this);
                 } else if (square == '^' && (direction.equals("left") || direction.equals("upwards") || direction.equals("right"))) {
-                    coords.translate(dx, dy);
+                    room = doorSquare(board.getBoard()[coords.x][coords.y]);
+                    room.playerEnter(this);
                 } else if (square == ']' && (direction.equals("right") || direction.equals("downwards") || direction.equals("upwards"))) {
-                    coords.translate(dx, dy);
+                    room = doorSquare(board.getBoard()[coords.x][coords.y]);
+                    room.playerEnter(this);
                 } else if (square == '_' && (direction.equals("left") || direction.equals("downwards") || direction.equals("right"))) {
-                    coords.translate(dx, dy);
-                } else if (doorSquare(square) != null){
-                    coords.translate(dx, dy);
-                    System.out.println("You are exiting the " + room.getName());
-                    room = null;
+                    room = doorSquare(board.getBoard()[coords.x][coords.y]);
+                    room.playerEnter(this);
                 } else {
+                    System.out.println("Wall in the way (" + (coords.x+dx) + "," + (coords.y+dy) + ") Square: " + square);
                     return false;
                 }
             } else {
-                System.out.println("Wall in the way (" + (coords.x+dx) + "," + (coords.y+dy) + ") Square: " + square);
+                System.out.println("Cannot move in room");
                 return false;
             }
         }
@@ -110,12 +108,12 @@ public class Player {
         if (square == 'K') return map.get("kitchen");
         else if (square == 'B') return map.get("ballroom");
         else if (square == 'C') return map.get("conservatory");
-        else if (square == 'I') return map.get("billiard Room");
+        else if (square == 'I') return map.get("billiard room");
         else if (square == 'L') return map.get("library");
         else if (square == 'S') return map.get("study");
         else if (square == 'H') return map.get("hall");
         else if (square == 'O') return map.get("lounge");
-        else if (square == 'D') return map.get("dining Room");
+        else if (square == 'D') return map.get("dining room");
 
         return null;
     }
