@@ -84,14 +84,14 @@ public class Board {
 
 	private void addRooms() {
 		rooms = new HashMap<>();
-		rooms.put("kitchen", new Room("Kitchen", Arrays.asList(new Point(5, 8)), new Point(4, 5)));
-		rooms.put("ballroom", new Room("Ballroom", Arrays.asList(new Point(8, 6), new Point(17, 6), new Point(10, 9), new Point(15, 9)), new Point(13, 6)));
-		rooms.put("conservatory", new Room("Conservatory", Arrays.asList(new Point(19, 6)), new Point(21, 4)));
+		rooms.put("kitchen", new Room("Kitchen", Arrays.asList(new Point(7, 7)), new Point(4, 5)));
+		rooms.put("ballroom", new Room("Ballroom", Arrays.asList(new Point(8, 6), new Point(18, 6), new Point(10, 8), new Point(16, 8)), new Point(13, 6)));
+		rooms.put("conservatory", new Room("Conservatory", Arrays.asList(new Point(20, 5)), new Point(21, 4)));
 		rooms.put("dining room", new Room("Dining Room", Arrays.asList(new Point(7, 17), new Point(9, 13)), new Point(5, 13)));
-		rooms.put("billiard room", new Room("Billiard Room", Arrays.asList(new Point(18, 10), new Point(23, 14)), new Point(22, 11)));
-		rooms.put("library", new Room("Library", Arrays.asList(new Point(21, 14), new Point(17, 17)), new Point(21, 17)));
-		rooms.put("study", new Room("Study", Arrays.asList(new Point(18, 21)), new Point(21, 23)));
-		rooms.put("hall", new Room("Hall", Arrays.asList(new Point(16, 21), new Point(12, 18), new Point(13, 18)), new Point(13, 20)));
+		rooms.put("billiard room", new Room("Billiard Room", Arrays.asList(new Point(19, 10), new Point(24, 13)), new Point(22, 11)));
+		rooms.put("library", new Room("Library", Arrays.asList(new Point(22, 13), new Point(17, 16)), new Point(21, 17)));
+		rooms.put("study", new Room("Study", Arrays.asList(new Point(19, 20)), new Point(21, 23)));
+		rooms.put("hall", new Room("Hall", Arrays.asList(new Point(12, 18), new Point(13, 18), new Point(14, 18), new Point(16, 19)), new Point(13, 20)));
 		rooms.put("lounge", new Room("Lounge", Arrays.asList(new Point(7, 19)), new Point(4, 22)));
 	}
 
