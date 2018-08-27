@@ -107,8 +107,8 @@ public class Cluedo {
         Collections.shuffle(weaponCards);
 
         solution.add(playerCards.remove(0));
-        solution.add(roomCards.remove(0));
         solution.add(weaponCards.remove(0));
+        solution.add(roomCards.remove(0));
 
         List<Card> remainingCards = new ArrayList<>();
         remainingCards.addAll(playerCards);

@@ -404,11 +404,16 @@ public class GUI extends JFrame {
             }
         });
 
+
         if (cluedo == null) {
             JOptionPane.showMessageDialog(this, "Go to options and start a new game.", "Start New Game", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
+
+
+        //Formatting evidence
+
         int base1 = playerOptions.size();
         int base2 = base1 + weaponOptions.size();
         int base3 = base2 + roomOptions.size();
@@ -464,6 +469,7 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(this, "You cannot make a suggestion when you're not in a room", "Make Suggestion", JOptionPane.WARNING_MESSAGE);
             return;
         }
+
 
         //Radio Grid
         GridBagConstraints panelConstraints = new GridBagConstraints();
@@ -524,6 +530,7 @@ public class GUI extends JFrame {
             roomPanel.add(button, panelConstraints);
             roomGroup.add(button);
             if (roomOptions.get(i) != current.getRoom().getName()) {
+
                 button.setEnabled(false);
             } else button.setSelected(true);
         }
@@ -579,6 +586,7 @@ public class GUI extends JFrame {
     }
 
     private void accusationPane() {
+        List<String> suggestion = new ArrayList<>();
         accusationPane = new JDialog(this, "Make an Accusation");
         if (cluedo == null) {
             JOptionPane.showMessageDialog(this, "Go to options and start a new game.", "Start New Game", JOptionPane.WARNING_MESSAGE);
@@ -608,11 +616,13 @@ public class GUI extends JFrame {
         playerPanel.setLayout(new GridBagLayout());
         ButtonGroup playerGroup = new ButtonGroup();
         playerPanel.add(playerSuggestLabel, panelConstraints);
+        List<JRadioButton> playerButtons = new ArrayList<>();
         for (int i = 0; i < playerOptions.size(); i++) {
             JRadioButton button = new JRadioButton(playerOptions.get(i));
             playerButtons.add(button);
             playerPanel.add(button, panelConstraints);
             playerGroup.add(button);
+            playerButtons.add(button);
         }
         layout.add(playerPanel, gbc);
 
@@ -624,11 +634,13 @@ public class GUI extends JFrame {
         weaponPanel.setLayout(new GridBagLayout());
         ButtonGroup weaponGroup = new ButtonGroup();
         weaponPanel.add(weaponSuggestLabel, panelConstraints);
+        List<JRadioButton> weaponButtons = new ArrayList<>();
         for (int i = 0; i < weaponOptions.size(); i++) {
             JRadioButton button = new JRadioButton(weaponOptions.get(i));
             weaponButtons.add(button);
             weaponPanel.add(button, panelConstraints);
             weaponGroup.add(button);
+            weaponButtons.add(button);
         }
         layout.add(weaponPanel, gbc);
 
@@ -640,11 +652,13 @@ public class GUI extends JFrame {
         roomPanel.setLayout(new GridBagLayout());
         ButtonGroup roomGroup = new ButtonGroup();
         roomPanel.add(roomSuggestLabel, panelConstraints);
+        List<JRadioButton> roomButtons = new ArrayList<>();
         for (int i = 0; i < roomOptions.size(); i++) {
             JRadioButton button = new JRadioButton(roomOptions.get(i));
             roomButtons.add(button);
             roomPanel.add(button, panelConstraints);
             roomGroup.add(button);
+            roomButtons.add(button);
         }
         layout.add(roomPanel, gbc);
 
@@ -672,6 +686,7 @@ public class GUI extends JFrame {
                 for (int i = 0; i < roomButtons.size(); i++) {
                     if (roomButtons.get(i).isSelected()) {
                         accusation.add(roomOptions.get(i));
+
                     }
                 }
                 for (int i = 0; i < weaponButtons.size(); i++) {
@@ -697,6 +712,7 @@ public class GUI extends JFrame {
                     setNextMove();
                 }
 
+
                 accusationPane.dispose();
             }
         });
@@ -717,6 +733,7 @@ public class GUI extends JFrame {
                 refute(p, suggestion);
                 setNextMove();
                 return;
+
             }
         }
         JOptionPane.showMessageDialog(this, "No players could refute your suggestion", "Suggestion", JOptionPane.INFORMATION_MESSAGE);
@@ -838,6 +855,5 @@ public class GUI extends JFrame {
             GUI gui = new GUI();
             gui.setVisible(true);
         });
-
     }
 }
