@@ -82,4 +82,8 @@ public class BoardPanel extends JPanel {
         repaint();
 
     }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
 }

@@ -187,12 +187,12 @@ public class Cluedo {
     }
 
     private void doPlayerWin() {
-        System.out.println("The accusation is correct, the game has ended.");
+        //System.out.println("The accusation is correct, the game has ended.");
         gameWon = true;
     }
 
     private void doPlayerLose() {
-        System.out.println("The accusation is incorrect, you have been removed from the game");
+        //System.out.println("The accusation is incorrect, you have been removed from the game");
         players.remove(move);
     }
 

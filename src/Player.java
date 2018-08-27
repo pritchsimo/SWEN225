@@ -15,8 +15,6 @@ public class Player {
     private Board board;
     private String colour;
 
-    private HashMap<String, List<Point>> roomNames;
-
     public Player(Point startCoord, String characterName, String playerName) {
         this.coords = startCoord;
         this.characterName = characterName;
@@ -71,11 +69,11 @@ public class Player {
                     room = doorSquare(board.getBoard()[coords.x][coords.y]);
                     room.playerEnter(this);
                 } else {
-                    System.out.println("Wall in the way (" + (coords.x+dx) + "," + (coords.y+dy) + ") Square: " + square);
+                    //System.out.println("Wall in the way (" + (coords.x+dx) + "," + (coords.y+dy) + ") Square: " + square);
                     return false;
                 }
             } else {
-                System.out.println("Cannot move in room");
+               // System.out.println("Cannot move in room");
                 return false;
             }
         }
@@ -141,12 +139,12 @@ public class Player {
     public List<Card> refutableCards(List<String> suggestion){
         List<Card> refutables = new ArrayList<>();
 
-        System.out.println("\n" + this.characterName + ", you have the following conflicting cards: ");
+        //System.out.println("\n" + this.characterName + ", you have the following conflicting cards: ");
         for (int i = 0; i < cards.size(); i++) {
             for (String suggestive : suggestion) {
                 if (cards.get(i).getName().equals(suggestive)) {
                     refutables.add(cards.get(i));
-                    System.out.println(cards.get(i).getName());
+                    //System.out.println(cards.get(i).getName());
                 }
             }
         }
