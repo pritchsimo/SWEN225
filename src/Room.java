@@ -34,10 +34,10 @@ public class Room {
 	public void playerEnter(Player p){
 		players.add(p);
 		if (players.size() == 1){
-			players.get(0).setCoords(new Point(middleOfRoom.x, middleOfRoom.y));
+			players.get(0).setCoords(middleOfRoom);
 		} else if (players.size() == 2){
 			players.get(0).setCoords(new Point(middleOfRoom.x-1, middleOfRoom.y));
-			players.get(1).setCoords(new Point(middleOfRoom.x, middleOfRoom.y));
+			players.get(1).setCoords(middleOfRoom);
 		} else if (players.size() == 3){
 			players.get(0).setCoords(new Point(middleOfRoom.x-1, middleOfRoom.y));
 			players.get(1).setCoords(middleOfRoom);
@@ -46,20 +46,20 @@ public class Room {
 			players.get(0).setCoords(new Point(middleOfRoom.x-1, middleOfRoom.y-1));
 			players.get(1).setCoords(new Point(middleOfRoom.x, middleOfRoom.y-1));
 			players.get(2).setCoords(new Point(middleOfRoom.x-1, middleOfRoom.y));
-			players.get(3).setCoords(new Point(middleOfRoom.x, middleOfRoom.y));
+			players.get(3).setCoords(middleOfRoom);
 		} else if (players.size() == 5){
 			players.get(0).setCoords(new Point(middleOfRoom.x-1, middleOfRoom.y-1));
 			players.get(1).setCoords(new Point(middleOfRoom.x, middleOfRoom.y-1));
 			players.get(2).setCoords(new Point(middleOfRoom.x+1, middleOfRoom.y-1));
 			players.get(3).setCoords(new Point(middleOfRoom.x-1, middleOfRoom.y));
-			players.get(4).setCoords(new Point(middleOfRoom.x, middleOfRoom.y));
+			players.get(4).setCoords(middleOfRoom);
 		} else if (players.size() == 6){
 			players.get(0).setCoords(new Point(middleOfRoom.x-1, middleOfRoom.y-1));
 			players.get(1).setCoords(new Point(middleOfRoom.x, middleOfRoom.y-1));
 			players.get(2).setCoords(new Point(middleOfRoom.x+1, middleOfRoom.y-1));
 			players.get(3).setCoords(new Point(middleOfRoom.x-1, middleOfRoom.y));
-			players.get(4).setCoords(new Point(middleOfRoom.x, middleOfRoom.y));
-			players.get(2).setCoords(new Point(middleOfRoom.x+1, middleOfRoom.y));
+			players.get(4).setCoords(middleOfRoom);
+			players.get(5).setCoords(new Point(middleOfRoom.x+1, middleOfRoom.y));
 		}
 	}
 

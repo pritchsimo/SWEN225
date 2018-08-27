@@ -7,6 +7,7 @@ import java.util.List;
 
 
 public class Tests {
+    //Do not need some of the tests because we changed that you cannot move around in a room
 
     @Test
     public void testEnterRoom(){
@@ -33,94 +34,94 @@ public class Tests {
         assertEquals(p1.getCoords(), new Point(7,6));
     }
 
-    @Test
-    public void testInsideRoomWalkIntoTopWall(){
-        Cluedo cluedo = new Cluedo();
-        setupMockPlayer(cluedo, new Point(4, 3), 0, null);
-        cluedo.setup(true);
-        Player p1 = cluedo.getPlayers().get(0);
-        p1.setRoom(cluedo.getBoard().getRooms().get("kitchen"));
+//    @Test
+//    public void testInsideRoomWalkIntoTopWall(){
+//        Cluedo cluedo = new Cluedo();
+//        setupMockPlayer(cluedo, new Point(4, 3), 0, null);
+//        cluedo.setup(true);
+//        Player p1 = cluedo.getPlayers().get(0);
+//        p1.setRoom(cluedo.getBoard().getRooms().get("kitchen"));
+//
+//        assertTrue(p1.translate("upwards",1));
+//        assertEquals(p1.getCoords(), new Point(4,2));
+//        assertFalse(p1.translate("upwards",1));
+//        assertEquals(p1.getCoords(), new Point(4,2));
+//        assertTrue(p1.translate("right",1));
+//        assertEquals(p1.getCoords(), new Point(5,2));
+//        assertTrue(p1.translate("left",1));
+//        assertEquals(p1.getCoords(), new Point(4,2));
+//
+//    }
 
-        assertTrue(p1.translate("upwards",1));
-        assertEquals(p1.getCoords(), new Point(4,2));
-        assertFalse(p1.translate("upwards",1));
-        assertEquals(p1.getCoords(), new Point(4,2));
-        assertTrue(p1.translate("right",1));
-        assertEquals(p1.getCoords(), new Point(5,2));
-        assertTrue(p1.translate("left",1));
-        assertEquals(p1.getCoords(), new Point(4,2));
+//    @Test
+//    public void testInsideRoomWalkIntoLeftWall(){
+//        Cluedo cluedo = new Cluedo();
+//        setupMockPlayer(cluedo, new Point(2, 4), 0, null);
+//        cluedo.setup(true);
+//        Player p1 = cluedo.getPlayers().get(0);
+//        p1.setRoom(cluedo.getBoard().getRooms().get("kitchen"));
+//
+//        assertTrue(p1.translate("left",1));
+//        assertEquals(p1.getCoords(), new Point(1,4));
+//        assertFalse(p1.translate("left",1));
+//        assertEquals(p1.getCoords(), new Point(1,4));
+//        assertTrue(p1.translate("downwards",1));
+//        assertEquals(p1.getCoords(), new Point(1,5));
+//        assertTrue(p1.translate("upwards",1));
+//        assertEquals(p1.getCoords(), new Point(1,4));
+//    }
 
-    }
+//    @Test
+//    public void testInsideRoomWalkIntoBottomWall(){
+//        Cluedo cluedo = new Cluedo();
+//        setupMockPlayer(cluedo, new Point(4, 6), 0, null);
+//        cluedo.setup(true);
+//        Player p1 = cluedo.getPlayers().get(0);
+//        p1.setRoom(cluedo.getBoard().getRooms().get("kitchen"));
+//
+//        assertTrue(p1.translate("downwards",1));
+//        assertEquals(p1.getCoords(), new Point(4,7));
+//        assertFalse(p1.translate("downwards",1));
+//        assertEquals(p1.getCoords(), new Point(4,7));
+//        assertTrue(p1.translate("left",1));
+//        assertEquals(p1.getCoords(), new Point(3,7));
+//        assertTrue(p1.translate("right",1));
+//        assertEquals(p1.getCoords(), new Point(4,7));
+//    }
 
-    @Test
-    public void testInsideRoomWalkIntoLeftWall(){
-        Cluedo cluedo = new Cluedo();
-        setupMockPlayer(cluedo, new Point(2, 4), 0, null);
-        cluedo.setup(true);
-        Player p1 = cluedo.getPlayers().get(0);
-        p1.setRoom(cluedo.getBoard().getRooms().get("kitchen"));
+//    @Test
+//    public void testInsideRoomWalkIntoRightWall(){
+//        Cluedo cluedo = new Cluedo();
+//        setupMockPlayer(cluedo, new Point(5, 4), 0, null);
+//        cluedo.setup(true);
+//        Player p1 = cluedo.getPlayers().get(0);
+//        p1.setRoom(cluedo.getBoard().getRooms().get("kitchen"));
+//
+//        assertTrue(p1.translate("right",1));
+//        assertEquals(p1.getCoords(), new Point(6,4));
+//        assertFalse(p1.translate("right",1));
+//        assertEquals(p1.getCoords(), new Point(6,4));
+//        assertTrue(p1.translate("downwards",1));
+//        assertEquals(p1.getCoords(), new Point(6,5));
+//        assertTrue(p1.translate("upwards",1));
+//        assertEquals(p1.getCoords(), new Point(6,4));
+//    }
 
-        assertTrue(p1.translate("left",1));
-        assertEquals(p1.getCoords(), new Point(1,4));
-        assertFalse(p1.translate("left",1));
-        assertEquals(p1.getCoords(), new Point(1,4));
-        assertTrue(p1.translate("downwards",1));
-        assertEquals(p1.getCoords(), new Point(1,5));
-        assertTrue(p1.translate("upwards",1));
-        assertEquals(p1.getCoords(), new Point(1,4));
-    }
-
-    @Test
-    public void testInsideRoomWalkIntoBottomWall(){
-        Cluedo cluedo = new Cluedo();
-        setupMockPlayer(cluedo, new Point(4, 6), 0, null);
-        cluedo.setup(true);
-        Player p1 = cluedo.getPlayers().get(0);
-        p1.setRoom(cluedo.getBoard().getRooms().get("kitchen"));
-
-        assertTrue(p1.translate("downwards",1));
-        assertEquals(p1.getCoords(), new Point(4,7));
-        assertFalse(p1.translate("downwards",1));
-        assertEquals(p1.getCoords(), new Point(4,7));
-        assertTrue(p1.translate("left",1));
-        assertEquals(p1.getCoords(), new Point(3,7));
-        assertTrue(p1.translate("right",1));
-        assertEquals(p1.getCoords(), new Point(4,7));
-    }
-
-    @Test
-    public void testInsideRoomWalkIntoRightWall(){
-        Cluedo cluedo = new Cluedo();
-        setupMockPlayer(cluedo, new Point(5, 4), 0, null);
-        cluedo.setup(true);
-        Player p1 = cluedo.getPlayers().get(0);
-        p1.setRoom(cluedo.getBoard().getRooms().get("kitchen"));
-
-        assertTrue(p1.translate("right",1));
-        assertEquals(p1.getCoords(), new Point(6,4));
-        assertFalse(p1.translate("right",1));
-        assertEquals(p1.getCoords(), new Point(6,4));
-        assertTrue(p1.translate("downwards",1));
-        assertEquals(p1.getCoords(), new Point(6,5));
-        assertTrue(p1.translate("upwards",1));
-        assertEquals(p1.getCoords(), new Point(6,4));
-    }
-
-    @Test
-    public void testExitRoom(){
-        Cluedo cluedo = new Cluedo();
-        setupMockPlayer(cluedo, new Point(5, 6), 0, null);
-        cluedo.setup(true);
-        Player p1 = cluedo.getPlayers().get(0);
-        p1.setRoom(cluedo.getBoard().getRooms().get("kitchen"));
-
-        assertTrue(p1.translate("downwards",1));
-        assertEquals(p1.getCoords(), new Point(5,7));
-        assertTrue(p1.translate("downwards",1));
-        assertEquals(p1.getCoords(), new Point(5,8));
-
-        assertNull(p1.getRoom());
-    }
+//    @Test
+//    public void testExitRoom(){
+//        Cluedo cluedo = new Cluedo();
+//        setupMockPlayer(cluedo, new Point(5, 6), 0, null);
+//        cluedo.setup(true);
+//        Player p1 = cluedo.getPlayers().get(0);
+//        p1.setRoom(cluedo.getBoard().getRooms().get("kitchen"));
+//
+//        assertTrue(p1.translate("downwards",1));
+//        assertEquals(p1.getCoords(), new Point(5,7));
+//        assertTrue(p1.translate("downwards",1));
+//        assertEquals(p1.getCoords(), new Point(5,8));
+//
+//        assertNull(p1.getRoom());
+//    }
 
     @Test
     public void testRefutableCardsEmpty() {

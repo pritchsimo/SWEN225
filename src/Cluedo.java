@@ -150,14 +150,15 @@ public class Cluedo {
         return players.get(move);
     }
 
-    public void accuse(List<String> accusation) {
+    public boolean accuse(List<String> accusation) {
         for (int i = 0; i < accusation.size(); i++) {
             if (!accusation.get(i).equals(solution.get(i).getName())) {
                 doPlayerLose();
-                return;
+                return false;
             }
         }
         doPlayerWin();
+        return true;
     }
 
     public List<Player> getPlayers() {
@@ -186,12 +187,12 @@ public class Cluedo {
     }
 
     private void doPlayerWin() {
-        System.out.println("The accusation is correct, the game has ended.");
+        //System.out.println("The accusation is correct, the game has ended.");
         gameWon = true;
     }
 
     private void doPlayerLose() {
-        System.out.println("The accusation is incorrect, you have been removed from the game");
+        //System.out.println("The accusation is incorrect, you have been removed from the game");
         players.remove(move);
     }
 
