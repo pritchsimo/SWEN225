@@ -16,7 +16,7 @@ public class BoardPanel extends JPanel {
     BufferedImage boardImage;
     public BoardPanel(){
         try {
-            boardImage = ImageIO.read(new File("DiceImages/Board.png"));
+            boardImage = ImageIO.read(new File("BoardImage/Board.png"));
             Graphics g = boardImage.getGraphics();
             g.drawImage(boardImage,0,0,this);
             g.dispose();
